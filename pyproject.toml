@@ -1,0 +1,53 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "securemailscope"
+version = "1.0.0"
+description = "Passive Email TLS Forensic & Cryptographic Risk Assessment Tool"
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+keywords = ["security", "forensics", "tls", "email", "pcap", "smtp", "imap"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Information Technology",
+    "Topic :: Security",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+]
+
+dependencies = [
+    "scapy>=2.5.0",
+    "cryptography>=41.0.0",
+    "pyyaml>=6.0",
+    "scikit-learn>=1.4.0",
+    "sqlalchemy>=2.0.0",
+    "fastapi>=0.110.0",
+    "uvicorn[standard]>=0.27.0",
+    "streamlit>=1.32.0",
+    "jinja2>=3.1.0",
+    "reportlab>=4.1.0",
+    "joblib>=1.3.0",
+    "numpy>=1.26.0",
+]
+
+[project.optional-dependencies]
+pdf = ["weasyprint>=60.0"]
+dev = [
+    "pytest>=8.0",
+    "pytest-cov>=4.1",
+    "httpx>=0.27.0",
+]
+
+[project.scripts]
+securemailscope = "securemailscope.main:main"
+
+[tool.pytest.ini_options]
+testpaths = ["securemailscope/tests"]
+addopts = "-v --tb=short"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["securemailscope*"]

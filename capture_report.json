@@ -1,0 +1,350 @@
+{
+  "report_id": "3979cd91-ce42-4e99-b7d1-d86e0361f47b",
+  "source_pcap_sha256": "0c96a199e6790537cec5f73b0d9b9730e0852bb8e22eadc8bd0320f8605e7ddc",
+  "source_pcap_path": "C:\\smc\\capture.pcap",
+  "source_pcap_size_bytes": 2592,
+  "generated_at": "2026-09-29T16:27:23.080788+00:00",
+  "tool_version": "1.0.0",
+  "analyst_host": "Aagman",
+  "tls13_visibility_note": "TLS 1.3 encrypts most handshake fields after ServerHello. Certificate details and some handshake parameters may not be visible in passive captures. Affected sessions are flagged with 'tls13_visibility_limited: true'.",
+  "custody": {
+    "report_id": "3979cd91-ce42-4e99-b7d1-d86e0361f47b",
+    "source_pcap_path": "C:\\smc\\capture.pcap",
+    "source_pcap_sha256": "0c96a199e6790537cec5f73b0d9b9730e0852bb8e22eadc8bd0320f8605e7ddc",
+    "source_pcap_size_bytes": 2592,
+    "generated_at": "2026-09-29T16:27:23.080788+00:00",
+    "analyst_host": "Aagman",
+    "analyst_platform": "Windows-11-10.0.26200-SP0",
+    "tool_version": "1.0.0",
+    "report_sha256": "cd1a946c9ef97b6d080c01887fc381e9f3130595184bbdc85a46d6425bdc0be8"
+  },
+  "hosts": [
+    {
+      "host": "198.51.100.5:25",
+      "posture_grade": "F",
+      "posture_score": 60,
+      "grade_delta": null,
+      "finding_summary": {
+        "critical": 0,
+        "high": 2,
+        "medium": 1,
+        "low": 0,
+        "informational": 0
+      },
+      "sessions": [
+        {
+          "session_id": "619811d5-6058-4b11-8052-2c33a852b538",
+          "protocol": "SMTP",
+          "src_ip": "10.0.1.20",
+          "dst_ip": "198.51.100.5",
+          "src_port": 55001,
+          "dst_port": 25,
+          "banner": "\u0016\u0003\u0001\u0000,\u0002\u0000\u0000(\u0003\u0001\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0000\u0000/\u0000\u0000\u0000",
+          "starttls_detected": true,
+          "downgrade_suspected": false,
+          "is_implicit_tls": false,
+          "tls_version": "TLS1.0",
+          "cipher_suite": "TLS_RSA_WITH_AES_128_CBC_SHA",
+          "cipher_strength": "weak",
+          "pfs": false,
+          "key_exchange": "RSA",
+          "sni": null,
+          "alpn": [],
+          "tls_anomalies": [],
+          "tls13_visibility_limited": false,
+          "certificate": null,
+          "ml_risk_label": "medium",
+          "ml_confidence": 0.3533,
+          "anomaly_detected": false,
+          "anomaly_score": 0.1624,
+          "packet_refs": [
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14
+          ],
+          "findings": [
+            {
+              "id": "deprecated-tls-10",
+              "finding_id": "1c847e7a-75f9-415d-857b-47920cbc20c3",
+              "category": "deprecated-protocol",
+              "severity": "high",
+              "description": "TLS 1.0 is negotiated \u00e2\u20ac\u201d deprecated by NIST and IETF (RFC 8996)",
+              "reference": "IETF RFC 8996, NIST SP 800-52 Rev.2",
+              "cwe": "CWE-326",
+              "contributing_factors": [],
+              "evidence_ref": {
+                "packet_number": 8,
+                "type": "session-start"
+              },
+              "remediation": "# Generic: Disable deprecated TLS versions\n# Ensure only TLS 1.2 and TLS 1.3 are enabled.\n# Consult your MTA/IMAP server documentation for the specific config key.\n# References: IETF RFC 8996, NIST SP 800-52 Rev.2",
+              "ml_flagged": false,
+              "anomaly_score": null
+            },
+            {
+              "id": "weak-cipher",
+              "finding_id": "4bc1f581-17a8-4cc7-8a07-a5af428e65ce",
+              "category": "weak-cipher",
+              "severity": "high",
+              "description": "A weak cipher suite is negotiated (no PFS or weak key exchange)",
+              "reference": "NIST SP 800-52 Rev.2",
+              "cwe": "CWE-327",
+              "contributing_factors": [],
+              "evidence_ref": {
+                "packet_number": 8,
+                "type": "session-start"
+              },
+              "remediation": "# Generic: Remove weak cipher suites\n# Disable: RC4, NULL, EXPORT, 3DES, MD5-based suites.\n# Enable: AES-GCM, ChaCha20-Poly1305 with ECDHE/DHE key exchange.\n# Reference: NIST SP 800-52 Rev.2, Mozilla SSL Configuration Generator",
+              "ml_flagged": false,
+              "anomaly_score": null
+            },
+            {
+              "id": "no-pfs",
+              "finding_id": "873f1fcd-580d-4341-8848-fe4ecd6098a2",
+              "category": "no-forward-secrecy",
+              "severity": "medium",
+              "description": "Cipher suite does not provide Perfect Forward Secrecy (PFS)",
+              "reference": "NIST SP 800-52 Rev.2 \u00c2\u00a73.3.1",
+              "cwe": "CWE-311",
+              "contributing_factors": [],
+              "evidence_ref": {
+                "packet_number": 8,
+                "type": "session-start"
+              },
+              "remediation": "# Generic: Enable Perfect Forward Secrecy\n# Configure your server to prefer ECDHE or DHE key exchange.\n# Disable static RSA key exchange.\n# Reference: NIST SP 800-52 Rev.2 \u00a73.3.1",
+              "ml_flagged": false,
+              "anomaly_score": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "host": "45.33.32.156:25",
+      "posture_grade": "D",
+      "posture_score": 50,
+      "grade_delta": null,
+      "finding_summary": {
+        "critical": 1,
+        "high": 0,
+        "medium": 1,
+        "low": 0,
+        "informational": 0
+      },
+      "sessions": [
+        {
+          "session_id": "69698585-ed70-47d6-a808-ca7881166398",
+          "protocol": "SMTP",
+          "src_ip": "10.0.2.30",
+          "dst_ip": "45.33.32.156",
+          "src_port": 56001,
+          "dst_port": 25,
+          "banner": "",
+          "starttls_detected": true,
+          "downgrade_suspected": true,
+          "is_implicit_tls": false,
+          "tls_version": "unknown",
+          "cipher_suite": "unknown",
+          "cipher_strength": "unknown",
+          "pfs": false,
+          "key_exchange": "unknown",
+          "sni": null,
+          "alpn": [],
+          "tls_anomalies": [],
+          "tls13_visibility_limited": false,
+          "certificate": null,
+          "ml_risk_label": "medium",
+          "ml_confidence": 0.3533,
+          "anomaly_detected": true,
+          "anomaly_score": -0.0272,
+          "packet_refs": [
+            15,
+            16,
+            17,
+            18,
+            19,
+            20
+          ],
+          "findings": [
+            {
+              "id": "starttls-downgrade",
+              "finding_id": "65689d5d-932d-47f7-8cb8-78e2f21ad252",
+              "category": "starttls-downgrade",
+              "severity": "critical",
+              "description": "STARTTLS downgrade attack suspected \u00e2\u20ac\u201d plaintext continued after STARTTLS command",
+              "reference": "RFC 3207, BASTA! research",
+              "cwe": "CWE-319",
+              "contributing_factors": [],
+              "evidence_ref": {
+                "packet_number": 17,
+                "type": "downgrade"
+              },
+              "remediation": "# STARTTLS stripping/downgrade was detected.\n# Mitigations:\n#   1. Postfix: Set smtp_tls_security_level = encrypt and\n#      smtpd_tls_security_level = encrypt to reject plaintext.\n#   2. Deploy MTA-STS (RFC 8461) to publish a policy that requires TLS.\n#   3. Publish SMTP TLS Reporting (TLSRPT) records (RFC 8460) to receive\n#      downgrade alerts.\n#   4. Consider DANE (RFC 7671) for DNSSEC-authenticated TLS enforcement.\n# References: RFC 8461 (MTA-STS), RFC 3207 (STARTTLS), BASTA! research",
+              "ml_flagged": false,
+              "anomaly_score": null
+            },
+            {
+              "id": "ml-anomaly",
+              "finding_id": "76d9212f-8660-48d7-877d-e9a08ec220ea",
+              "category": "ml-anomaly",
+              "severity": "medium",
+              "description": "Session flagged as anomalous by IsolationForest (score=-0.027)",
+              "reference": "",
+              "cwe": "",
+              "contributing_factors": [
+                "anomaly-score",
+                "isolation-forest"
+              ],
+              "evidence_ref": {
+                "packet_number": 15
+              },
+              "remediation": "Investigate session for unusual TLS behavior or novel misconfiguration.",
+              "ml_flagged": true,
+              "anomaly_score": -0.027233495335499347
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "host": "203.0.113.50:25",
+      "posture_grade": "D",
+      "posture_score": 35,
+      "grade_delta": null,
+      "finding_summary": {
+        "critical": 0,
+        "high": 1,
+        "medium": 1,
+        "low": 0,
+        "informational": 0
+      },
+      "sessions": [
+        {
+          "session_id": "172bc515-25f5-49ab-a250-e88c57098a0e",
+          "protocol": "SMTP",
+          "src_ip": "10.0.3.40",
+          "dst_ip": "203.0.113.50",
+          "src_port": 57001,
+          "dst_port": 25,
+          "banner": "\u0016\u0003\u0003\u0000,\u0002\u0000\u0000(\u0003\u0003\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0011\u0000\u0000/\u0000\u0000\u0000",
+          "starttls_detected": true,
+          "downgrade_suspected": false,
+          "is_implicit_tls": false,
+          "tls_version": "TLS1.2",
+          "cipher_suite": "TLS_RSA_WITH_AES_128_CBC_SHA",
+          "cipher_strength": "weak",
+          "pfs": false,
+          "key_exchange": "RSA",
+          "sni": null,
+          "alpn": [],
+          "tls_anomalies": [],
+          "tls13_visibility_limited": false,
+          "certificate": null,
+          "ml_risk_label": "medium",
+          "ml_confidence": 0.3533,
+          "anomaly_detected": false,
+          "anomaly_score": 0.1904,
+          "packet_refs": [
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27
+          ],
+          "findings": [
+            {
+              "id": "weak-cipher",
+              "finding_id": "d811b524-2815-4bbd-a035-7ee385e0d3fd",
+              "category": "weak-cipher",
+              "severity": "high",
+              "description": "A weak cipher suite is negotiated (no PFS or weak key exchange)",
+              "reference": "NIST SP 800-52 Rev.2",
+              "cwe": "CWE-327",
+              "contributing_factors": [],
+              "evidence_ref": {
+                "packet_number": 21,
+                "type": "session-start"
+              },
+              "remediation": "# Generic: Remove weak cipher suites\n# Disable: RC4, NULL, EXPORT, 3DES, MD5-based suites.\n# Enable: AES-GCM, ChaCha20-Poly1305 with ECDHE/DHE key exchange.\n# Reference: NIST SP 800-52 Rev.2, Mozilla SSL Configuration Generator",
+              "ml_flagged": false,
+              "anomaly_score": null
+            },
+            {
+              "id": "no-pfs",
+              "finding_id": "23af0192-eb8b-44cc-a297-39977969e40b",
+              "category": "no-forward-secrecy",
+              "severity": "medium",
+              "description": "Cipher suite does not provide Perfect Forward Secrecy (PFS)",
+              "reference": "NIST SP 800-52 Rev.2 \u00c2\u00a73.3.1",
+              "cwe": "CWE-311",
+              "contributing_factors": [],
+              "evidence_ref": {
+                "packet_number": 21,
+                "type": "session-start"
+              },
+              "remediation": "# Generic: Enable Perfect Forward Secrecy\n# Configure your server to prefer ECDHE or DHE key exchange.\n# Disable static RSA key exchange.\n# Reference: NIST SP 800-52 Rev.2 \u00a73.3.1",
+              "ml_flagged": false,
+              "anomaly_score": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "host": "203.0.113.10:25",
+      "posture_grade": "A",
+      "posture_score": 0,
+      "grade_delta": null,
+      "finding_summary": {
+        "critical": 0,
+        "high": 0,
+        "medium": 0,
+        "low": 0,
+        "informational": 0
+      },
+      "sessions": [
+        {
+          "session_id": "e994f87c-be8b-4b87-bba9-10d5ace9d5c2",
+          "protocol": "SMTP",
+          "src_ip": "10.0.0.5",
+          "dst_ip": "203.0.113.10",
+          "src_port": 54321,
+          "dst_port": 25,
+          "banner": "250-mail.acme.com",
+          "starttls_detected": true,
+          "downgrade_suspected": false,
+          "is_implicit_tls": false,
+          "tls_version": "TLS1.2",
+          "cipher_suite": "TLS_AES_128_GCM_SHA256",
+          "cipher_strength": "strong",
+          "pfs": true,
+          "key_exchange": "unknown",
+          "sni": null,
+          "alpn": [],
+          "tls_anomalies": [],
+          "tls13_visibility_limited": false,
+          "certificate": null,
+          "ml_risk_label": "medium",
+          "ml_confidence": 0.3533,
+          "anomaly_detected": false,
+          "anomaly_score": 0.0635,
+          "packet_refs": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "findings": []
+        }
+      ]
+    }
+  ]
+}

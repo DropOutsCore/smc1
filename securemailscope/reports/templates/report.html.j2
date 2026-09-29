@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SecureMailScope Forensic Report — {{ report.report_id[:8] }}</title>
+<style>
+  :root {
+    --bg: #0d1117; --surface: #161b22; --surface2: #21262d;
+    --border: #30363d; --text: #e6edf3; --muted: #8b949e;
+    --accent: #58a6ff; --critical: #f85149; --high: #d29922;
+    --medium: #388bfd; --low: #3fb950; --info: #6e7681;
+    --grade-a: #3fb950; --grade-b: #58a6ff; --grade-c: #d29922;
+    --grade-d: #f0883e; --grade-f: #f85149;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', system-ui, sans-serif; font-size: 14px; line-height: 1.6; }
+  .container { max-width: 1200px; margin: 0 auto; padding: 32px 24px; }
+
+  /* Header */
+  .report-header { border-bottom: 1px solid var(--border); padding-bottom: 24px; margin-bottom: 32px; }
+  .report-header h1 { font-size: 28px; font-weight: 700; color: var(--accent); }
+  .report-header .subtitle { color: var(--muted); margin-top: 4px; }
+  .meta-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; margin-top: 20px; }
+  .meta-card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 12px 16px; }
+  .meta-card .label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); }
+  .meta-card .value { font-family: 'Consolas', monospace; font-size: 13px; word-break: break-all; margin-top: 4px; }
+
+  /* Executive Summary */
+  .section { margin-bottom: 40px; }
+  .section-title { font-size: 18px; font-weight: 600; border-bottom: 1px solid var(--border); padding-bottom: 8px; margin-bottom: 20px; }
+
+  /* Host cards */
+  .host-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px; }
+  .host-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px; position: relative; }
+  .host-card .grade-badge {
+    position: absolute; top: 20px; right: 20px;
+    width: 56px; height: 56px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px; font-weight: 800;
+  }
+  .grade-A { background: rgba(63,185,80,0.15); color: var(--grade-a); border: 2px solid var(--grade-a); }
+  .grade-B { background: rgba(88,166,255,0.15); color: var(--grade-b); border: 2px solid var(--grade-b); }
+  .grade-C { background: rgba(210,153,34,0.15); color: var(--grade-c); border: 2px solid var(--grade-c); }
+  .grade-D { background: rgba(240,136,62,0.15); color: var(--grade-d); border: 2px solid var(--grade-d); }
+  .grade-F { background: rgba(248,81,73,0.15); color: var(--grade-f); border: 2px solid var(--grade-f); }
+  .host-card h3 { font-size: 15px; font-weight: 600; padding-right: 70px; word-break: break-all; }
+  .host-card .delta { font-size: 12px; color: var(--muted); margin-top: 4px; }
+  .severity-pills { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+  .pill { font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 999px; }
+  .pill-critical { background: rgba(248,81,73,0.15); color: var(--critical); }
+  .pill-high { background: rgba(210,153,34,0.15); color: var(--high); }
+  .pill-medium { background: rgba(56,139,253,0.15); color: var(--medium); }
+  .pill-low { background: rgba(63,185,80,0.15); color: var(--low); }
+
+  /* Session detail */
+  .session-detail { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; margin-bottom: 16px; overflow: hidden; }
+  .session-header { padding: 14px 16px; background: var(--surface2); display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
+  .session-header h4 { font-size: 13px; font-weight: 600; }
+  .session-body { padding: 16px; }
+  .detail-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; margin-bottom: 16px; }
+  .detail-item .dk { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; }
+  .detail-item .dv { font-family: monospace; font-size: 13px; margin-top: 2px; }
+
+  /* Findings table */
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th { background: var(--surface2); padding: 10px 12px; text-align: left; font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); }
+  td { padding: 10px 12px; border-top: 1px solid var(--border); vertical-align: top; }
+  tr:hover td { background: rgba(255,255,255,0.02); }
+  .sev-critical { color: var(--critical); font-weight: 700; }
+  .sev-high { color: var(--high); font-weight: 600; }
+  .sev-medium { color: var(--medium); }
+  .sev-low { color: var(--low); }
+  .code-block { background: var(--surface2); border: 1px solid var(--border); border-radius: 6px; padding: 12px; font-family: 'Consolas', monospace; font-size: 12px; white-space: pre-wrap; word-break: break-all; margin-top: 8px; }
+  .tag { display: inline-block; font-size: 11px; padding: 2px 8px; border-radius: 4px; background: var(--surface2); border: 1px solid var(--border); color: var(--muted); margin: 2px; }
+  .badge-pfs-yes { color: var(--low); font-weight: 600; }
+  .badge-pfs-no { color: var(--high); font-weight: 600; }
+
+  /* Evidence appendix */
+  .evidence-ref { font-family: monospace; font-size: 12px; background: var(--surface2); padding: 4px 8px; border-radius: 4px; display: inline-block; }
+
+  /* TLS visibility warning */
+  .visibility-warning { background: rgba(210,153,34,0.08); border: 1px solid rgba(210,153,34,0.3); border-radius: 6px; padding: 10px 14px; font-size: 12px; color: var(--high); margin-bottom: 12px; }
+
+  /* Footer */
+  .report-footer { border-top: 1px solid var(--border); margin-top: 40px; padding-top: 20px; text-align: center; color: var(--muted); font-size: 12px; }
+  .sha256 { font-family: monospace; font-size: 11px; word-break: break-all; }
+
+  @media print {
+    body { background: #fff; color: #000; }
+    .host-card, .session-detail { break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- HEADER -->
+  <div class="report-header">
+    <h1>🔒 SecureMailScope Forensic Report</h1>
+    <p class="subtitle">Passive Email TLS/STARTTLS Cryptographic Risk Assessment</p>
+    <div class="meta-grid">
+      <div class="meta-card">
+        <div class="label">Report ID</div>
+        <div class="value">{{ report.report_id }}</div>
+      </div>
+      <div class="meta-card">
+        <div class="label">Generated At</div>
+        <div class="value">{{ report.generated_at }}</div>
+      </div>
+      <div class="meta-card">
+        <div class="label">Source PCAP SHA-256</div>
+        <div class="value">{{ report.source_pcap_sha256 }}</div>
+      </div>
+      <div class="meta-card">
+        <div class="label">Source File</div>
+        <div class="value">{{ report.source_pcap_path }}</div>
+      </div>
+      <div class="meta-card">
+        <div class="label">Hosts Analyzed</div>
+        <div class="value">{{ report.hosts | length }}</div>
+      </div>
+      <div class="meta-card">
+        <div class="label">Tool Version</div>
+        <div class="value">SecureMailScope v{{ report.tool_version }}</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TLS 1.3 VISIBILITY NOTE -->
+  <div class="visibility-warning">
+    ⚠️ <strong>TLS 1.3 Visibility Limitation:</strong> {{ report.tls13_visibility_note }}
+  </div>
+
+  <!-- EXECUTIVE SUMMARY -->
+  <div class="section">
+    <div class="section-title">Executive Summary — Host Posture Grades</div>
+    <div class="host-grid">
+      {% for host in report.hosts %}
+      <div class="host-card">
+        <div class="grade-badge grade-{{ host.posture_grade }}">{{ host.posture_grade }}</div>
+        <h3>{{ host.host }}</h3>
+        {% if host.grade_delta %}
+        <div class="delta">📈 {{ host.grade_delta }}</div>
+        {% endif %}
+        <div class="delta">Score: {{ host.posture_score }} | Sessions: {{ host.sessions | length }}</div>
+        <div class="severity-pills" style="margin-top:10px;">
+          {% if host.finding_summary.get('critical', 0) > 0 %}
+          <span class="pill pill-critical">{{ host.finding_summary.critical }} Critical</span>
+          {% endif %}
+          {% if host.finding_summary.get('high', 0) > 0 %}
+          <span class="pill pill-high">{{ host.finding_summary.high }} High</span>
+          {% endif %}
+          {% if host.finding_summary.get('medium', 0) > 0 %}
+          <span class="pill pill-medium">{{ host.finding_summary.medium }} Medium</span>
+          {% endif %}
+          {% if host.finding_summary.get('low', 0) > 0 %}
+          <span class="pill pill-low">{{ host.finding_summary.low }} Low</span>
+          {% endif %}
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- PER-HOST DETAIL -->
+  {% for host in report.hosts %}
+  <div class="section">
+    <div class="section-title">
+      Host: {{ host.host }}
+      <span class="grade-badge grade-{{ host.posture_grade }}" style="display:inline-flex;width:36px;height:36px;font-size:16px;vertical-align:middle;margin-left:12px;">{{ host.posture_grade }}</span>
+    </div>
+
+    {% for session in host.sessions %}
+    <div class="session-detail">
+      <div class="session-header">
+        <h4>
+          {{ session.protocol }} Session —
+          {{ session.src_ip }}:{{ session.src_port }} → {{ session.dst_ip }}:{{ session.dst_port }}
+          {% if session.starttls_detected %}<span class="tag">STARTTLS</span>{% endif %}
+          {% if session.is_implicit_tls %}<span class="tag">Implicit TLS</span>{% endif %}
+          {% if session.downgrade_suspected %}<span class="tag" style="color:var(--critical)">⚠ DOWNGRADE</span>{% endif %}
+        </h4>
+        <span style="color:var(--muted);font-size:12px;">{{ session.session_id[:8] }}…</span>
+      </div>
+      <div class="session-body">
+
+        {% if session.tls13_visibility_limited %}
+        <div class="visibility-warning">🔒 TLS 1.3 — some handshake fields are not visible in this passive capture.</div>
+        {% endif %}
+
+        <!-- TLS Details -->
+        <div class="detail-grid">
+          <div class="detail-item"><div class="dk">TLS Version</div><div class="dv">{{ session.tls_version }}</div></div>
+          <div class="detail-item"><div class="dk">Cipher Suite</div><div class="dv">{{ session.cipher_suite }}</div></div>
+          <div class="detail-item"><div class="dk">Cipher Strength</div><div class="dv">{{ session.cipher_strength }}</div></div>
+          <div class="detail-item"><div class="dk">Key Exchange</div><div class="dv">{{ session.key_exchange }}</div></div>
+          <div class="detail-item">
+            <div class="dk">PFS</div>
+            <div class="dv {% if session.pfs %}badge-pfs-yes{% else %}badge-pfs-no{% endif %}">
+              {% if session.pfs %}✅ Yes{% else %}❌ No{% endif %}
+            </div>
+          </div>
+          <div class="detail-item"><div class="dk">SNI</div><div class="dv">{{ session.sni or '—' }}</div></div>
+          <div class="detail-item"><div class="dk">ML Risk</div><div class="dv">{{ session.ml_risk_label }} ({{ "%.0f"|format(session.ml_confidence * 100) }}%)</div></div>
+          <div class="detail-item">
+            <div class="dk">Anomaly</div>
+            <div class="dv">{% if session.anomaly_detected %}⚠️ Detected ({{ "%.3f"|format(session.anomaly_score) }}){% else %}Normal{% endif %}</div>
+          </div>
+        </div>
+
+        <!-- Certificate -->
+        {% if session.certificate %}
+        <div style="margin-top:12px;">
+          <strong>Certificate</strong>
+          <div class="detail-grid" style="margin-top:8px;">
+            <div class="detail-item"><div class="dk">Subject</div><div class="dv">{{ session.certificate.subject }}</div></div>
+            <div class="detail-item"><div class="dk">Issuer</div><div class="dv">{{ session.certificate.issuer }}</div></div>
+            <div class="detail-item"><div class="dk">Key</div><div class="dv">{{ session.certificate.key_algorithm }} {{ session.certificate.key_length }} bit ({{ session.certificate.key_strength }})</div></div>
+            <div class="detail-item"><div class="dk">Signature Alg</div><div class="dv">{{ session.certificate.signature_algorithm }}</div></div>
+            <div class="detail-item"><div class="dk">Expires</div><div class="dv {% if session.certificate.is_expired %}sev-critical{% elif session.certificate.expiring_within_30_days %}sev-high{% endif %}">
+              {{ session.certificate.expires or '—' }}
+              {% if session.certificate.is_expired %} ⛔ EXPIRED{% elif session.certificate.expiring_within_30_days %} ⚠️ EXPIRING SOON{% endif %}
+            </div></div>
+            <div class="detail-item"><div class="dk">Self-signed</div><div class="dv">{% if session.certificate.is_self_signed %}⚠️ Yes{% else %}No{% endif %}</div></div>
+            <div class="detail-item"><div class="dk">Hostname Match</div><div class="dv">
+              {% if session.certificate.hostname_match == true %}✅ Yes
+              {% elif session.certificate.hostname_match == false %}❌ No (Mismatch)
+              {% else %}—{% endif %}
+            </div></div>
+            {% if session.certificate.sans %}
+            <div class="detail-item" style="grid-column: 1/-1;"><div class="dk">SANs</div><div class="dv">{{ session.certificate.sans | join(', ') }}</div></div>
+            {% endif %}
+          </div>
+        </div>
+        {% endif %}
+
+        <!-- Findings -->
+        {% if session.findings %}
+        <div style="margin-top:16px;">
+          <strong>Findings ({{ session.findings | length }})</strong>
+          <table style="margin-top:8px;">
+            <tr>
+              <th>Severity</th><th>ID</th><th>Description</th><th>Evidence</th><th>CWE</th>
+            </tr>
+            {% for f in session.findings %}
+            <tr>
+              <td class="sev-{{ f.severity }}">{{ f.severity | upper }}</td>
+              <td><code>{{ f.id }}</code></td>
+              <td>
+                {{ f.description }}
+                {% if f.contributing_factors %}
+                <div style="margin-top:6px;">
+                  {% for cf in f.contributing_factors %}
+                  <span class="tag">{{ cf }}</span>
+                  {% endfor %}
+                </div>
+                {% endif %}
+                {% if f.remediation %}
+                <div class="code-block">{{ f.remediation }}</div>
+                {% endif %}
+              </td>
+              <td><span class="evidence-ref">pkt #{{ f.evidence_ref.get('packet_number', '?') }}</span></td>
+              <td><span class="tag">{{ f.cwe or '—' }}</span></td>
+            </tr>
+            {% endfor %}
+          </table>
+        </div>
+        {% endif %}
+
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% endfor %}
+
+  <!-- EVIDENCE APPENDIX -->
+  <div class="section">
+    <div class="section-title">Evidence Appendix — Forensic References</div>
+    <p style="color:var(--muted);margin-bottom:16px;">All findings are traceable to specific packet numbers in the source PCAP (SHA-256: <span class="sha256">{{ report.source_pcap_sha256 }}</span>).</p>
+    <table>
+      <tr><th>Finding ID</th><th>Host</th><th>Session</th><th>Severity</th><th>Packet #</th><th>Reference Standard</th></tr>
+      {% for host in report.hosts %}
+        {% for session in host.sessions %}
+          {% for f in session.findings %}
+          <tr>
+            <td><code>{{ f.id }}</code></td>
+            <td>{{ host.host }}</td>
+            <td><code>{{ session.session_id[:8] }}…</code></td>
+            <td class="sev-{{ f.severity }}">{{ f.severity | upper }}</td>
+            <td><span class="evidence-ref">{{ f.evidence_ref.get('packet_number', '?') }}</span></td>
+            <td>{{ f.reference or '—' }}</td>
+          </tr>
+          {% endfor %}
+        {% endfor %}
+      {% endfor %}
+    </table>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="report-footer">
+    <p>SecureMailScope v{{ report.tool_version }} — Passive Forensic Analysis — No active network connections were made.</p>
+    <p class="sha256">Source PCAP: {{ report.source_pcap_sha256 }} | Report ID: {{ report.report_id }}</p>
+  </div>
+
+</div>
+</body>
+</html>

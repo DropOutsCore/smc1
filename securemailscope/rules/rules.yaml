@@ -1,0 +1,159 @@
+# SecureMailScope — Weakness Rule Engine
+# ----------------------------------------
+# Rules are evaluated in order. Each rule produces a Finding when its
+# condition evaluates to True.
+#
+# Condition variables available at evaluation time:
+#   tls       — TLSHandshakeInfo fields (tls.version, tls.cipher_suite, tls.pfs, …)
+#   cert      — CertificateInfo fields for the leaf cert  (cert.key_length, cert.is_expired, …)
+#   session   — EmailSession fields  (session.starttls_detected, session.downgrade_suspected, …)
+#
+# Severity levels: critical | high | medium | low | informational
+#
+# To add a new rule: add an entry here and restart analysis — no code changes needed.
+
+rules:
+
+  # ─────────────────────────── TLS VERSION ────────────────────────────────
+
+  - id: deprecated-tls-ssl3
+    category: deprecated-protocol
+    condition: "tls.tls_version in ['SSLv3']"
+    severity: critical
+    description: "SSLv3 is negotiated — vulnerable to POODLE (CVE-2014-3566)"
+    reference: "IETF RFC 7568"
+    cwe: "CWE-326"
+
+  - id: deprecated-tls-10
+    category: deprecated-protocol
+    condition: "tls.tls_version in ['TLS1.0']"
+    severity: high
+    description: "TLS 1.0 is negotiated — deprecated by NIST and IETF (RFC 8996)"
+    reference: "IETF RFC 8996, NIST SP 800-52 Rev.2"
+    cwe: "CWE-326"
+
+  - id: deprecated-tls-11
+    category: deprecated-protocol
+    condition: "tls.tls_version in ['TLS1.1']"
+    severity: high
+    description: "TLS 1.1 is negotiated — deprecated by NIST and IETF (RFC 8996)"
+    reference: "IETF RFC 8996, NIST SP 800-52 Rev.2"
+    cwe: "CWE-326"
+
+  # ─────────────────────────── CIPHER SUITES ──────────────────────────────
+
+  - id: insecure-cipher
+    category: weak-cipher
+    condition: "tls.cipher_strength == 'insecure'"
+    severity: critical
+    description: "An insecure cipher suite is negotiated (RC4, NULL, export-grade, or 3DES)"
+    reference: "IETF RFC 7465 (RC4), RFC 6151 (MD5)"
+    cwe: "CWE-327"
+
+  - id: weak-cipher
+    category: weak-cipher
+    condition: "tls.cipher_strength == 'weak'"
+    severity: high
+    description: "A weak cipher suite is negotiated (no PFS or weak key exchange)"
+    reference: "NIST SP 800-52 Rev.2"
+    cwe: "CWE-327"
+
+  # ─────────────────────────── FORWARD SECRECY ────────────────────────────
+
+  - id: no-pfs
+    category: no-forward-secrecy
+    condition: "not tls.pfs and tls.tls_version not in ['TLS1.3', 'unknown']"
+    severity: medium
+    description: "Cipher suite does not provide Perfect Forward Secrecy (PFS)"
+    reference: "NIST SP 800-52 Rev.2 §3.3.1"
+    cwe: "CWE-311"
+
+  # ─────────────────────────── CERTIFICATE — EXPIRY ───────────────────────
+
+  - id: cert-expired
+    category: certificate-validity
+    condition: "cert.is_expired"
+    severity: critical
+    description: "Server certificate is expired"
+    reference: "RFC 5280 §4.1.2.5"
+    cwe: "CWE-298"
+
+  - id: cert-not-yet-valid
+    category: certificate-validity
+    condition: "cert.is_not_yet_valid"
+    severity: high
+    description: "Server certificate is not yet valid (future not-before date)"
+    reference: "RFC 5280 §4.1.2.5"
+    cwe: "CWE-298"
+
+  - id: cert-expiring-soon
+    category: certificate-validity
+    condition: "cert.expiring_within_30_days and not cert.is_expired"
+    severity: low
+    description: "Server certificate expires within 30 days"
+    reference: "RFC 5280"
+    cwe: "CWE-298"
+
+  # ─────────────────────────── CERTIFICATE — KEY ──────────────────────────
+
+  - id: weak-key-rsa
+    category: weak-key
+    condition: "cert.key_algorithm == 'RSA' and cert.key_length < 2048"
+    severity: high
+    description: "RSA public key length is below 2048 bits"
+    reference: "NIST SP 800-57 Part 1 Rev.5"
+    cwe: "CWE-326"
+
+  - id: weak-key-ecc
+    category: weak-key
+    condition: "'EC' in cert.key_algorithm and cert.key_length < 224"
+    severity: high
+    description: "ECC public key length is below 224 bits"
+    reference: "NIST SP 800-57 Part 1 Rev.5"
+    cwe: "CWE-326"
+
+  # ─────────────────────────── CERTIFICATE — SIGNATURE ────────────────────
+
+  - id: weak-signature-algorithm
+    category: weak-signature
+    condition: "cert.signature_algorithm_weak"
+    severity: high
+    description: "Certificate uses a weak signature algorithm (MD5 or SHA-1)"
+    reference: "CA/Browser Forum Baseline Requirements, RFC 6151"
+    cwe: "CWE-327"
+
+  # ─────────────────────────── CERTIFICATE — TRUST ────────────────────────
+
+  - id: self-signed-cert
+    category: certificate-trust
+    condition: "cert.is_self_signed"
+    severity: medium
+    description: "Server certificate is self-signed"
+    reference: "RFC 5280"
+    cwe: "CWE-295"
+
+  - id: hostname-mismatch
+    category: certificate-trust
+    condition: "cert.hostname_match == False"
+    severity: high
+    description: "Certificate hostname does not match observed SNI"
+    reference: "RFC 6125"
+    cwe: "CWE-297"
+
+  # ─────────────────────────── STARTTLS / SESSION ──────────────────────────
+
+  - id: starttls-downgrade
+    category: starttls-downgrade
+    condition: "session.downgrade_suspected"
+    severity: critical
+    description: "STARTTLS downgrade attack suspected — plaintext continued after STARTTLS command"
+    reference: "RFC 3207, BASTA! research"
+    cwe: "CWE-319"
+
+  - id: no-starttls
+    category: starttls-missing
+    condition: "not session.starttls_detected and not session.is_implicit_tls"
+    severity: high
+    description: "No STARTTLS negotiation detected — email may be transmitted in plaintext"
+    reference: "RFC 3207, RFC 8314"
+    cwe: "CWE-319"

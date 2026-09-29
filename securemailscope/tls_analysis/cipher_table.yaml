@@ -1,0 +1,63 @@
+# TLS cipher suite strength lookup table
+# Source: IANA TLS Cipher Suite Registry + NIST SP 800-52 Rev.2
+# Strength values: strong | acceptable | weak | insecure
+# Update this file to adjust strength classifications without code changes.
+
+ciphers:
+
+  # ── TLS 1.3 suites (AEAD only, always strong) ────────────────────────────
+  TLS_AES_256_GCM_SHA384:         { strength: strong,     pfs: true,  notes: "TLS 1.3 mandatory" }
+  TLS_AES_128_GCM_SHA256:         { strength: strong,     pfs: true,  notes: "TLS 1.3 mandatory" }
+  TLS_CHACHA20_POLY1305_SHA256:   { strength: strong,     pfs: true,  notes: "TLS 1.3 mandatory" }
+  TLS_AES_128_CCM_SHA256:         { strength: acceptable, pfs: true,  notes: "TLS 1.3 CCM" }
+  TLS_AES_128_CCM_8_SHA256:       { strength: weak,       pfs: true,  notes: "Truncated tag" }
+
+  # ── ECDHE suites (PFS) ───────────────────────────────────────────────────
+  TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384:     { strength: strong,     pfs: true }
+  TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256:     { strength: strong,     pfs: true }
+  TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256: { strength: strong,   pfs: true }
+  TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384:   { strength: strong,     pfs: true }
+  TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256:   { strength: strong,     pfs: true }
+  TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256: { strength: strong, pfs: true }
+  TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384:     { strength: acceptable, pfs: true,  notes: "CBC mode" }
+  TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256:     { strength: acceptable, pfs: true,  notes: "CBC mode" }
+  TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA:        { strength: acceptable, pfs: true,  notes: "CBC+SHA1" }
+  TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA:        { strength: acceptable, pfs: true,  notes: "CBC+SHA1" }
+
+  # ── DHE suites (PFS) ─────────────────────────────────────────────────────
+  TLS_DHE_RSA_WITH_AES_256_GCM_SHA384:       { strength: strong,     pfs: true }
+  TLS_DHE_RSA_WITH_AES_128_GCM_SHA256:       { strength: strong,     pfs: true }
+  TLS_DHE_RSA_WITH_AES_256_CBC_SHA256:       { strength: acceptable, pfs: true,  notes: "CBC mode" }
+  TLS_DHE_RSA_WITH_AES_128_CBC_SHA256:       { strength: acceptable, pfs: true,  notes: "CBC mode" }
+  TLS_DHE_RSA_WITH_AES_256_CBC_SHA:          { strength: acceptable, pfs: true,  notes: "CBC+SHA1" }
+  TLS_DHE_RSA_WITH_AES_128_CBC_SHA:          { strength: acceptable, pfs: true,  notes: "CBC+SHA1" }
+
+  # ── Static RSA suites (no PFS) ───────────────────────────────────────────
+  TLS_RSA_WITH_AES_256_GCM_SHA384:           { strength: weak,       pfs: false, notes: "No PFS" }
+  TLS_RSA_WITH_AES_128_GCM_SHA256:           { strength: weak,       pfs: false, notes: "No PFS" }
+  TLS_RSA_WITH_AES_256_CBC_SHA256:           { strength: weak,       pfs: false, notes: "No PFS" }
+  TLS_RSA_WITH_AES_128_CBC_SHA256:           { strength: weak,       pfs: false, notes: "No PFS" }
+  TLS_RSA_WITH_AES_256_CBC_SHA:              { strength: weak,       pfs: false, notes: "No PFS + SHA1" }
+  TLS_RSA_WITH_AES_128_CBC_SHA:              { strength: weak,       pfs: false, notes: "No PFS + SHA1" }
+  TLS_RSA_WITH_3DES_EDE_CBC_SHA:             { strength: insecure,   pfs: false, notes: "SWEET32" }
+
+  # ── Insecure/deprecated suites ───────────────────────────────────────────
+  TLS_RSA_WITH_RC4_128_MD5:                  { strength: insecure, pfs: false, notes: "RC4+MD5 — prohibited RFC 7465" }
+  TLS_RSA_WITH_RC4_128_SHA:                  { strength: insecure, pfs: false, notes: "RC4 — prohibited RFC 7465" }
+  TLS_RSA_EXPORT_WITH_RC4_40_MD5:            { strength: insecure, pfs: false, notes: "Export-grade" }
+  TLS_RSA_EXPORT_WITH_RC2_CBC_40_MD5:        { strength: insecure, pfs: false, notes: "Export-grade" }
+  TLS_RSA_WITH_NULL_MD5:                     { strength: insecure, pfs: false, notes: "NULL encryption" }
+  TLS_RSA_WITH_NULL_SHA:                     { strength: insecure, pfs: false, notes: "NULL encryption" }
+  TLS_RSA_WITH_NULL_SHA256:                  { strength: insecure, pfs: false, notes: "NULL encryption" }
+  TLS_NULL_WITH_NULL_NULL:                   { strength: insecure, pfs: false, notes: "No security at all" }
+  TLS_RSA_WITH_DES_CBC_SHA:                  { strength: insecure, pfs: false, notes: "DES — trivially breakable" }
+  TLS_DHE_RSA_EXPORT_WITH_DES40_CBC_SHA:     { strength: insecure, pfs: false, notes: "FREAK/Logjam" }
+  TLS_RSA_EXPORT_WITH_DES40_CBC_SHA:         { strength: insecure, pfs: false, notes: "Export-grade" }
+
+  # ── Anonymous suites (no authentication) ────────────────────────────────
+  TLS_DH_anon_WITH_AES_256_CBC_SHA:          { strength: insecure, pfs: false, notes: "Anonymous — no auth" }
+  TLS_DH_anon_WITH_AES_128_CBC_SHA:          { strength: insecure, pfs: false, notes: "Anonymous — no auth" }
+  TLS_ECDH_anon_WITH_AES_256_CBC_SHA:        { strength: insecure, pfs: false, notes: "Anonymous — no auth" }
+
+# Default for unknown/unlisted cipher suites
+unknown_cipher_default: { strength: unknown, pfs: false }

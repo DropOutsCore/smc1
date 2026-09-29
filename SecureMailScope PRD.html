@@ -1,0 +1,353 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}</style><style>:root{color-scheme:light dark;--md-bg:#fff;--md-text:rgba(0,0,0,.8);--md-muted:rgba(0,0,0,.6);--md-fill:rgba(0,0,0,.04);--md-fill-strong:rgba(0,0,0,.06);--md-rule:rgba(0,0,0,.1);--md-rule-strong:rgba(0,0,0,.16);--md-link:hsl(210 100% 45%)}@media (prefers-color-scheme:dark){:root:where(:not([data-theme="light"])){--md-bg:#0d0d0d;--md-text:rgba(255,255,255,.85);--md-muted:rgba(255,255,255,.6);--md-fill:rgba(255,255,255,.06);--md-fill-strong:rgba(255,255,255,.09);--md-rule:rgba(255,255,255,.14);--md-rule-strong:rgba(255,255,255,.22);--md-link:hsl(210 100% 72%)}}:root[data-theme="dark"]{color-scheme:dark;--md-bg:#0d0d0d;--md-text:rgba(255,255,255,.85);--md-muted:rgba(255,255,255,.6);--md-fill:rgba(255,255,255,.06);--md-fill-strong:rgba(255,255,255,.09);--md-rule:rgba(255,255,255,.14);--md-rule-strong:rgba(255,255,255,.22);--md-link:hsl(210 100% 72%)}:root[data-theme="light"]{color-scheme:light}@media print{:root,:root[data-theme="dark"]{color-scheme:light;--md-bg:#fff;--md-text:rgba(0,0,0,.8);--md-muted:rgba(0,0,0,.6);--md-fill:rgba(0,0,0,.04);--md-fill-strong:rgba(0,0,0,.06);--md-rule:rgba(0,0,0,.1);--md-rule-strong:rgba(0,0,0,.16);--md-link:hsl(210 100% 45%)}}body{background:var(--md-bg);color:var(--md-text);max-width:720px;margin:0 auto;padding:32px;display:flex;flex-direction:column;gap:10px;font:14px/1.55 -apple-system,BlinkMacSystemFont,'SF Pro','Segoe UI',sans-serif;overflow-wrap:break-word}body>:first-child{margin-top:0}h1,h2,h3,h4,h5,h6{margin:6px 0 0;line-height:1.25;font-weight:600;text-wrap:balance}h1{font-size:1.35em}h2{font-size:1.15em;color:var(--md-muted)}h3,h4,h5,h6{font-size:1em}p,ul,ol,blockquote,table,pre,hr{margin:0}strong{font-weight:600}a{color:var(--md-link);text-decoration:none}a:hover{text-decoration:underline}ul,ol{display:flex;flex-direction:column;gap:6px;padding-left:22px}ul{list-style:disc}ol{list-style:decimal}:is(li,td,th)>*+:is(p,ul,ol,blockquote){margin-top:6px}blockquote{display:flex;flex-direction:column;gap:10px;border-left:2px solid var(--md-rule);padding-left:10px;color:var(--md-muted)}:not(pre)>code{background:var(--md-fill);padding:1px 3px;border-radius:4px;font:.92em 'SF Mono',ui-monospace,Menlo,Consolas,monospace}a>code{background:none;color:inherit}pre{background:var(--md-fill);padding:10px 12px;border-radius:6px;overflow-x:auto;font:12px/1.5 'SF Mono',ui-monospace,Menlo,Consolas,monospace;margin-block:4px}pre code{background:none;padding:0;font:inherit}table{width:100%;border-collapse:separate;border-spacing:2px;font:inherit}th,td{padding:6px 8px;border-radius:3px;text-align:left;vertical-align:top}th{background:var(--md-fill-strong);font-weight:600}td{background:var(--md-fill)}:is(th,td) :not(pre)>code{background:transparent}hr{border:0;border-top:1px solid var(--md-rule-strong);margin-block:10px}img{max-width:100%;height:auto;border-radius:4px}</style>
+</head><body>
+<h1>SecureMailScope</h1>
+<h3>Product Requirements Document</h3>
+<p><strong>AI-Assisted Cryptographic Security Posture Assessment for Secure Email Communications</strong></p>
+<hr>
+<h2>1. Overview</h2>
+<p>Email transport security (SMTP, IMAP, POP3 over TLS/STARTTLS) is frequently misconfigured — obsolete TLS versions, weak ciphers, broken STARTTLS, expired or misissued certificates — yet most network analysis tools only decode packets; they don't score <em>risk</em> or tell an analyst what to fix first.</p>
+<p><strong>SecureMailScope</strong> is a passive network forensic framework that ingests PCAP captures of email traffic, reconstructs the full session lifecycle (TCP → protocol handshake → STARTTLS → TLS negotiation → certificate exchange), and uses AI/ML to classify cryptographic risk, flag anomalous TLS behavior, and generate prioritized, exportable security reports.</p>
+<p><strong>Primary users:</strong> SOC analysts, Digital Forensics &amp; Incident Response (DFIR) teams, enterprise security/email administrators, compliance auditors.</p>
+<hr>
+<h2>2. Goals</h2>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Goal</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>G1</td>
+<td>Passively analyze SMTP/IMAP/POP3 PCAPs with zero active interaction with the network</td>
+</tr>
+<tr>
+<td>G2</td>
+<td>Reconstruct complete sessions and TLS handshakes with high fidelity</td>
+</tr>
+<tr>
+<td>G3</td>
+<td>Automatically detect cryptographic weaknesses against current best-practice baselines (NIST/IETF)</td>
+</tr>
+<tr>
+<td>G4</td>
+<td>Apply AI/ML to score risk, detect anomalies, and rank findings by severity</td>
+</tr>
+<tr>
+<td>G5</td>
+<td>Produce forensic-grade, exportable reports (JSON/PDF/HTML) and a live dashboard</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Non-goals:</strong> decrypting TLS payloads without keys, active MITM testing, real-time traffic blocking, or acting as a mail server/proxy.</p>
+<hr>
+<h2>3. Personas</h2>
+<ul>
+<li><strong>SOC Analyst</strong> — needs a fast, prioritized view of which mail servers/sessions are cryptographically weak, right now.</li>
+<li><strong>DFIR Investigator</strong> — needs a reproducible, chain-of-custody-friendly report tying findings to specific packets/streams for post-incident review.</li>
+<li><strong>Enterprise Email Admin</strong> — needs plain-language remediation guidance (e.g., &quot;disable TLS 1.0 on mail.corp.com&quot;) without needing to read raw handshake bytes.</li>
+</ul>
+<hr>
+<h2>4. Scope</h2>
+<p><strong>In scope</strong></p>
+<ul>
+<li>Offline/batch analysis of <code>.pcap</code>/<code>.pcapng</code> files</li>
+<li>SMTP, IMAP, POP3 (including implicit-TLS variants: SMTPS 465, IMAPS 993, POP3S 995)</li>
+<li>STARTTLS detection and downgrade-attempt detection</li>
+<li>TLS 1.0–1.3 handshake parsing, cipher suite / key exchange extraction</li>
+<li>X.509 certificate parsing, chain, and expiry validation</li>
+<li>AI/ML risk scoring, anomaly detection, and mitigation recommendations</li>
+<li>JSON/PDF/HTML report export + interactive dashboard</li>
+</ul>
+<p><strong>Out of scope (v1)</strong></p>
+<ul>
+<li>Decrypting application-layer email content</li>
+<li>Live/inline packet capture or blocking</li>
+<li>Non-email protocols (HTTP, FTP, etc.)</li>
+<li>Automated remediation (the tool recommends; it does not act)</li>
+</ul>
+<hr>
+<h2>5. Functional Requirements</h2>
+<h3>5.1 Protocol &amp; Session Reconstruction</h3>
+<ul>
+<li><strong>FR-1</strong> Auto-identify SMTP/IMAP/POP3 traffic by port and payload signature (not port alone, to catch non-standard ports).</li>
+<li><strong>FR-2</strong> Reassemble full TCP streams per session, handling retransmission, out-of-order segments, and fragmentation.</li>
+<li><strong>FR-3</strong> Detect STARTTLS command/response and mark the exact transition point from plaintext to encrypted stream.</li>
+<li><strong>FR-4</strong> Flag STARTTLS stripping/downgrade patterns (e.g., plaintext continues after a STARTTLS command was observed).</li>
+</ul>
+<h3>5.2 TLS Handshake Analysis</h3>
+<ul>
+<li><strong>FR-5</strong> Parse ClientHello/ServerHello, extract negotiated TLS version, cipher suite, extensions (SNI, ALPN, supported groups).</li>
+<li><strong>FR-6</strong> Identify key exchange mechanism (RSA static, ECDHE, DHE) and derive Perfect Forward Secrecy (PFS) status.</li>
+<li><strong>FR-7</strong> Detect deprecated/insecure protocol versions (SSLv2/3, TLS 1.0/1.1) and weak/export-grade or NULL/RC4/3DES cipher suites.</li>
+<li><strong>FR-8</strong> Detect anomalous or malformed handshakes (unexpected renegotiation, incomplete handshake, non-standard extensions).</li>
+</ul>
+<h3>5.3 Certificate Analysis</h3>
+<ul>
+<li><strong>FR-9</strong> Extract X.509 certificates from the handshake (Certificate message) and reconstruct the presented chain.</li>
+<li><strong>FR-10</strong> Validate chain of trust, and separately report (without failing analysis on) self-signed or untrusted roots.</li>
+<li><strong>FR-11</strong> Check validity window (not-yet-valid / expired) and expiry-proximity warnings (e.g., &lt;30 days).</li>
+<li><strong>FR-12</strong> Extract public key algorithm and key length (flag RSA &lt;2048, ECC &lt;224) and signature algorithm (flag MD5/SHA-1 signed certs).</li>
+<li><strong>FR-13</strong> Check hostname/SAN match against observed SNI/destination.</li>
+</ul>
+<h3>5.4 Cryptographic Weakness Detection</h3>
+<ul>
+<li><strong>FR-14</strong> Rule engine mapping findings (5.1–5.3) to a curated weakness catalog (deprecated TLS, weak ciphers, weak keys, no-PFS, cert issues), each tagged with CWE/CVE or standards reference (NIST SP 800-52, IETF RFC 8996) where applicable.</li>
+<li><strong>FR-15</strong> Deduplicate and correlate repeated findings across sessions to the same host/service.</li>
+</ul>
+<h3>5.5 AI/ML Risk Intelligence</h3>
+<ul>
+<li><strong>FR-16</strong> Feature extraction pipeline converting each session's protocol/TLS/certificate attributes into a structured feature vector.</li>
+<li><strong>FR-17</strong> Supervised <strong>risk classification model</strong> producing a per-session and per-host cryptographic risk score (e.g., Critical/High/Medium/Low) with contributing-factor explainability.</li>
+<li><strong>FR-18</strong> Unsupervised <strong>anomaly detection model</strong> (e.g., isolation forest / autoencoder) to flag TLS sessions that deviate from the baseline of &quot;normal&quot; traffic for that environment, catching novel/unlabeled misconfigurations or attack patterns.</li>
+<li><strong>FR-19</strong> Threat prioritization: rank findings by (severity × exposure × exploitability) rather than raw count.</li>
+<li><strong>FR-20</strong> Auto-generated, human-readable mitigation recommendations per finding (templated, informed by the finding type).</li>
+</ul>
+<h3>5.6 Reporting &amp; Visualization</h3>
+<ul>
+<li><strong>FR-21</strong> Export full findings as structured <strong>JSON</strong> (machine-readable, for SIEM/SOAR ingestion).</li>
+<li><strong>FR-22</strong> Export a formatted <strong>PDF</strong> forensic report (executive summary + technical appendix + evidence references).</li>
+<li><strong>FR-23</strong> Export an <strong>HTML</strong> report viewable offline.</li>
+<li><strong>FR-24</strong> Interactive <strong>dashboard</strong>: posture overview, per-host drill-down, findings table with filters/sort, session timeline view.</li>
+</ul>
+<hr>
+<h2>6. Non-Functional Requirements</h2>
+<table>
+<thead>
+<tr>
+<th>Category</th>
+<th>Requirement</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Performance</td>
+<td>Process a 1 GB PCAP with mixed email traffic in a bounded, predictable time; stream-process rather than load entire capture in memory</td>
+</tr>
+<tr>
+<td>Scalability</td>
+<td>Support batch analysis of multiple PCAPs / large enterprise captures</td>
+</tr>
+<tr>
+<td>Forensic integrity</td>
+<td>Read-only analysis; never modify source PCAP; every report finding traceable to packet/stream offsets for evidentiary use</td>
+</tr>
+<tr>
+<td>Security</td>
+<td>Sandbox untrusted PCAP parsing (malformed captures are a common attack vector); no external network calls during analysis</td>
+</tr>
+<tr>
+<td>Usability</td>
+<td>Findings must be understandable by an admin without deep TLS expertise</td>
+</tr>
+<tr>
+<td>Extensibility</td>
+<td>Weakness rule catalog and ML feature set should be updatable without code changes (config/rules-driven)</td>
+</tr>
+<tr>
+<td>Compliance</td>
+<td>Align detection baselines with NIST SP 800-52 Rev.2 and current IETF deprecation RFCs</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2>7. High-Level Architecture</h2>
+<pre><code>PCAP Input
+   │
+   ▼
+[Capture Ingestion] → tshark/pyshark or Scapy for parsing
+   │
+   ▼
+[TCP Stream Reassembly]
+   │
+   ▼
+[Protocol Identifier] → SMTP / IMAP / POP3 classifier
+   │
+   ▼
+[STARTTLS &amp; TLS Handshake Parser] → cipher/version/kex extraction
+   │
+   ▼
+[Certificate Extractor &amp; Validator] → X.509 parsing (cryptography / pyOpenSSL)
+   │
+   ▼
+[Feature Extraction Layer] ───────────────┐
+   │                                      │
+   ▼                                      ▼
+[Rule-Based Weakness Engine]     [AI/ML Risk &amp; Anomaly Models]
+   │                                      │
+   └──────────────┬───────────────────────┘
+                  ▼
+        [Risk Scoring &amp; Prioritization]
+                  │
+                  ▼
+   [Report Generator]  →  JSON / PDF / HTML
+                  │
+                  ▼
+        [Interactive Dashboard]
+</code></pre>
+<p><strong>Suggested stack:</strong> Python (pyshark/Scapy for capture parsing, <code>cryptography</code>/<code>pyOpenSSL</code> for X.509), scikit-learn or XGBoost for classification, an isolation forest or lightweight autoencoder for anomaly detection, FastAPI backend, React + charting library for the dashboard, WeasyPrint/ReportLab for PDF export.</p>
+<hr>
+<h2>8. AI/ML Component Detail</h2>
+<ul>
+<li><strong>Inputs (feature vector per session):</strong> protocol type, TLS version, cipher suite (+ strength category), key exchange type, PFS flag, cert key length/algorithm, cert validity window, chain trust status, handshake anomalies, STARTTLS timing/behavior.</li>
+<li><strong>Risk classification model:</strong> multi-class or ordinal classifier → {Critical, High, Medium, Low, Informational}, trained on labeled configurations built from known-good/known-weak baselines; must expose feature importances so a finding can say <em>why</em> it's rated Critical.</li>
+<li><strong>Anomaly detection model:</strong> unsupervised, trained per-environment on the observed traffic baseline, to catch misconfigurations or behaviors the rule engine doesn't have a rule for yet (novel downgrade techniques, unusual cert reuse, timing anomalies).</li>
+<li><strong>Recommendation generation:</strong> rule-templated (not free-form generative) to guarantee accuracy and auditability of security guidance — each recommendation is deterministically tied to a finding ID.</li>
+</ul>
+<hr>
+<h2>9. Deliverables</h2>
+<ol>
+<li>Working analysis pipeline (PCAP → reconstructed sessions → TLS/cert findings)</li>
+<li>Trained risk-classification + anomaly-detection models with documented feature set</li>
+<li>JSON schema for findings export</li>
+<li>PDF and HTML forensic report templates</li>
+<li>Interactive dashboard (posture overview + drill-down)</li>
+<li>Documentation: setup, rule catalog reference, model card</li>
+</ol>
+<hr>
+<h2>10. Success Metrics</h2>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Target</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Protocol identification accuracy</td>
+<td>&gt;95% on labeled test PCAPs</td>
+</tr>
+<tr>
+<td>TLS/cert field extraction accuracy</td>
+<td>&gt;98% on well-formed handshakes</td>
+</tr>
+<tr>
+<td>False positive rate on weakness findings</td>
+<td>&lt;5%</td>
+</tr>
+<tr>
+<td>Anomaly detection recall on injected test attacks</td>
+<td>&gt;90%</td>
+</tr>
+<tr>
+<td>Time to generate a full report for a 500MB PCAP</td>
+<td>Under a few minutes on reference hardware</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2>11. Milestones (suggested phasing)</h2>
+<table>
+<thead>
+<tr>
+<th>Phase</th>
+<th>Focus</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>PCAP ingestion, TCP reassembly, protocol identification, STARTTLS detection</td>
+</tr>
+<tr>
+<td>2</td>
+<td>TLS handshake parsing, certificate extraction &amp; validation, rule-based weakness engine</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Feature pipeline + ML risk scoring + anomaly detection</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Report generation (JSON/PDF/HTML), dashboard, end-to-end testing &amp; demo prep</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2>12. Risks &amp; Assumptions</h2>
+<ul>
+<li><strong>Assumption:</strong> Analysis is passive/offline on captured PCAPs — no assumption of live network access or decryption keys.</li>
+<li><strong>Risk:</strong> Malformed/adversarial PCAPs could crash parsers → mitigate with defensive parsing and sandboxing.</li>
+<li><strong>Risk:</strong> ML risk model needs representative labeled training data — mitigate by combining rule-engine baselines (rules give guaranteed-correct labels) with supervised learning on top.</li>
+<li><strong>Risk:</strong> TLS 1.3's encrypted handshake fields (post-ServerHello) limit passive visibility into some parameters — v1 scope should rely on what's visible in ClientHello/ServerHello/Certificate messages and document this limitation explicitly in the report.</li>
+</ul>
+<hr>
+<h2>13. Traceability: Problem Statement → Requirement</h2>
+<table>
+<thead>
+<tr>
+<th>Problem statement item</th>
+<th>Requirement(s)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Passive analysis of SMTP/IMAP/POP3 PCAPs</td>
+<td>FR-1</td>
+</tr>
+<tr>
+<td>STARTTLS negotiation detection</td>
+<td>FR-3, FR-4</td>
+</tr>
+<tr>
+<td>TCP stream reconstruction</td>
+<td>FR-2</td>
+</tr>
+<tr>
+<td>TLS handshake reconstruction</td>
+<td>FR-5, FR-8</td>
+</tr>
+<tr>
+<td>TLS version / cipher suite / key exchange ID</td>
+<td>FR-5, FR-6</td>
+</tr>
+<tr>
+<td>X.509 extraction &amp; chain validation</td>
+<td>FR-9, FR-10</td>
+</tr>
+<tr>
+<td>Certificate expiry analysis</td>
+<td>FR-11</td>
+</tr>
+<tr>
+<td>Public key algorithm/length, signature algorithm</td>
+<td>FR-12</td>
+</tr>
+<tr>
+<td>Weak crypto / deprecated TLS detection</td>
+<td>FR-7, FR-14</td>
+</tr>
+<tr>
+<td>Forward Secrecy assessment</td>
+<td>FR-6</td>
+</tr>
+<tr>
+<td>AI-based risk scoring</td>
+<td>FR-17</td>
+</tr>
+<tr>
+<td>AI-assisted anomaly detection</td>
+<td>FR-18</td>
+</tr>
+<tr>
+<td>Prioritized findings</td>
+<td>FR-19</td>
+</tr>
+<tr>
+<td>Mitigation recommendations</td>
+<td>FR-20</td>
+</tr>
+<tr>
+<td>JSON/PDF/HTML export</td>
+<td>FR-21, FR-22, FR-23</td>
+</tr>
+<tr>
+<td>Interactive dashboard</td>
+<td>FR-24</td>
+</tr>
+</tbody>
+</table>
+
+</body></html>
