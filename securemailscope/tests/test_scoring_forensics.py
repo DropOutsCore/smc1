@@ -29,10 +29,11 @@ def test_grade_thresholds():
 
 
 def test_host_grade_no_findings():
-    """A host with no findings gets grade A."""
+    """A host with no findings gets grade A or A+ (Excellent)."""
     grade = compute_host_grade("1.2.3.4:25", [])
-    assert grade.grade == "A"
+    assert grade.grade in ("A", "A+")
     assert grade.score == 0
+    assert grade.label in ("Strong", "Excellent")
 
 
 def test_host_grade_critical():

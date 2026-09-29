@@ -149,21 +149,25 @@ def build_report(
         score = grade_obj.score if grade_obj else 0
         grade_delta = grade_obj.grade_delta if grade_obj else None
         finding_counts = grade_obj.finding_counts if grade_obj else {}
+        grade_label = getattr(grade_obj, "label", "Critical") if grade_obj else "Critical"
+        why_this_grade = getattr(grade_obj, "why_this_grade", None) if grade_obj else None
 
         sessions_output = [_build_session_dict(sr) for sr in results]
 
         hosts_output.append({
             "host": host,
             "posture_grade": grade,
+            "posture_label": grade_label,
             "posture_score": score,
             "grade_delta": grade_delta,
             "finding_summary": finding_counts,
+            "why_this_grade": why_this_grade,
             "sessions": sessions_output,
         })
 
     # Sort hosts by grade (worst first)
-    grade_order = {"F": 0, "D": 1, "C": 2, "B": 3, "A": 4}
-    hosts_output.sort(key=lambda h: grade_order.get(h["posture_grade"], 5))
+    grade_order = {"F": 0, "E": 1, "D": 2, "C": 3, "B": 4, "A": 5, "A+": 6}
+    hosts_output.sort(key=lambda h: grade_order.get(h["posture_grade"], 7))
 
     report = {
         "report_id": custody.report_id,

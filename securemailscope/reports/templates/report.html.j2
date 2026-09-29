@@ -39,10 +39,12 @@
     display: flex; align-items: center; justify-content: center;
     font-size: 24px; font-weight: 800;
   }
+  .grade-A-plus, .grade-A\+ { background: rgba(63,185,80,0.22); color: #3fb950; border: 2px solid #3fb950; box-shadow: 0 0 10px rgba(63,185,80,0.3); }
   .grade-A { background: rgba(63,185,80,0.15); color: var(--grade-a); border: 2px solid var(--grade-a); }
   .grade-B { background: rgba(88,166,255,0.15); color: var(--grade-b); border: 2px solid var(--grade-b); }
   .grade-C { background: rgba(210,153,34,0.15); color: var(--grade-c); border: 2px solid var(--grade-c); }
   .grade-D { background: rgba(240,136,62,0.15); color: var(--grade-d); border: 2px solid var(--grade-d); }
+  .grade-E { background: rgba(248,113,113,0.15); color: #f87171; border: 2px solid #f87171; }
   .grade-F { background: rgba(248,81,73,0.15); color: var(--grade-f); border: 2px solid var(--grade-f); }
   .host-card h3 { font-size: 15px; font-weight: 600; padding-right: 70px; word-break: break-all; }
   .host-card .delta { font-size: 12px; color: var(--muted); margin-top: 4px; }
@@ -138,12 +140,17 @@
     <div class="host-grid">
       {% for host in report.hosts %}
       <div class="host-card">
-        <div class="grade-badge grade-{{ host.posture_grade }}">{{ host.posture_grade }}</div>
+        <div class="grade-badge grade-{{ host.posture_grade | replace('+', '-plus') }}">{{ host.posture_grade }}</div>
         <h3>{{ host.host }}</h3>
+        <div style="margin-top:4px;">
+          <span style="font-size:12px;font-weight:700;color:{% if host.posture_grade in ['A+', 'A'] %}#3fb950{% elif host.posture_grade == 'B' %}#58a6ff{% elif host.posture_grade == 'C' %}#d29922{% else %}#f85149{% endif %};">
+            Security Posture: {{ host.posture_grade }} ({{ host.posture_label or 'Strong' }})
+          </span>
+        </div>
         {% if host.grade_delta %}
         <div class="delta">📈 {{ host.grade_delta }}</div>
         {% endif %}
-        <div class="delta">Score: {{ host.posture_score }} | Sessions: {{ host.sessions | length }}</div>
+        <div class="delta">Risk Score: {{ host.posture_score }} / 100 | Sessions: {{ host.sessions | length }}</div>
         <div class="severity-pills" style="margin-top:10px;">
           {% if host.finding_summary.get('critical', 0) > 0 %}
           <span class="pill pill-critical">{{ host.finding_summary.critical }} Critical</span>
@@ -168,8 +175,97 @@
   <div class="section">
     <div class="section-title">
       Host: {{ host.host }}
-      <span class="grade-badge grade-{{ host.posture_grade }}" style="display:inline-flex;width:36px;height:36px;font-size:16px;vertical-align:middle;margin-left:12px;">{{ host.posture_grade }}</span>
+      <span class="grade-badge grade-{{ host.posture_grade | replace('+', '-plus') }}" style="display:inline-flex;width:36px;height:36px;font-size:16px;vertical-align:middle;margin-left:12px;">{{ host.posture_grade }}</span>
+      <span style="font-size:13px;font-weight:600;margin-left:8px;color:var(--muted);">Security Posture: <strong>{{ host.posture_grade }} ({{ host.posture_label or 'Strong' }})</strong> — Risk Score: {{ host.posture_score }}/100</span>
     </div>
+
+    <!-- Why This Grade? — Single Intuitive Posture Grade Breakdown -->
+    {% set wg = host.why_this_grade %}
+    {% if wg %}
+    <div style="margin-bottom:18px;background:rgba(88,166,255,0.04);border:1px solid rgba(88,166,255,0.25);border-radius:8px;padding:16px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+        <div>
+          <span style="font-size:11px;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:0.05em;">🛡️ Why This Grade? — Single Intuitive Security Posture</span>
+          <h3 style="margin:2px 0 0 0;font-size:15px;color:#f0f6fc;">
+            Security Posture: <strong style="color:{% if host.posture_grade in ['A+', 'A'] %}#3fb950{% elif host.posture_grade == 'B' %}#58a6ff{% elif host.posture_grade == 'C' %}#d29922{% else %}#f85149{% endif %};">{{ host.posture_grade }}</strong> ({{ host.posture_label or wg.label }})
+            <span style="font-size:12px;color:var(--muted);font-weight:400;margin-left:8px;">Risk Score: {{ host.posture_score }}/100 (Bracket: {{ wg.threshold_bracket }})</span>
+          </h3>
+        </div>
+        <span class="tag" style="background:#0d1117;color:var(--accent);border-color:var(--accent);font-weight:700;">
+          {{ wg.label | upper }}
+        </span>
+      </div>
+
+      <p style="font-size:12px;color:#c9d1d9;margin:6px 0 12px 0;line-height:1.5;">{{ wg.summary }}</p>
+
+      <!-- Grade Ladder Bar -->
+      {% if wg.grade_ladder %}
+      <div style="display:flex;gap:6px;margin-bottom:12px;overflow-x:auto;">
+        {% for step in wg.grade_ladder %}
+        <div style="flex:1;min-width:65px;padding:6px 4px;text-align:center;border-radius:6px;border:1px solid {% if step.active %}#3fb950{% else %}rgba(255,255,255,0.08){% endif %};background:{% if step.active %}rgba(63,185,80,0.15){% else %}rgba(0,0,0,0.2){% endif %};">
+          <div style="font-size:13px;font-weight:700;color:{% if step.active %}#3fb950{% else %}#8b949e{% endif %};">{{ step.grade }}</div>
+          <div style="font-size:9px;color:{% if step.active %}#e6edf3{% else %}#6e7681{% endif %};">{{ step.label }}</div>
+          <div style="font-size:8px;font-family:monospace;color:#6e7681;">{{ step.range }}</div>
+        </div>
+        {% endfor %}
+      </div>
+      {% endif %}
+
+      <!-- Determining Factors Table -->
+      {% if wg.determining_factors %}
+      <div style="margin-top:10px;">
+        <span style="font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;">Findings Causing This Grade (Deterministic Impact):</span>
+        <table style="margin-top:6px;">
+          <thead>
+            <tr>
+              <th>Finding / Rule</th>
+              <th>Observed on Wire</th>
+              <th>Score Impact</th>
+              <th>Severity</th>
+              <th>Packet Evidence</th>
+              <th>Impact on Posture Grade</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for f in wg.determining_factors %}
+            <tr>
+              <td><strong>{{ f.feature }}</strong><br/><span style="font-size:10px;color:var(--muted)">{{ f.rule_id }}</span></td>
+              <td><code>{{ f.observed_value }}</code></td>
+              <td style="color:var(--critical);font-weight:700;">+{{ f.score_contribution }}</td>
+              <td class="sev-{{ f.severity }}">{{ f.severity | upper }}</td>
+              <td><span class="evidence-ref">{{ f.evidence_ref }}</span></td>
+              <td style="font-size:11px;color:var(--muted)">{{ f.impact_on_grade }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% endif %}
+
+      <!-- Actionable Target -->
+      {% if wg.next_grade_target %}
+      <div style="margin-top:10px;padding:8px 12px;background:rgba(210,153,34,0.08);border:1px solid rgba(210,153,34,0.3);border-radius:6px;display:flex;justify-content:space-between;align-items:center;">
+        <span style="font-size:11px;color:#d29922;font-weight:600;">🎯 Path to Grade {{ wg.next_grade_target.target_grade }} ({{ wg.next_grade_target.target_label }}):</span>
+        <span style="font-size:11px;color:#e6edf3;">{{ wg.next_grade_target.top_remediation_action }}</span>
+      </div>
+      {% endif %}
+    </div>
+    {% endif %}
+
+    <!-- Host Posture Score Breakdown -->
+    {% if host.why_this_score %}
+    <div style="margin-bottom:18px;background:rgba(139,255,122,0.03);border:1px solid rgba(139,255,122,0.2);border-radius:8px;padding:14px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+        <strong style="color:var(--accent);font-size:13px;">🔍 Host Posture Score Breakdown — {{ host.host }}</strong>
+        <span class="tag" style="background:#0d1117;color:#3fb950;border-color:#3fb950;font-weight:700;">
+          Posture Score: {{ host.why_this_score.posture_score }} / 100 (Grade {{ host.why_this_score.posture_grade }})
+        </span>
+      </div>
+      {% if host.why_this_score.ascii_tree %}
+      <pre class="code-block" style="background:#0d1117;color:#3fb950;font-size:11px;line-height:1.45;margin:6px 0 0 0;">{{ host.why_this_score.ascii_tree }}</pre>
+      {% endif %}
+    </div>
+    {% endif %}
 
     {% for session in host.sessions %}
     <div class="session-detail">
@@ -235,6 +331,70 @@
         </div>
         {% endif %}
 
+        <!-- WHY THIS SCORE? (EXPLAINABLE AI & RISK BREAKDOWN) -->
+        {% if session.why_this_score %}
+        <div style="margin-top:16px;background:rgba(139,255,122,0.03);border:1px solid rgba(139,255,122,0.2);border-radius:8px;padding:14px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+            <strong style="color:var(--accent);font-size:13px;">🔍 Why This Score? — Transparent Risk Reasoning</strong>
+            <span class="tag" style="background:#0d1117;color:#3fb950;border-color:#3fb950;font-weight:700;">
+              Score: {{ session.why_this_score.risk_score }} / 100 ({{ session.why_this_score.severity | upper }})
+            </span>
+          </div>
+
+          <!-- ASCII Decision Tree -->
+          {% if session.why_this_score.ascii_tree %}
+          <pre class="code-block" style="background:#0d1117;color:#3fb950;font-size:11px;line-height:1.45;margin:8px 0 12px 0;">{{ session.why_this_score.ascii_tree }}</pre>
+          {% endif %}
+
+          <!-- Factor breakdown table -->
+          {% if session.why_this_score.contributing_factors %}
+          <table>
+            <thead>
+              <tr>
+                <th>Finding / Feature</th>
+                <th>Observed on Wire</th>
+                <th>Score Impact</th>
+                <th>Severity</th>
+                <th>Evidence Reference</th>
+                <th>Reason & Rationale</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for f in session.why_this_score.contributing_factors %}
+              <tr>
+                <td><strong>{{ f.feature }}</strong><br/><span style="font-size:10px;color:var(--muted)">{{ f.rule_id }}</span></td>
+                <td><code style="color:var(--high)">{{ f.observed_value }}</code></td>
+                <td style="color:var(--critical);font-weight:700;">+{{ f.score_contribution }}</td>
+                <td class="sev-{{ f.severity }}">{{ f.severity | upper }}</td>
+                <td><span class="evidence-ref">{{ f.evidence_reference }}</span></td>
+                <td style="font-size:12px;color:var(--muted)">{{ f.short_explanation }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+          {% else %}
+          <p style="color:var(--low);font-size:12px;margin:4px 0;">✓ Clean baseline: no adverse risk factors or security vulnerabilities detected.</p>
+          {% endif %}
+
+          <!-- Separated ML Anomaly Assessment -->
+          {% set ml = session.ml_anomaly_assessment or session.why_this_score.ml_anomaly_assessment %}
+          {% if ml %}
+          <div style="margin-top:12px;padding:10px 12px;background:rgba(88,166,255,0.06);border:1px solid rgba(88,166,255,0.2);border-radius:6px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+              <span style="font-size:11px;font-weight:700;color:var(--accent);text-transform:uppercase;">🤖 ML Anomaly Assessment (Independent Statistical Model)</span>
+              <span class="tag" style="color:var(--accent);border-color:var(--accent);">{{ ml.ml_risk_label | upper }} ({{ "%.0f"|format(ml.ml_confidence * 100) }}% conf)</span>
+            </div>
+            <p style="font-size:11px;color:var(--muted);margin-bottom:6px;">{{ ml.score_isolation_note }}</p>
+            <div style="display:flex;gap:12px;font-size:11px;font-family:monospace;flex-wrap:wrap;">
+              <span>Anomaly Detected: <strong style="color:{% if ml.is_model_anomaly %}var(--critical){% else %}var(--low){% endif %}">{% if ml.is_model_anomaly %}YES{% else %}NO{% endif %}</strong></span>
+              <span>Anomaly Score: <strong>{{ "%.3f"|format(ml.anomaly_score) }}</strong></span>
+              <span>Architecture: <strong>{{ ml.model_architecture }}</strong></span>
+            </div>
+          </div>
+          {% endif %}
+        </div>
+        {% endif %}
+
         <!-- Findings -->
         {% if session.findings %}
         <div style="margin-top:16px;">
@@ -274,26 +434,97 @@
   </div>
   {% endfor %}
 
-  <!-- EVIDENCE APPENDIX -->
-  <div class="section">
-    <div class="section-title">Evidence Appendix — Forensic References</div>
-    <p style="color:var(--muted);margin-bottom:16px;">All findings are traceable to specific packet numbers in the source PCAP (SHA-256: <span class="sha256">{{ report.source_pcap_sha256 }}</span>).</p>
+  <!-- FORENSIC EVIDENCE & CHAIN OF CUSTODY -->
+  <div class="section" id="forensic-evidence">
+    <div class="section-title">Forensic Evidence & Chain of Custody</div>
+
+    <!-- Integrity Statement Banner -->
+    <div style="background: rgba(63, 185, 80, 0.1); border: 1px solid #3fb950; border-radius: 8px; padding: 14px 18px; margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between;">
+      <div>
+        <span style="color: #3fb950; font-weight: 700; font-size: 14px;">🛡️ INTEGRITY STATEMENT:</span>
+        <span style="color: #e6edf3; font-weight: 600; font-size: 13px; margin-left: 8px;">No active network connections were made during analysis.</span>
+      </div>
+      <span style="background: rgba(63, 185, 80, 0.2); color: #3fb950; border: 1px solid #3fb950; font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 999px;">
+        {{ report.forensic_evidence_and_chain_of_custody.passive_offline_status if report.forensic_evidence_and_chain_of_custody else 'PASSIVE / OFFLINE (AIR-GAPPED)' }}
+      </span>
+    </div>
+
+    <!-- Metadata Grid -->
+    <div class="meta-grid" style="margin-bottom: 24px;">
+      <div class="meta-card">
+        <div class="label">Source PCAP</div>
+        <div class="value">{{ report.source_pcap_path or (report.forensic_evidence_and_chain_of_custody.source_pcap if report.forensic_evidence_and_chain_of_custody else 'N/A') }}</div>
+      </div>
+      <div class="meta-card">
+        <div class="label">PCAP SHA-256</div>
+        <div class="value sha256">{{ report.source_pcap_sha256 }}</div>
+      </div>
+      <div class="meta-card">
+        <div class="label">Analysis ID</div>
+        <div class="value">{{ report.analysis_id or (report.forensic_evidence_and_chain_of_custody.analysis_id if report.forensic_evidence_and_chain_of_custody else report.report_id) }}</div>
+      </div>
+      <div class="meta-card">
+        <div class="label">Report ID</div>
+        <div class="value">{{ report.report_id }}</div>
+      </div>
+      <div class="meta-card">
+        <div class="label">Timestamp</div>
+        <div class="value">{{ report.generated_at }}</div>
+      </div>
+      <div class="meta-card">
+        <div class="label">Analyzer Version</div>
+        <div class="value">SecureMailScope v{{ report.tool_version }}</div>
+      </div>
+    </div>
+
+    <!-- Packet-level Evidence Mapping -->
+    <h3 style="font-size: 14px; font-weight: 600; color: var(--accent); margin-bottom: 8px;">Packet-Level Evidence Mapping</h3>
+    <p style="color: var(--muted); font-size: 12px; margin-bottom: 14px;">
+      Provenance chain: <code>PCAP SHA-256 → Session → Packet Number/Offset → Observed Value → Finding ID → Detection Rule</code>
+    </p>
+
     <table>
-      <tr><th>Finding ID</th><th>Host</th><th>Session</th><th>Severity</th><th>Packet #</th><th>Reference Standard</th></tr>
-      {% for host in report.hosts %}
-        {% for session in host.sessions %}
-          {% for f in session.findings %}
+      <thead>
+        <tr>
+          <th>Finding ID</th>
+          <th>Detection Rule</th>
+          <th>Session Flow</th>
+          <th>Packet # / Offset</th>
+          <th>Observed Wire Value</th>
+          <th>Evidence Reference Chain</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% set evidence_list = report.forensic_evidence_and_chain_of_custody.packet_level_evidence_mapping if report.forensic_evidence_and_chain_of_custody else [] %}
+        {% if evidence_list %}
+          {% for ev in evidence_list %}
           <tr>
-            <td><code>{{ f.id }}</code></td>
-            <td>{{ host.host }}</td>
-            <td><code>{{ session.session_id[:8] }}…</code></td>
-            <td class="sev-{{ f.severity }}">{{ f.severity | upper }}</td>
-            <td><span class="evidence-ref">{{ f.evidence_ref.get('packet_number', '?') }}</span></td>
-            <td>{{ f.reference or '—' }}</td>
+            <td><code>{{ ev.finding_id[:8] if ev.finding_id|length > 8 else ev.finding_id }}</code></td>
+            <td><strong>{{ ev.detection_rule }}</strong></td>
+            <td><code>{{ ev.session_flow }}</code></td>
+            <td><span class="evidence-ref">Pkt #{{ ev.packet_number }} (Offset {{ ev.byte_offset }})</span></td>
+            <td><code>{{ ev.observed_value }}</code></td>
+            <td style="font-size: 11px; font-family: monospace; color: var(--muted); word-break: break-all;">{{ ev.evidence_chain }}</td>
           </tr>
           {% endfor %}
-        {% endfor %}
-      {% endfor %}
+        {% else %}
+          {% for host in report.hosts %}
+            {% for session in host.sessions %}
+              {% for f in session.findings %}
+              {% set ev = f.evidence_reference if f.evidence_reference else {} %}
+              <tr>
+                <td><code>{{ f.id }}</code></td>
+                <td><strong>{{ f.id }}</strong></td>
+                <td><code>{{ session.protocol }} {{ session.src_ip }}:{{ session.src_port }} → {{ session.dst_ip }}:{{ session.dst_port }}</code></td>
+                <td><span class="evidence-ref">Pkt #{{ f.evidence_ref.get('packet_number', '?') }} (Offset {{ f.evidence_ref.get('byte_offset', 0) }})</span></td>
+                <td><code>{{ ev.observed_value if ev.observed_value else f.description }}</code></td>
+                <td style="font-size: 11px; font-family: monospace; color: var(--muted);">{{ ev.evidence_chain if ev.evidence_chain else (report.source_pcap_sha256[:12] ~ '… → ' ~ session.session_id[:8] ~ ' → Pkt #' ~ f.evidence_ref.get('packet_number', '?') ~ ' → ' ~ f.id) }}</td>
+              </tr>
+              {% endfor %}
+            {% endfor %}
+          {% endfor %}
+        {% endif %}
+      </tbody>
     </table>
   </div>
 

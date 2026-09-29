@@ -86,6 +86,10 @@ def _handle_json_report(json_path: Path, config: PipelineConfig) -> PipelineResu
         logger.error(result.error)
         return result
 
+    from securemailscope.forensics.evidence_layer import enrich_report_with_forensics
+    from securemailscope.scoring.explainability import enrich_report_with_explainability
+    report = enrich_report_with_forensics(report)
+    report = enrich_report_with_explainability(report)
     result.report = report
     result.json_path = str(json_path)
 
@@ -267,6 +271,15 @@ def run(pcap_path: str, config: PipelineConfig) -> PipelineResult:
     # ── Phase 7: Build & export reports ──────────────────────────────────
     logger.info("Phase 7: Report generation")
     report = build_report(custody, session_results, host_grades)
+
+    # Non-invasive forensic evidence layer enrichment
+    from securemailscope.forensics.evidence_layer import enrich_report_with_forensics
+    report = enrich_report_with_forensics(report, pcap_path=pcap_path, pcap_sha256=meta.sha256)
+
+    # Non-invasive explainable AI / risk assessment layer enrichment
+    from securemailscope.scoring.explainability import enrich_report_with_explainability
+    report = enrich_report_with_explainability(report)
+
     json_str = to_json(report)
 
     # Compute report hash (chain-of-custody)

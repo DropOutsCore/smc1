@@ -63,3 +63,8 @@ $RECYCLE.BIN/
 # Generated reports & temporary files
 reports_out/
 *.tmp
+
+# Frontend dependencies and build output
+node_modules/
+frontend/node_modules/
+frontend/dist/

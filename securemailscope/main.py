@@ -53,13 +53,20 @@ def cmd_analyze(args: argparse.Namespace) -> int:
     print(f"  Total findings    : {result.finding_count}")
     print()
 
-    grade_colors = {"A": "[A]", "B": "[B]", "C": "[C]", "D": "[D]", "F": "[F]"}
+    grade_colors = {"A+": "[A+]", "A": "[A]", "B": "[B]", "C": "[C]", "D": "[D]", "E": "[E]", "F": "[F]"}
     for host in result.report.get("hosts", []):
         grade = host["posture_grade"]
+        label = host.get("posture_label", "")
         icon = grade_colors.get(grade, "[ ]")
-        print(f"  {icon} {host['host']:35s} Grade: {grade}  Score: {host['posture_score']}")
+        lbl_str = f"({label})" if label else ""
+        print(f"  {icon} {host['host']:30s} Posture: {grade:2s} {lbl_str:12s} Risk Score: {host['posture_score']}/100")
         if host.get("grade_delta"):
-            print(f"       > {host['grade_delta']}")
+            delta_safe = host['grade_delta'].replace("→", "->")
+            print(f"       > Delta: {delta_safe}")
+        if host.get("why_this_grade"):
+            why = host["why_this_grade"]
+            if why.get("summary"):
+                print(f"       Why this grade? {why['summary']}")
 
 
     print()
@@ -71,6 +78,12 @@ def cmd_analyze(args: argparse.Namespace) -> int:
         print(f"  PDF  : {result.pdf_path}")
     print()
     print(f"  Source PCAP SHA-256: {result.report.get('source_pcap_sha256', '')}")
+    fe = result.report.get("forensic_evidence_and_chain_of_custody", {})
+    if fe:
+        print(f"  Analysis ID        : {fe.get('analysis_id', '')}")
+        print(f"  Integrity          : {fe.get('integrity_statement', '')}")
+        print(f"  Status             : {fe.get('passive_offline_status', '')}")
+        print(f"  Evidence Traces    : {len(fe.get('packet_level_evidence_mapping', []))} findings mapped to wire packets")
     print("=" * 60)
     return 0
 

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SecureMailScope Forensic Report — 3979cd91</title>
+<title>SecureMailScope Forensic Report — c397a0d2</title>
 <style>
   :root {
     --bg: #0d1117; --surface: #161b22; --surface2: #21262d;
@@ -102,11 +102,11 @@
     <div class="meta-grid">
       <div class="meta-card">
         <div class="label">Report ID</div>
-        <div class="value">3979cd91-ce42-4e99-b7d1-d86e0361f47b</div>
+        <div class="value">c397a0d2-94a4-40e0-b15f-00ffd1225fa0</div>
       </div>
       <div class="meta-card">
         <div class="label">Generated At</div>
-        <div class="value">2026-09-29T16:27:23.080788+00:00</div>
+        <div class="value">2026-09-29T18:13:43.152336+00:00</div>
       </div>
       <div class="meta-card">
         <div class="label">Source PCAP SHA-256</div>
@@ -114,7 +114,7 @@
       </div>
       <div class="meta-card">
         <div class="label">Source File</div>
-        <div class="value">C:\smc\capture.pcap</div>
+        <div class="value">capture.pcap</div>
       </div>
       <div class="meta-card">
         <div class="label">Hosts Analyzed</div>
@@ -141,6 +141,8 @@
         <div class="grade-badge grade-F">F</div>
         <h3>198.51.100.5:25</h3>
         
+        <div class="delta">📈 No change from F (last scan 2026-09-29)</div>
+        
         <div class="delta">Score: 60 | Sessions: 1</div>
         <div class="severity-pills" style="margin-top:10px;">
           
@@ -158,6 +160,8 @@
         <div class="grade-badge grade-D">D</div>
         <h3>45.33.32.156:25</h3>
         
+        <div class="delta">📈 No change from D (last scan 2026-09-29)</div>
+        
         <div class="delta">Score: 50 | Sessions: 1</div>
         <div class="severity-pills" style="margin-top:10px;">
           
@@ -174,6 +178,8 @@
       <div class="host-card">
         <div class="grade-badge grade-D">D</div>
         <h3>203.0.113.50:25</h3>
+        
+        <div class="delta">📈 No change from D (last scan 2026-09-29)</div>
         
         <div class="delta">Score: 35 | Sessions: 1</div>
         <div class="severity-pills" style="margin-top:10px;">
@@ -212,6 +218,28 @@
       <span class="grade-badge grade-F" style="display:inline-flex;width:36px;height:36px;font-size:16px;vertical-align:middle;margin-left:12px;">F</span>
     </div>
 
+    <!-- Host Posture Score Breakdown -->
+    
+    <div style="margin-bottom:18px;background:rgba(139,255,122,0.03);border:1px solid rgba(139,255,122,0.2);border-radius:8px;padding:14px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+        <strong style="color:var(--accent);font-size:13px;">🔍 Host Posture Score Breakdown — 198.51.100.5:25</strong>
+        <span class="tag" style="background:#0d1117;color:#3fb950;border-color:#3fb950;font-weight:700;">
+          Posture Score: 60 / 100 (Grade F)
+        </span>
+      </div>
+      
+      <pre class="code-block" style="background:#0d1117;color:#3fb950;font-size:11px;line-height:1.45;margin:6px 0 0 0;">Host Posture Score (198.51.100.5:25 - Grade F): 60 / 100
+Severity: GRADE F
+
+WHY?
+├── TLS Protocol Version (TLS Version...   +40
+├── Cipher Suite Security (Cipher Sui...   +25
+└── Forward Secrecy (PFS) (Key Exchan...   +10
+└── Total                                  60</pre>
+      
+    </div>
+    
+
     
     <div class="session-detail">
       <div class="session-header">
@@ -222,7 +250,7 @@
           
           
         </h4>
-        <span style="color:var(--muted);font-size:12px;">619811d5…</span>
+        <span style="color:var(--muted);font-size:12px;">5382607b…</span>
       </div>
       <div class="session-body">
 
@@ -249,6 +277,93 @@
         </div>
 
         <!-- Certificate -->
+        
+
+        <!-- WHY THIS SCORE? (EXPLAINABLE AI & RISK BREAKDOWN) -->
+        
+        <div style="margin-top:16px;background:rgba(139,255,122,0.03);border:1px solid rgba(139,255,122,0.2);border-radius:8px;padding:14px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+            <strong style="color:var(--accent);font-size:13px;">🔍 Why This Score? — Transparent Risk Reasoning</strong>
+            <span class="tag" style="background:#0d1117;color:#3fb950;border-color:#3fb950;font-weight:700;">
+              Score: 75 / 100 (HIGH)
+            </span>
+          </div>
+
+          <!-- ASCII Decision Tree -->
+          
+          <pre class="code-block" style="background:#0d1117;color:#3fb950;font-size:11px;line-height:1.45;margin:8px 0 12px 0;">Session Risk Score: 75 / 100
+Severity: HIGH
+
+WHY?
+├── TLS Protocol Version (TLS Version...   +40
+├── Cipher Suite Security (Cipher Sui...   +25
+└── Forward Secrecy (PFS) (Key Exchan...   +10
+└── Total                                  75</pre>
+          
+
+          <!-- Factor breakdown table -->
+          
+          <table>
+            <thead>
+              <tr>
+                <th>Finding / Feature</th>
+                <th>Observed on Wire</th>
+                <th>Score Impact</th>
+                <th>Severity</th>
+                <th>Evidence Reference</th>
+                <th>Reason & Rationale</th>
+              </tr>
+            </thead>
+            <tbody>
+              
+              <tr>
+                <td><strong>TLS Protocol Version</strong><br/><span style="font-size:10px;color:var(--muted)">deprecated-tls-10</span></td>
+                <td><code style="color:var(--high)">TLS Version: TLS1.0</code></td>
+                <td style="color:var(--critical);font-weight:700;">+40</td>
+                <td class="sev-high">HIGH</td>
+                <td><span class="evidence-ref">Packet #8 (Offset 0)</span></td>
+                <td style="font-size:12px;color:var(--muted)">Deprecated TLS 1.0 protocol (RFC 8996 violation, vulnerable to BEAST/POODLE attacks)</td>
+              </tr>
+              
+              <tr>
+                <td><strong>Cipher Suite Security</strong><br/><span style="font-size:10px;color:var(--muted)">weak-cipher</span></td>
+                <td><code style="color:var(--high)">Cipher Suite: TLS_RSA_WITH_AES_128_CBC_SHA</code></td>
+                <td style="color:var(--critical);font-weight:700;">+25</td>
+                <td class="sev-high">HIGH</td>
+                <td><span class="evidence-ref">Packet #8 (Offset 0)</span></td>
+                <td style="font-size:12px;color:var(--muted)">Insecure CBC/RC4/3DES or non-AEAD cipher suite negotiated without modern authenticated encryption</td>
+              </tr>
+              
+              <tr>
+                <td><strong>Forward Secrecy (PFS)</strong><br/><span style="font-size:10px;color:var(--muted)">no-pfs</span></td>
+                <td><code style="color:var(--high)">Key Exchange: RSA, PFS: False</code></td>
+                <td style="color:var(--critical);font-weight:700;">+10</td>
+                <td class="sev-medium">MEDIUM</td>
+                <td><span class="evidence-ref">Packet #8 (Offset 0)</span></td>
+                <td style="font-size:12px;color:var(--muted)">No Perfect Forward Secrecy (PFS); static RSA key exchange enables retrospective traffic decryption</td>
+              </tr>
+              
+            </tbody>
+          </table>
+          
+
+          <!-- Separated ML Anomaly Assessment -->
+          
+          
+          <div style="margin-top:12px;padding:10px 12px;background:rgba(88,166,255,0.06);border:1px solid rgba(88,166,255,0.2);border-radius:6px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+              <span style="font-size:11px;font-weight:700;color:var(--accent);text-transform:uppercase;">🤖 ML Anomaly Assessment (Independent Statistical Model)</span>
+              <span class="tag" style="color:var(--accent);border-color:var(--accent);">MEDIUM (35% conf)</span>
+            </div>
+            <p style="font-size:11px;color:var(--muted);margin-bottom:6px;">ML assessment runs in parallel as a secondary heuristic and does not inflate deterministic rule scores.</p>
+            <div style="display:flex;gap:12px;font-size:11px;font-family:monospace;flex-wrap:wrap;">
+              <span>Anomaly Detected: <strong style="color:var(--low)">NO</strong></span>
+              <span>Anomaly Score: <strong>0.162</strong></span>
+              <span>Architecture: <strong>RandomForest Classifier + IsolationForest Baseline</strong></span>
+            </div>
+          </div>
+          
+        </div>
         
 
         <!-- Findings -->
@@ -326,6 +441,27 @@
       <span class="grade-badge grade-D" style="display:inline-flex;width:36px;height:36px;font-size:16px;vertical-align:middle;margin-left:12px;">D</span>
     </div>
 
+    <!-- Host Posture Score Breakdown -->
+    
+    <div style="margin-bottom:18px;background:rgba(139,255,122,0.03);border:1px solid rgba(139,255,122,0.2);border-radius:8px;padding:14px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+        <strong style="color:var(--accent);font-size:13px;">🔍 Host Posture Score Breakdown — 45.33.32.156:25</strong>
+        <span class="tag" style="background:#0d1117;color:#3fb950;border-color:#3fb950;font-weight:700;">
+          Posture Score: 50 / 100 (Grade D)
+        </span>
+      </div>
+      
+      <pre class="code-block" style="background:#0d1117;color:#3fb950;font-size:11px;line-height:1.45;margin:6px 0 0 0;">Host Posture Score (45.33.32.156:25 - Grade D): 50 / 100
+Severity: GRADE D
+
+WHY?
+├── STARTTLS Negotiation (TLS Version...   +40
+└── ml-anomaly (anomaly-score)             +10
+└── Total                                  50</pre>
+      
+    </div>
+    
+
     
     <div class="session-detail">
       <div class="session-header">
@@ -336,7 +472,7 @@
           
           <span class="tag" style="color:var(--critical)">⚠ DOWNGRADE</span>
         </h4>
-        <span style="color:var(--muted);font-size:12px;">69698585…</span>
+        <span style="color:var(--muted);font-size:12px;">63ade425…</span>
       </div>
       <div class="session-body">
 
@@ -363,6 +499,83 @@
         </div>
 
         <!-- Certificate -->
+        
+
+        <!-- WHY THIS SCORE? (EXPLAINABLE AI & RISK BREAKDOWN) -->
+        
+        <div style="margin-top:16px;background:rgba(139,255,122,0.03);border:1px solid rgba(139,255,122,0.2);border-radius:8px;padding:14px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+            <strong style="color:var(--accent);font-size:13px;">🔍 Why This Score? — Transparent Risk Reasoning</strong>
+            <span class="tag" style="background:#0d1117;color:#3fb950;border-color:#3fb950;font-weight:700;">
+              Score: 50 / 100 (CRITICAL)
+            </span>
+          </div>
+
+          <!-- ASCII Decision Tree -->
+          
+          <pre class="code-block" style="background:#0d1117;color:#3fb950;font-size:11px;line-height:1.45;margin:8px 0 12px 0;">Session Risk Score: 50 / 100
+Severity: CRITICAL
+
+WHY?
+├── STARTTLS Negotiation (TLS Version...   +40
+└── ml-anomaly (anomaly-score)             +10
+└── Total                                  50</pre>
+          
+
+          <!-- Factor breakdown table -->
+          
+          <table>
+            <thead>
+              <tr>
+                <th>Finding / Feature</th>
+                <th>Observed on Wire</th>
+                <th>Score Impact</th>
+                <th>Severity</th>
+                <th>Evidence Reference</th>
+                <th>Reason & Rationale</th>
+              </tr>
+            </thead>
+            <tbody>
+              
+              <tr>
+                <td><strong>STARTTLS Negotiation</strong><br/><span style="font-size:10px;color:var(--muted)">starttls-downgrade</span></td>
+                <td><code style="color:var(--high)">TLS Version: unknown</code></td>
+                <td style="color:var(--critical);font-weight:700;">+40</td>
+                <td class="sev-critical">CRITICAL</td>
+                <td><span class="evidence-ref">Packet #17 (Offset 0)</span></td>
+                <td style="font-size:12px;color:var(--muted)">STARTTLS offered in server banner was stripped or omitted during client negotiation</td>
+              </tr>
+              
+              <tr>
+                <td><strong>ml-anomaly</strong><br/><span style="font-size:10px;color:var(--muted)">ml-anomaly</span></td>
+                <td><code style="color:var(--high)">anomaly-score</code></td>
+                <td style="color:var(--critical);font-weight:700;">+10</td>
+                <td class="sev-medium">MEDIUM</td>
+                <td><span class="evidence-ref">Packet #15 (Offset 0)</span></td>
+                <td style="font-size:12px;color:var(--muted)">Session flagged as anomalous by IsolationForest (score=-0.027)</td>
+              </tr>
+              
+            </tbody>
+          </table>
+          
+
+          <!-- Separated ML Anomaly Assessment -->
+          
+          
+          <div style="margin-top:12px;padding:10px 12px;background:rgba(88,166,255,0.06);border:1px solid rgba(88,166,255,0.2);border-radius:6px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+              <span style="font-size:11px;font-weight:700;color:var(--accent);text-transform:uppercase;">🤖 ML Anomaly Assessment (Independent Statistical Model)</span>
+              <span class="tag" style="color:var(--accent);border-color:var(--accent);">MEDIUM (35% conf)</span>
+            </div>
+            <p style="font-size:11px;color:var(--muted);margin-bottom:6px;">ML assessment runs in parallel as a secondary heuristic and does not inflate deterministic rule scores.</p>
+            <div style="display:flex;gap:12px;font-size:11px;font-family:monospace;flex-wrap:wrap;">
+              <span>Anomaly Detected: <strong style="color:var(--critical)">YES</strong></span>
+              <span>Anomaly Score: <strong>-0.027</strong></span>
+              <span>Architecture: <strong>RandomForest Classifier + IsolationForest Baseline</strong></span>
+            </div>
+          </div>
+          
+        </div>
         
 
         <!-- Findings -->
@@ -433,6 +646,27 @@
       <span class="grade-badge grade-D" style="display:inline-flex;width:36px;height:36px;font-size:16px;vertical-align:middle;margin-left:12px;">D</span>
     </div>
 
+    <!-- Host Posture Score Breakdown -->
+    
+    <div style="margin-bottom:18px;background:rgba(139,255,122,0.03);border:1px solid rgba(139,255,122,0.2);border-radius:8px;padding:14px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+        <strong style="color:var(--accent);font-size:13px;">🔍 Host Posture Score Breakdown — 203.0.113.50:25</strong>
+        <span class="tag" style="background:#0d1117;color:#3fb950;border-color:#3fb950;font-weight:700;">
+          Posture Score: 35 / 100 (Grade D)
+        </span>
+      </div>
+      
+      <pre class="code-block" style="background:#0d1117;color:#3fb950;font-size:11px;line-height:1.45;margin:6px 0 0 0;">Host Posture Score (203.0.113.50:25 - Grade D): 35 / 100
+Severity: GRADE D
+
+WHY?
+├── Cipher Suite Security (Cipher Sui...   +25
+└── Forward Secrecy (PFS) (Key Exchan...   +10
+└── Total                                  35</pre>
+      
+    </div>
+    
+
     
     <div class="session-detail">
       <div class="session-header">
@@ -443,7 +677,7 @@
           
           
         </h4>
-        <span style="color:var(--muted);font-size:12px;">172bc515…</span>
+        <span style="color:var(--muted);font-size:12px;">38a92a49…</span>
       </div>
       <div class="session-body">
 
@@ -470,6 +704,83 @@
         </div>
 
         <!-- Certificate -->
+        
+
+        <!-- WHY THIS SCORE? (EXPLAINABLE AI & RISK BREAKDOWN) -->
+        
+        <div style="margin-top:16px;background:rgba(139,255,122,0.03);border:1px solid rgba(139,255,122,0.2);border-radius:8px;padding:14px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+            <strong style="color:var(--accent);font-size:13px;">🔍 Why This Score? — Transparent Risk Reasoning</strong>
+            <span class="tag" style="background:#0d1117;color:#3fb950;border-color:#3fb950;font-weight:700;">
+              Score: 35 / 100 (HIGH)
+            </span>
+          </div>
+
+          <!-- ASCII Decision Tree -->
+          
+          <pre class="code-block" style="background:#0d1117;color:#3fb950;font-size:11px;line-height:1.45;margin:8px 0 12px 0;">Session Risk Score: 35 / 100
+Severity: HIGH
+
+WHY?
+├── Cipher Suite Security (Cipher Sui...   +25
+└── Forward Secrecy (PFS) (Key Exchan...   +10
+└── Total                                  35</pre>
+          
+
+          <!-- Factor breakdown table -->
+          
+          <table>
+            <thead>
+              <tr>
+                <th>Finding / Feature</th>
+                <th>Observed on Wire</th>
+                <th>Score Impact</th>
+                <th>Severity</th>
+                <th>Evidence Reference</th>
+                <th>Reason & Rationale</th>
+              </tr>
+            </thead>
+            <tbody>
+              
+              <tr>
+                <td><strong>Cipher Suite Security</strong><br/><span style="font-size:10px;color:var(--muted)">weak-cipher</span></td>
+                <td><code style="color:var(--high)">Cipher Suite: TLS_RSA_WITH_AES_128_CBC_SHA</code></td>
+                <td style="color:var(--critical);font-weight:700;">+25</td>
+                <td class="sev-high">HIGH</td>
+                <td><span class="evidence-ref">Packet #21 (Offset 0)</span></td>
+                <td style="font-size:12px;color:var(--muted)">Insecure CBC/RC4/3DES or non-AEAD cipher suite negotiated without modern authenticated encryption</td>
+              </tr>
+              
+              <tr>
+                <td><strong>Forward Secrecy (PFS)</strong><br/><span style="font-size:10px;color:var(--muted)">no-pfs</span></td>
+                <td><code style="color:var(--high)">Key Exchange: RSA, PFS: False</code></td>
+                <td style="color:var(--critical);font-weight:700;">+10</td>
+                <td class="sev-medium">MEDIUM</td>
+                <td><span class="evidence-ref">Packet #21 (Offset 0)</span></td>
+                <td style="font-size:12px;color:var(--muted)">No Perfect Forward Secrecy (PFS); static RSA key exchange enables retrospective traffic decryption</td>
+              </tr>
+              
+            </tbody>
+          </table>
+          
+
+          <!-- Separated ML Anomaly Assessment -->
+          
+          
+          <div style="margin-top:12px;padding:10px 12px;background:rgba(88,166,255,0.06);border:1px solid rgba(88,166,255,0.2);border-radius:6px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+              <span style="font-size:11px;font-weight:700;color:var(--accent);text-transform:uppercase;">🤖 ML Anomaly Assessment (Independent Statistical Model)</span>
+              <span class="tag" style="color:var(--accent);border-color:var(--accent);">MEDIUM (35% conf)</span>
+            </div>
+            <p style="font-size:11px;color:var(--muted);margin-bottom:6px;">ML assessment runs in parallel as a secondary heuristic and does not inflate deterministic rule scores.</p>
+            <div style="display:flex;gap:12px;font-size:11px;font-family:monospace;flex-wrap:wrap;">
+              <span>Anomaly Detected: <strong style="color:var(--low)">NO</strong></span>
+              <span>Anomaly Score: <strong>0.190</strong></span>
+              <span>Architecture: <strong>RandomForest Classifier + IsolationForest Baseline</strong></span>
+            </div>
+          </div>
+          
+        </div>
         
 
         <!-- Findings -->
@@ -530,6 +841,26 @@
       <span class="grade-badge grade-A" style="display:inline-flex;width:36px;height:36px;font-size:16px;vertical-align:middle;margin-left:12px;">A</span>
     </div>
 
+    <!-- Host Posture Score Breakdown -->
+    
+    <div style="margin-bottom:18px;background:rgba(139,255,122,0.03);border:1px solid rgba(139,255,122,0.2);border-radius:8px;padding:14px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+        <strong style="color:var(--accent);font-size:13px;">🔍 Host Posture Score Breakdown — 203.0.113.10:25</strong>
+        <span class="tag" style="background:#0d1117;color:#3fb950;border-color:#3fb950;font-weight:700;">
+          Posture Score: 0 / 100 (Grade A)
+        </span>
+      </div>
+      
+      <pre class="code-block" style="background:#0d1117;color:#3fb950;font-size:11px;line-height:1.45;margin:6px 0 0 0;">Host Posture Score (203.0.113.10:25 - Grade A): 0 / 100
+Severity: GRADE A
+
+WHY?
+└── No security findings detected          +0
+└── Total                                 0</pre>
+      
+    </div>
+    
+
     
     <div class="session-detail">
       <div class="session-header">
@@ -540,7 +871,7 @@
           
           
         </h4>
-        <span style="color:var(--muted);font-size:12px;">e994f87c…</span>
+        <span style="color:var(--muted);font-size:12px;">cfe0d6b7…</span>
       </div>
       <div class="session-body">
 
@@ -569,6 +900,50 @@
         <!-- Certificate -->
         
 
+        <!-- WHY THIS SCORE? (EXPLAINABLE AI & RISK BREAKDOWN) -->
+        
+        <div style="margin-top:16px;background:rgba(139,255,122,0.03);border:1px solid rgba(139,255,122,0.2);border-radius:8px;padding:14px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+            <strong style="color:var(--accent);font-size:13px;">🔍 Why This Score? — Transparent Risk Reasoning</strong>
+            <span class="tag" style="background:#0d1117;color:#3fb950;border-color:#3fb950;font-weight:700;">
+              Score: 0 / 100 (CLEAN)
+            </span>
+          </div>
+
+          <!-- ASCII Decision Tree -->
+          
+          <pre class="code-block" style="background:#0d1117;color:#3fb950;font-size:11px;line-height:1.45;margin:8px 0 12px 0;">Session Risk Score: 0 / 100
+Severity: CLEAN
+
+WHY?
+└── No security findings detected          +0
+└── Total                                 0</pre>
+          
+
+          <!-- Factor breakdown table -->
+          
+          <p style="color:var(--low);font-size:12px;margin:4px 0;">✓ Clean baseline: no adverse risk factors or security vulnerabilities detected.</p>
+          
+
+          <!-- Separated ML Anomaly Assessment -->
+          
+          
+          <div style="margin-top:12px;padding:10px 12px;background:rgba(88,166,255,0.06);border:1px solid rgba(88,166,255,0.2);border-radius:6px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+              <span style="font-size:11px;font-weight:700;color:var(--accent);text-transform:uppercase;">🤖 ML Anomaly Assessment (Independent Statistical Model)</span>
+              <span class="tag" style="color:var(--accent);border-color:var(--accent);">MEDIUM (35% conf)</span>
+            </div>
+            <p style="font-size:11px;color:var(--muted);margin-bottom:6px;">ML assessment runs in parallel as a secondary heuristic and does not inflate deterministic rule scores.</p>
+            <div style="display:flex;gap:12px;font-size:11px;font-family:monospace;flex-wrap:wrap;">
+              <span>Anomaly Detected: <strong style="color:var(--low)">NO</strong></span>
+              <span>Anomaly Score: <strong>0.064</strong></span>
+              <span>Architecture: <strong>RandomForest Classifier + IsolationForest Baseline</strong></span>
+            </div>
+          </div>
+          
+        </div>
+        
+
         <!-- Findings -->
         
 
@@ -578,99 +953,142 @@
   </div>
   
 
-  <!-- EVIDENCE APPENDIX -->
-  <div class="section">
-    <div class="section-title">Evidence Appendix — Forensic References</div>
-    <p style="color:var(--muted);margin-bottom:16px;">All findings are traceable to specific packet numbers in the source PCAP (SHA-256: <span class="sha256">0c96a199e6790537cec5f73b0d9b9730e0852bb8e22eadc8bd0320f8605e7ddc</span>).</p>
+  <!-- FORENSIC EVIDENCE & CHAIN OF CUSTODY -->
+  <div class="section" id="forensic-evidence">
+    <div class="section-title">Forensic Evidence & Chain of Custody</div>
+
+    <!-- Integrity Statement Banner -->
+    <div style="background: rgba(63, 185, 80, 0.1); border: 1px solid #3fb950; border-radius: 8px; padding: 14px 18px; margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between;">
+      <div>
+        <span style="color: #3fb950; font-weight: 700; font-size: 14px;">🛡️ INTEGRITY STATEMENT:</span>
+        <span style="color: #e6edf3; font-weight: 600; font-size: 13px; margin-left: 8px;">No active network connections were made during analysis.</span>
+      </div>
+      <span style="background: rgba(63, 185, 80, 0.2); color: #3fb950; border: 1px solid #3fb950; font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 999px;">
+        PASSIVE_OFFLINE (Air-Gapped / Strictly Read-Only)
+      </span>
+    </div>
+
+    <!-- Metadata Grid -->
+    <div class="meta-grid" style="margin-bottom: 24px;">
+      <div class="meta-card">
+        <div class="label">Source PCAP</div>
+        <div class="value">capture.pcap</div>
+      </div>
+      <div class="meta-card">
+        <div class="label">PCAP SHA-256</div>
+        <div class="value sha256">0c96a199e6790537cec5f73b0d9b9730e0852bb8e22eadc8bd0320f8605e7ddc</div>
+      </div>
+      <div class="meta-card">
+        <div class="label">Analysis ID</div>
+        <div class="value">08a4053c-4e01-4ac3-b6a3-e88e42987fa3</div>
+      </div>
+      <div class="meta-card">
+        <div class="label">Report ID</div>
+        <div class="value">c397a0d2-94a4-40e0-b15f-00ffd1225fa0</div>
+      </div>
+      <div class="meta-card">
+        <div class="label">Timestamp</div>
+        <div class="value">2026-09-29T18:13:43.152336+00:00</div>
+      </div>
+      <div class="meta-card">
+        <div class="label">Analyzer Version</div>
+        <div class="value">SecureMailScope v1.0.0</div>
+      </div>
+    </div>
+
+    <!-- Packet-level Evidence Mapping -->
+    <h3 style="font-size: 14px; font-weight: 600; color: var(--accent); margin-bottom: 8px;">Packet-Level Evidence Mapping</h3>
+    <p style="color: var(--muted); font-size: 12px; margin-bottom: 14px;">
+      Provenance chain: <code>PCAP SHA-256 → Session → Packet Number/Offset → Observed Value → Finding ID → Detection Rule</code>
+    </p>
+
     <table>
-      <tr><th>Finding ID</th><th>Host</th><th>Session</th><th>Severity</th><th>Packet #</th><th>Reference Standard</th></tr>
-      
+      <thead>
+        <tr>
+          <th>Finding ID</th>
+          <th>Detection Rule</th>
+          <th>Session Flow</th>
+          <th>Packet # / Offset</th>
+          <th>Observed Wire Value</th>
+          <th>Evidence Reference Chain</th>
+        </tr>
+      </thead>
+      <tbody>
+        
         
           
           <tr>
-            <td><code>deprecated-tls-10</code></td>
-            <td>198.51.100.5:25</td>
-            <td><code>619811d5…</code></td>
-            <td class="sev-high">HIGH</td>
-            <td><span class="evidence-ref">8</span></td>
-            <td>IETF RFC 8996, NIST SP 800-52 Rev.2</td>
+            <td><code>7b714013</code></td>
+            <td><strong>deprecated-tls-10</strong></td>
+            <td><code>SMTP 10.0.1.20:55001 → 198.51.100.5:25</code></td>
+            <td><span class="evidence-ref">Pkt #8 (Offset 0)</span></td>
+            <td><code>TLS Version: TLS1.0</code></td>
+            <td style="font-size: 11px; font-family: monospace; color: var(--muted); word-break: break-all;">0c96a199e679... → Session [SMTP 10.0.1.20:55001 → 198.51.100.5:25] → Pkt #8 (Offset 0) → Observed: TLS Version: TLS1.0 → Finding #7b714013 → Rule: deprecated-tls-10</td>
           </tr>
           
           <tr>
-            <td><code>weak-cipher</code></td>
-            <td>198.51.100.5:25</td>
-            <td><code>619811d5…</code></td>
-            <td class="sev-high">HIGH</td>
-            <td><span class="evidence-ref">8</span></td>
-            <td>NIST SP 800-52 Rev.2</td>
+            <td><code>48552d3d</code></td>
+            <td><strong>weak-cipher</strong></td>
+            <td><code>SMTP 10.0.1.20:55001 → 198.51.100.5:25</code></td>
+            <td><span class="evidence-ref">Pkt #8 (Offset 0)</span></td>
+            <td><code>Cipher Suite: TLS_RSA_WITH_AES_128_CBC_SHA</code></td>
+            <td style="font-size: 11px; font-family: monospace; color: var(--muted); word-break: break-all;">0c96a199e679... → Session [SMTP 10.0.1.20:55001 → 198.51.100.5:25] → Pkt #8 (Offset 0) → Observed: Cipher Suite: TLS_RSA_WITH_AES_128_CBC_SHA → Finding #48552d3d → Rule: weak-cipher</td>
           </tr>
           
           <tr>
-            <td><code>no-pfs</code></td>
-            <td>198.51.100.5:25</td>
-            <td><code>619811d5…</code></td>
-            <td class="sev-medium">MEDIUM</td>
-            <td><span class="evidence-ref">8</span></td>
-            <td>NIST SP 800-52 Rev.2 Â§3.3.1</td>
-          </tr>
-          
-        
-      
-        
-          
-          <tr>
-            <td><code>starttls-downgrade</code></td>
-            <td>45.33.32.156:25</td>
-            <td><code>69698585…</code></td>
-            <td class="sev-critical">CRITICAL</td>
-            <td><span class="evidence-ref">17</span></td>
-            <td>RFC 3207, BASTA! research</td>
+            <td><code>2b031574</code></td>
+            <td><strong>no-pfs</strong></td>
+            <td><code>SMTP 10.0.1.20:55001 → 198.51.100.5:25</code></td>
+            <td><span class="evidence-ref">Pkt #8 (Offset 0)</span></td>
+            <td><code>Key Exchange: RSA, PFS: False</code></td>
+            <td style="font-size: 11px; font-family: monospace; color: var(--muted); word-break: break-all;">0c96a199e679... → Session [SMTP 10.0.1.20:55001 → 198.51.100.5:25] → Pkt #8 (Offset 0) → Observed: Key Exchange: RSA, PFS: False → Finding #2b031574 → Rule: no-pfs</td>
           </tr>
           
           <tr>
-            <td><code>ml-anomaly</code></td>
-            <td>45.33.32.156:25</td>
-            <td><code>69698585…</code></td>
-            <td class="sev-medium">MEDIUM</td>
-            <td><span class="evidence-ref">15</span></td>
-            <td>—</td>
-          </tr>
-          
-        
-      
-        
-          
-          <tr>
-            <td><code>weak-cipher</code></td>
-            <td>203.0.113.50:25</td>
-            <td><code>172bc515…</code></td>
-            <td class="sev-high">HIGH</td>
-            <td><span class="evidence-ref">21</span></td>
-            <td>NIST SP 800-52 Rev.2</td>
+            <td><code>1664a170</code></td>
+            <td><strong>starttls-downgrade</strong></td>
+            <td><code>SMTP 10.0.2.30:56001 → 45.33.32.156:25</code></td>
+            <td><span class="evidence-ref">Pkt #17 (Offset 0)</span></td>
+            <td><code>TLS Version: unknown</code></td>
+            <td style="font-size: 11px; font-family: monospace; color: var(--muted); word-break: break-all;">0c96a199e679... → Session [SMTP 10.0.2.30:56001 → 45.33.32.156:25] → Pkt #17 (Offset 0) → Observed: TLS Version: unknown → Finding #1664a170 → Rule: starttls-downgrade</td>
           </tr>
           
           <tr>
-            <td><code>no-pfs</code></td>
-            <td>203.0.113.50:25</td>
-            <td><code>172bc515…</code></td>
-            <td class="sev-medium">MEDIUM</td>
-            <td><span class="evidence-ref">21</span></td>
-            <td>NIST SP 800-52 Rev.2 Â§3.3.1</td>
+            <td><code>e3687286</code></td>
+            <td><strong>ml-anomaly</strong></td>
+            <td><code>SMTP 10.0.2.30:56001 → 45.33.32.156:25</code></td>
+            <td><span class="evidence-ref">Pkt #15 (Offset 0)</span></td>
+            <td><code>anomaly-score</code></td>
+            <td style="font-size: 11px; font-family: monospace; color: var(--muted); word-break: break-all;">0c96a199e679... → Session [SMTP 10.0.2.30:56001 → 45.33.32.156:25] → Pkt #15 (Offset 0) → Observed: anomaly-score → Finding #e3687286 → Rule: ml-anomaly</td>
+          </tr>
+          
+          <tr>
+            <td><code>765b7a29</code></td>
+            <td><strong>weak-cipher</strong></td>
+            <td><code>SMTP 10.0.3.40:57001 → 203.0.113.50:25</code></td>
+            <td><span class="evidence-ref">Pkt #21 (Offset 0)</span></td>
+            <td><code>Cipher Suite: TLS_RSA_WITH_AES_128_CBC_SHA</code></td>
+            <td style="font-size: 11px; font-family: monospace; color: var(--muted); word-break: break-all;">0c96a199e679... → Session [SMTP 10.0.3.40:57001 → 203.0.113.50:25] → Pkt #21 (Offset 0) → Observed: Cipher Suite: TLS_RSA_WITH_AES_128_CBC_SHA → Finding #765b7a29 → Rule: weak-cipher</td>
+          </tr>
+          
+          <tr>
+            <td><code>125f2424</code></td>
+            <td><strong>no-pfs</strong></td>
+            <td><code>SMTP 10.0.3.40:57001 → 203.0.113.50:25</code></td>
+            <td><span class="evidence-ref">Pkt #21 (Offset 0)</span></td>
+            <td><code>Key Exchange: RSA, PFS: False</code></td>
+            <td style="font-size: 11px; font-family: monospace; color: var(--muted); word-break: break-all;">0c96a199e679... → Session [SMTP 10.0.3.40:57001 → 203.0.113.50:25] → Pkt #21 (Offset 0) → Observed: Key Exchange: RSA, PFS: False → Finding #125f2424 → Rule: no-pfs</td>
           </tr>
           
         
-      
-        
-          
-        
-      
+      </tbody>
     </table>
   </div>
 
   <!-- FOOTER -->
   <div class="report-footer">
     <p>SecureMailScope v1.0.0 — Passive Forensic Analysis — No active network connections were made.</p>
-    <p class="sha256">Source PCAP: 0c96a199e6790537cec5f73b0d9b9730e0852bb8e22eadc8bd0320f8605e7ddc | Report ID: 3979cd91-ce42-4e99-b7d1-d86e0361f47b</p>
+    <p class="sha256">Source PCAP: 0c96a199e6790537cec5f73b0d9b9730e0852bb8e22eadc8bd0320f8605e7ddc | Report ID: c397a0d2-94a4-40e0-b15f-00ffd1225fa0</p>
   </div>
 
 </div>
