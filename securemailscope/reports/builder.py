@@ -255,6 +255,7 @@ def _build_session_dict(sr: SessionAnalysisResult) -> dict:
         "alpn": tls.alpn if tls else [],
         "tls_anomalies": tls.anomalies if tls else [],
         "tls13_visibility_limited": tls.tls13_visibility_limited if tls else False,
+        "not_observable": tls.not_observable if tls else [],
         "certificate": cert_dict,
         "ml_risk_label": sr.ml_risk_label,
         "ml_confidence": round(sr.ml_confidence, 4),

@@ -82,9 +82,9 @@ def build_feature_vector(
     """
     proto = session.protocol.upper()
     feat: list[float] = [
-        1.0 if proto == "SMTP" else 0.0,                 # [0]
-        1.0 if proto == "IMAP" else 0.0,                 # [1]
-        1.0 if proto == "POP3" else 0.0,                 # [2]
+        1.0 if "SMTP" in proto else 0.0,                 # [0]
+        1.0 if "IMAP" in proto else 0.0,                 # [1]
+        1.0 if "POP3" in proto else 0.0,                 # [2]
     ]
 
     if tls:

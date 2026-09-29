@@ -1,23 +1,23 @@
 {
-  "report_id": "c397a0d2-94a4-40e0-b15f-00ffd1225fa0",
+  "report_id": "c4ba2085-7b6e-46e7-93d8-fb7e8866f4be",
   "source_pcap_sha256": "0c96a199e6790537cec5f73b0d9b9730e0852bb8e22eadc8bd0320f8605e7ddc",
   "source_pcap_path": "capture.pcap",
   "source_pcap_size_bytes": 2592,
-  "generated_at": "2026-09-29T18:13:43.152336+00:00",
+  "generated_at": "2026-09-29T19:33:47.173634+00:00",
   "tool_version": "1.0.0",
   "analyst_host": "Aagman",
   "tls13_visibility_note": "TLS 1.3 encrypts most handshake fields after ServerHello. Certificate details and some handshake parameters may not be visible in passive captures. Affected sessions are flagged with 'tls13_visibility_limited: true'.",
   "custody": {
-    "report_id": "c397a0d2-94a4-40e0-b15f-00ffd1225fa0",
+    "report_id": "c4ba2085-7b6e-46e7-93d8-fb7e8866f4be",
     "source_pcap_path": "capture.pcap",
     "source_pcap_sha256": "0c96a199e6790537cec5f73b0d9b9730e0852bb8e22eadc8bd0320f8605e7ddc",
     "source_pcap_size_bytes": 2592,
-    "generated_at": "2026-09-29T18:13:43.152336+00:00",
+    "generated_at": "2026-09-29T19:33:47.173634+00:00",
     "analyst_host": "Aagman",
     "analyst_platform": "Windows-11-10.0.26200-SP0",
     "tool_version": "1.0.0",
-    "report_sha256": "5785bbf98df666c2db5c22174cd16e22a968a0c972b494845212974cc7e7b57c",
-    "analysis_id": "08a4053c-4e01-4ac3-b6a3-e88e42987fa3",
+    "report_sha256": "b241ca230c60ca2cf9b7a82d1a9808cd064ebb9019bb5827b6c5ae15d64b34c2",
+    "analysis_id": "75e24868-1749-4764-9da0-9a1b7562978b",
     "source_filename": "capture.pcap",
     "passive_offline_status": "PASSIVE_OFFLINE (Air-Gapped / Strictly Read-Only)",
     "integrity_statement": "No active network connections were made during analysis."
@@ -25,9 +25,10 @@
   "hosts": [
     {
       "host": "198.51.100.5:25",
-      "posture_grade": "F",
+      "posture_grade": "E",
+      "posture_label": "Poor",
       "posture_score": 60,
-      "grade_delta": "No change from F (last scan 2026-09-29)",
+      "grade_delta": "No change from E (last scan 2026-09-29)",
       "finding_summary": {
         "critical": 0,
         "high": 2,
@@ -35,10 +36,103 @@
         "low": 0,
         "informational": 0
       },
+      "why_this_grade": {
+        "grade": "E",
+        "label": "Poor",
+        "score": 60,
+        "threshold_bracket": "51-75",
+        "headline": "Security Posture: E \u2014 Poor",
+        "summary": "Host '198.51.100.5:25' received Posture Grade E (Poor) with a cumulative risk score of 60/100 (Bracket: 51-75). This grade was determined by 3 adverse findings (2 High, 1 Medium).",
+        "determining_factors": [
+          {
+            "finding_id": "f883e1e3-52e8-48ac-a27c-4abfc2f32da9",
+            "rule_id": "deprecated-tls-10",
+            "feature": "Deprecated Protocol",
+            "severity": "high",
+            "description": "TLS 1.0 is negotiated \u00e2\u20ac\u201d deprecated by NIST and IETF (RFC 8996)",
+            "score_contribution": 25,
+            "observed_value": "TLS 1.0 is negotiated \u00e2\u20ac\u201d deprecated by NIST and IETF (RFC 8996)",
+            "evidence_ref": "Packet #8 (Offset 0)",
+            "impact_on_grade": "+25 points penalty towards Grade E"
+          },
+          {
+            "finding_id": "141dac3b-fdb0-4ed3-b4e2-c56b2e241558",
+            "rule_id": "weak-cipher",
+            "feature": "Weak Cipher",
+            "severity": "high",
+            "description": "A weak cipher suite is negotiated (no PFS or weak key exchange)",
+            "score_contribution": 25,
+            "observed_value": "A weak cipher suite is negotiated (no PFS or weak key exchange)",
+            "evidence_ref": "Packet #8 (Offset 0)",
+            "impact_on_grade": "+25 points penalty towards Grade E"
+          },
+          {
+            "finding_id": "3d9bc180-d524-4ddc-9084-4e0ff019e176",
+            "rule_id": "no-pfs",
+            "feature": "No Forward Secrecy",
+            "severity": "medium",
+            "description": "Cipher suite does not provide Perfect Forward Secrecy (PFS)",
+            "score_contribution": 10,
+            "observed_value": "Cipher suite does not provide Perfect Forward Secrecy (PFS)",
+            "evidence_ref": "Packet #8 (Offset 0)",
+            "impact_on_grade": "+10 points penalty towards Grade E"
+          }
+        ],
+        "grade_ladder": [
+          {
+            "grade": "A+",
+            "label": "Excellent",
+            "range": "0",
+            "active": false
+          },
+          {
+            "grade": "A",
+            "label": "Strong",
+            "range": "1-5",
+            "active": false
+          },
+          {
+            "grade": "B",
+            "label": "Good",
+            "range": "6-15",
+            "active": false
+          },
+          {
+            "grade": "C",
+            "label": "Moderate",
+            "range": "16-30",
+            "active": false
+          },
+          {
+            "grade": "D",
+            "label": "Weak",
+            "range": "31-50",
+            "active": false
+          },
+          {
+            "grade": "E",
+            "label": "Poor",
+            "range": "51-75",
+            "active": true
+          },
+          {
+            "grade": "F",
+            "label": "Critical",
+            "range": "76+",
+            "active": false
+          }
+        ],
+        "next_grade_target": {
+          "target_grade": "D",
+          "target_label": "Weak",
+          "points_to_reduce": 10,
+          "top_remediation_action": "Remediate highest penalty finding 'deprecated-tls-10' (-25 pts) to advance towards Grade D."
+        }
+      },
       "sessions": [
         {
-          "session_id": "5382607b-2f11-4d1b-86d1-5e3862372dc9",
-          "protocol": "SMTP",
+          "session_id": "1fce351e-49b9-4596-98b4-e70fed56b041",
+          "protocol": "SMTP STARTTLS",
           "src_ip": "10.0.1.20",
           "dst_ip": "198.51.100.5",
           "src_port": 55001,
@@ -56,6 +150,7 @@
           "alpn": [],
           "tls_anomalies": [],
           "tls13_visibility_limited": false,
+          "not_observable": [],
           "certificate": null,
           "ml_risk_label": "medium",
           "ml_confidence": 0.3533,
@@ -73,7 +168,7 @@
           "findings": [
             {
               "id": "deprecated-tls-10",
-              "finding_id": "7b714013-2053-49fd-b9cd-d0e32527c658",
+              "finding_id": "f883e1e3-52e8-48ac-a27c-4abfc2f32da9",
               "category": "deprecated-protocol",
               "severity": "high",
               "description": "TLS 1.0 is negotiated \u00e2\u20ac\u201d deprecated by NIST and IETF (RFC 8996)",
@@ -89,19 +184,19 @@
               "anomaly_score": null,
               "evidence_reference": {
                 "pcap_sha256": "0c96a199e6790537cec5f73b0d9b9730e0852bb8e22eadc8bd0320f8605e7ddc",
-                "session_id": "5382607b-2f11-4d1b-86d1-5e3862372dc9",
-                "session_flow": "SMTP 10.0.1.20:55001 \u2192 198.51.100.5:25",
+                "session_id": "1fce351e-49b9-4596-98b4-e70fed56b041",
+                "session_flow": "SMTP STARTTLS 10.0.1.20:55001 \u2192 198.51.100.5:25",
                 "packet_number": 8,
                 "byte_offset": 0,
                 "observed_value": "TLS Version: TLS1.0",
-                "finding_id": "7b714013-2053-49fd-b9cd-d0e32527c658",
+                "finding_id": "f883e1e3-52e8-48ac-a27c-4abfc2f32da9",
                 "detection_rule": "deprecated-tls-10",
-                "evidence_chain": "0c96a199e679... \u2192 Session [SMTP 10.0.1.20:55001 \u2192 198.51.100.5:25] \u2192 Pkt #8 (Offset 0) \u2192 Observed: TLS Version: TLS1.0 \u2192 Finding #7b714013 \u2192 Rule: deprecated-tls-10"
+                "evidence_chain": "0c96a199e679... \u2192 Session [SMTP STARTTLS 10.0.1.20:55001 \u2192 198.51.100.5:25] \u2192 Pkt #8 (Offset 0) \u2192 Observed: TLS Version: TLS1.0 \u2192 Finding #f883e1e3 \u2192 Rule: deprecated-tls-10"
               }
             },
             {
               "id": "weak-cipher",
-              "finding_id": "48552d3d-d35a-4bbb-a605-eefa8790ef5c",
+              "finding_id": "141dac3b-fdb0-4ed3-b4e2-c56b2e241558",
               "category": "weak-cipher",
               "severity": "high",
               "description": "A weak cipher suite is negotiated (no PFS or weak key exchange)",
@@ -117,19 +212,19 @@
               "anomaly_score": null,
               "evidence_reference": {
                 "pcap_sha256": "0c96a199e6790537cec5f73b0d9b9730e0852bb8e22eadc8bd0320f8605e7ddc",
-                "session_id": "5382607b-2f11-4d1b-86d1-5e3862372dc9",
-                "session_flow": "SMTP 10.0.1.20:55001 \u2192 198.51.100.5:25",
+                "session_id": "1fce351e-49b9-4596-98b4-e70fed56b041",
+                "session_flow": "SMTP STARTTLS 10.0.1.20:55001 \u2192 198.51.100.5:25",
                 "packet_number": 8,
                 "byte_offset": 0,
                 "observed_value": "Cipher Suite: TLS_RSA_WITH_AES_128_CBC_SHA",
-                "finding_id": "48552d3d-d35a-4bbb-a605-eefa8790ef5c",
+                "finding_id": "141dac3b-fdb0-4ed3-b4e2-c56b2e241558",
                 "detection_rule": "weak-cipher",
-                "evidence_chain": "0c96a199e679... \u2192 Session [SMTP 10.0.1.20:55001 \u2192 198.51.100.5:25] \u2192 Pkt #8 (Offset 0) \u2192 Observed: Cipher Suite: TLS_RSA_WITH_AES_128_CBC_SHA \u2192 Finding #48552d3d \u2192 Rule: weak-cipher"
+                "evidence_chain": "0c96a199e679... \u2192 Session [SMTP STARTTLS 10.0.1.20:55001 \u2192 198.51.100.5:25] \u2192 Pkt #8 (Offset 0) \u2192 Observed: Cipher Suite: TLS_RSA_WITH_AES_128_CBC_SHA \u2192 Finding #141dac3b \u2192 Rule: weak-cipher"
               }
             },
             {
               "id": "no-pfs",
-              "finding_id": "2b031574-aacc-4514-8490-9a24c4c74e54",
+              "finding_id": "3d9bc180-d524-4ddc-9084-4e0ff019e176",
               "category": "no-forward-secrecy",
               "severity": "medium",
               "description": "Cipher suite does not provide Perfect Forward Secrecy (PFS)",
@@ -145,14 +240,14 @@
               "anomaly_score": null,
               "evidence_reference": {
                 "pcap_sha256": "0c96a199e6790537cec5f73b0d9b9730e0852bb8e22eadc8bd0320f8605e7ddc",
-                "session_id": "5382607b-2f11-4d1b-86d1-5e3862372dc9",
-                "session_flow": "SMTP 10.0.1.20:55001 \u2192 198.51.100.5:25",
+                "session_id": "1fce351e-49b9-4596-98b4-e70fed56b041",
+                "session_flow": "SMTP STARTTLS 10.0.1.20:55001 \u2192 198.51.100.5:25",
                 "packet_number": 8,
                 "byte_offset": 0,
                 "observed_value": "Key Exchange: RSA, PFS: False",
-                "finding_id": "2b031574-aacc-4514-8490-9a24c4c74e54",
+                "finding_id": "3d9bc180-d524-4ddc-9084-4e0ff019e176",
                 "detection_rule": "no-pfs",
-                "evidence_chain": "0c96a199e679... \u2192 Session [SMTP 10.0.1.20:55001 \u2192 198.51.100.5:25] \u2192 Pkt #8 (Offset 0) \u2192 Observed: Key Exchange: RSA, PFS: False \u2192 Finding #2b031574 \u2192 Rule: no-pfs"
+                "evidence_chain": "0c96a199e679... \u2192 Session [SMTP STARTTLS 10.0.1.20:55001 \u2192 198.51.100.5:25] \u2192 Pkt #8 (Offset 0) \u2192 Observed: Key Exchange: RSA, PFS: False \u2192 Finding #3d9bc180 \u2192 Rule: no-pfs"
               }
             }
           ],
@@ -165,7 +260,7 @@
               {
                 "feature": "TLS Protocol Version",
                 "rule_id": "deprecated-tls-10",
-                "finding_id": "7b714013-2053-49fd-b9cd-d0e32527c658",
+                "finding_id": "f883e1e3-52e8-48ac-a27c-4abfc2f32da9",
                 "observed_value": "TLS Version: TLS1.0",
                 "score_contribution": 40,
                 "severity": "high",
@@ -175,7 +270,7 @@
               {
                 "feature": "Cipher Suite Security",
                 "rule_id": "weak-cipher",
-                "finding_id": "48552d3d-d35a-4bbb-a605-eefa8790ef5c",
+                "finding_id": "141dac3b-fdb0-4ed3-b4e2-c56b2e241558",
                 "observed_value": "Cipher Suite: TLS_RSA_WITH_AES_128_CBC_SHA",
                 "score_contribution": 25,
                 "severity": "high",
@@ -185,7 +280,7 @@
               {
                 "feature": "Forward Secrecy (PFS)",
                 "rule_id": "no-pfs",
-                "finding_id": "2b031574-aacc-4514-8490-9a24c4c74e54",
+                "finding_id": "3d9bc180-d524-4ddc-9084-4e0ff019e176",
                 "observed_value": "Key Exchange: RSA, PFS: False",
                 "score_contribution": 10,
                 "severity": "medium",
@@ -203,7 +298,7 @@
               "model_architecture": "RandomForest Classifier + IsolationForest Baseline",
               "score_isolation_note": "ML assessment runs in parallel as a secondary heuristic and does not inflate deterministic rule scores.",
               "model_features": [
-                "Handshake Protocol: SMTP",
+                "Handshake Protocol: SMTP STARTTLS",
                 "TLS Version Feature: TLS1.0",
                 "Cipher PFS Flag: False",
                 "STARTTLS Status: True"
@@ -219,23 +314,26 @@
             "model_architecture": "RandomForest Classifier + IsolationForest Baseline",
             "score_isolation_note": "ML assessment runs in parallel as a secondary heuristic and does not inflate deterministic rule scores.",
             "model_features": [
-              "Handshake Protocol: SMTP",
+              "Handshake Protocol: SMTP STARTTLS",
               "TLS Version Feature: TLS1.0",
               "Cipher PFS Flag: False",
               "STARTTLS Status: True"
             ]
-          }
+          },
+          "host_posture_grade": "E",
+          "host_posture_label": "Poor"
         }
       ],
       "why_this_score": {
         "posture_score": 60,
-        "posture_grade": "F",
+        "posture_grade": "E",
+        "posture_label": "Poor",
         "factor_count": 3,
         "contributing_factors": [
           {
             "feature": "TLS Protocol Version",
             "rule_id": "deprecated-tls-10",
-            "finding_id": "7b714013-2053-49fd-b9cd-d0e32527c658",
+            "finding_id": "f883e1e3-52e8-48ac-a27c-4abfc2f32da9",
             "observed_value": "TLS Version: TLS1.0",
             "score_contribution": 40,
             "severity": "high",
@@ -245,7 +343,7 @@
           {
             "feature": "Cipher Suite Security",
             "rule_id": "weak-cipher",
-            "finding_id": "48552d3d-d35a-4bbb-a605-eefa8790ef5c",
+            "finding_id": "141dac3b-fdb0-4ed3-b4e2-c56b2e241558",
             "observed_value": "Cipher Suite: TLS_RSA_WITH_AES_128_CBC_SHA",
             "score_contribution": 25,
             "severity": "high",
@@ -255,7 +353,7 @@
           {
             "feature": "Forward Secrecy (PFS)",
             "rule_id": "no-pfs",
-            "finding_id": "2b031574-aacc-4514-8490-9a24c4c74e54",
+            "finding_id": "3d9bc180-d524-4ddc-9084-4e0ff019e176",
             "observed_value": "Key Exchange: RSA, PFS: False",
             "score_contribution": 10,
             "severity": "medium",
@@ -263,12 +361,106 @@
             "short_explanation": "No Perfect Forward Secrecy (PFS); static RSA key exchange enables retrospective traffic decryption"
           }
         ],
-        "ascii_tree": "Host Posture Score (198.51.100.5:25 - Grade F): 60 / 100\nSeverity: GRADE F\n\nWHY?\n\u251c\u2500\u2500 TLS Protocol Version (TLS Version...   +40\n\u251c\u2500\u2500 Cipher Suite Security (Cipher Sui...   +25\n\u2514\u2500\u2500 Forward Secrecy (PFS) (Key Exchan...   +10\n\u2514\u2500\u2500 Total                                  60"
+        "ascii_tree": "Host Posture Score (198.51.100.5:25 - Grade E [Poor]): 60 / 100\nSeverity: GRADE E (POOR)\n\nWHY?\n\u251c\u2500\u2500 TLS Protocol Version (TLS Version...   +40\n\u251c\u2500\u2500 Cipher Suite Security (Cipher Sui...   +25\n\u2514\u2500\u2500 Forward Secrecy (PFS) (Key Exchan...   +10\n\u2514\u2500\u2500 Total                                  60",
+        "why_this_grade": {
+          "grade": "E",
+          "label": "Poor",
+          "score": 60,
+          "threshold_bracket": "51-75",
+          "headline": "Security Posture: E \u2014 Poor",
+          "summary": "Host '198.51.100.5:25' received Posture Grade E (Poor) with a cumulative risk score of 60/100 (Bracket: 51-75). This grade was determined by 3 adverse findings (2 High, 1 Medium).",
+          "determining_factors": [
+            {
+              "finding_id": "f883e1e3-52e8-48ac-a27c-4abfc2f32da9",
+              "rule_id": "deprecated-tls-10",
+              "feature": "Deprecated Protocol",
+              "severity": "high",
+              "description": "TLS 1.0 is negotiated \u00e2\u20ac\u201d deprecated by NIST and IETF (RFC 8996)",
+              "score_contribution": 25,
+              "observed_value": "TLS 1.0 is negotiated \u00e2\u20ac\u201d deprecated by NIST and IETF (RFC 8996)",
+              "evidence_ref": "Packet #8 (Offset 0)",
+              "impact_on_grade": "+25 points penalty towards Grade E"
+            },
+            {
+              "finding_id": "141dac3b-fdb0-4ed3-b4e2-c56b2e241558",
+              "rule_id": "weak-cipher",
+              "feature": "Weak Cipher",
+              "severity": "high",
+              "description": "A weak cipher suite is negotiated (no PFS or weak key exchange)",
+              "score_contribution": 25,
+              "observed_value": "A weak cipher suite is negotiated (no PFS or weak key exchange)",
+              "evidence_ref": "Packet #8 (Offset 0)",
+              "impact_on_grade": "+25 points penalty towards Grade E"
+            },
+            {
+              "finding_id": "3d9bc180-d524-4ddc-9084-4e0ff019e176",
+              "rule_id": "no-pfs",
+              "feature": "No Forward Secrecy",
+              "severity": "medium",
+              "description": "Cipher suite does not provide Perfect Forward Secrecy (PFS)",
+              "score_contribution": 10,
+              "observed_value": "Cipher suite does not provide Perfect Forward Secrecy (PFS)",
+              "evidence_ref": "Packet #8 (Offset 0)",
+              "impact_on_grade": "+10 points penalty towards Grade E"
+            }
+          ],
+          "grade_ladder": [
+            {
+              "grade": "A+",
+              "label": "Excellent",
+              "range": "0",
+              "active": false
+            },
+            {
+              "grade": "A",
+              "label": "Strong",
+              "range": "1-5",
+              "active": false
+            },
+            {
+              "grade": "B",
+              "label": "Good",
+              "range": "6-15",
+              "active": false
+            },
+            {
+              "grade": "C",
+              "label": "Moderate",
+              "range": "16-30",
+              "active": false
+            },
+            {
+              "grade": "D",
+              "label": "Weak",
+              "range": "31-50",
+              "active": false
+            },
+            {
+              "grade": "E",
+              "label": "Poor",
+              "range": "51-75",
+              "active": true
+            },
+            {
+              "grade": "F",
+              "label": "Critical",
+              "range": "76+",
+              "active": false
+            }
+          ],
+          "next_grade_target": {
+            "target_grade": "D",
+            "target_label": "Weak",
+            "points_to_reduce": 10,
+            "top_remediation_action": "Remediate highest penalty finding 'deprecated-tls-10' (-25 pts) to advance towards Grade D."
+          }
+        }
       }
     },
     {
       "host": "45.33.32.156:25",
       "posture_grade": "D",
+      "posture_label": "Weak",
       "posture_score": 50,
       "grade_delta": "No change from D (last scan 2026-09-29)",
       "finding_summary": {
@@ -278,9 +470,91 @@
         "low": 0,
         "informational": 0
       },
+      "why_this_grade": {
+        "grade": "D",
+        "label": "Weak",
+        "score": 50,
+        "threshold_bracket": "31-50",
+        "headline": "Security Posture: D \u2014 Weak",
+        "summary": "Host '45.33.32.156:25' received Posture Grade D (Weak) with a cumulative risk score of 50/100 (Bracket: 31-50). This grade was determined by 2 adverse findings (1 Critical, 1 Medium).",
+        "determining_factors": [
+          {
+            "finding_id": "624742be-5826-424f-b003-4543882bb9ef",
+            "rule_id": "starttls-downgrade",
+            "feature": "Starttls Downgrade",
+            "severity": "critical",
+            "description": "STARTTLS downgrade attack suspected \u00e2\u20ac\u201d plaintext continued after STARTTLS command",
+            "score_contribution": 40,
+            "observed_value": "STARTTLS downgrade attack suspected \u00e2\u20ac\u201d plaintext continued after STARTTLS command",
+            "evidence_ref": "Packet #17 (Offset 0)",
+            "impact_on_grade": "+40 points penalty towards Grade D"
+          },
+          {
+            "finding_id": "f8805f58-a6d1-44bc-8f25-f31b01b471d2",
+            "rule_id": "ml-anomaly",
+            "feature": "Ml Anomaly",
+            "severity": "medium",
+            "description": "Session flagged as anomalous by IsolationForest (score=-0.027)",
+            "score_contribution": 10,
+            "observed_value": "Session flagged as anomalous by IsolationForest (score=-0.027)",
+            "evidence_ref": "Packet #15 (Offset 0)",
+            "impact_on_grade": "+10 points penalty towards Grade D"
+          }
+        ],
+        "grade_ladder": [
+          {
+            "grade": "A+",
+            "label": "Excellent",
+            "range": "0",
+            "active": false
+          },
+          {
+            "grade": "A",
+            "label": "Strong",
+            "range": "1-5",
+            "active": false
+          },
+          {
+            "grade": "B",
+            "label": "Good",
+            "range": "6-15",
+            "active": false
+          },
+          {
+            "grade": "C",
+            "label": "Moderate",
+            "range": "16-30",
+            "active": false
+          },
+          {
+            "grade": "D",
+            "label": "Weak",
+            "range": "31-50",
+            "active": true
+          },
+          {
+            "grade": "E",
+            "label": "Poor",
+            "range": "51-75",
+            "active": false
+          },
+          {
+            "grade": "F",
+            "label": "Critical",
+            "range": "76+",
+            "active": false
+          }
+        ],
+        "next_grade_target": {
+          "target_grade": "C",
+          "target_label": "Moderate",
+          "points_to_reduce": 20,
+          "top_remediation_action": "Remediate highest penalty finding 'starttls-downgrade' (-40 pts) to advance towards Grade C."
+        }
+      },
       "sessions": [
         {
-          "session_id": "63ade425-4f3e-4c99-a66d-3d5c46d319fd",
+          "session_id": "80fd83e7-d9b5-493c-99af-ad61545b8e36",
           "protocol": "SMTP",
           "src_ip": "10.0.2.30",
           "dst_ip": "45.33.32.156",
@@ -299,6 +573,11 @@
           "alpn": [],
           "tls_anomalies": [],
           "tls13_visibility_limited": false,
+          "not_observable": [
+            "tls_version (not observable: handshake incomplete)",
+            "cipher_suite (not observable: handshake incomplete)",
+            "key_exchange (not observable: handshake incomplete)"
+          ],
           "certificate": null,
           "ml_risk_label": "medium",
           "ml_confidence": 0.3533,
@@ -315,7 +594,7 @@
           "findings": [
             {
               "id": "starttls-downgrade",
-              "finding_id": "1664a170-e86c-4330-b649-057160602fd1",
+              "finding_id": "624742be-5826-424f-b003-4543882bb9ef",
               "category": "starttls-downgrade",
               "severity": "critical",
               "description": "STARTTLS downgrade attack suspected \u00e2\u20ac\u201d plaintext continued after STARTTLS command",
@@ -331,19 +610,19 @@
               "anomaly_score": null,
               "evidence_reference": {
                 "pcap_sha256": "0c96a199e6790537cec5f73b0d9b9730e0852bb8e22eadc8bd0320f8605e7ddc",
-                "session_id": "63ade425-4f3e-4c99-a66d-3d5c46d319fd",
+                "session_id": "80fd83e7-d9b5-493c-99af-ad61545b8e36",
                 "session_flow": "SMTP 10.0.2.30:56001 \u2192 45.33.32.156:25",
                 "packet_number": 17,
                 "byte_offset": 0,
                 "observed_value": "TLS Version: unknown",
-                "finding_id": "1664a170-e86c-4330-b649-057160602fd1",
+                "finding_id": "624742be-5826-424f-b003-4543882bb9ef",
                 "detection_rule": "starttls-downgrade",
-                "evidence_chain": "0c96a199e679... \u2192 Session [SMTP 10.0.2.30:56001 \u2192 45.33.32.156:25] \u2192 Pkt #17 (Offset 0) \u2192 Observed: TLS Version: unknown \u2192 Finding #1664a170 \u2192 Rule: starttls-downgrade"
+                "evidence_chain": "0c96a199e679... \u2192 Session [SMTP 10.0.2.30:56001 \u2192 45.33.32.156:25] \u2192 Pkt #17 (Offset 0) \u2192 Observed: TLS Version: unknown \u2192 Finding #624742be \u2192 Rule: starttls-downgrade"
               }
             },
             {
               "id": "ml-anomaly",
-              "finding_id": "e3687286-d65b-4b3c-b46d-75b4877c8067",
+              "finding_id": "f8805f58-a6d1-44bc-8f25-f31b01b471d2",
               "category": "ml-anomaly",
               "severity": "medium",
               "description": "Session flagged as anomalous by IsolationForest (score=-0.027)",
@@ -361,14 +640,14 @@
               "anomaly_score": -0.027233495335499347,
               "evidence_reference": {
                 "pcap_sha256": "0c96a199e6790537cec5f73b0d9b9730e0852bb8e22eadc8bd0320f8605e7ddc",
-                "session_id": "63ade425-4f3e-4c99-a66d-3d5c46d319fd",
+                "session_id": "80fd83e7-d9b5-493c-99af-ad61545b8e36",
                 "session_flow": "SMTP 10.0.2.30:56001 \u2192 45.33.32.156:25",
                 "packet_number": 15,
                 "byte_offset": 0,
                 "observed_value": "anomaly-score",
-                "finding_id": "e3687286-d65b-4b3c-b46d-75b4877c8067",
+                "finding_id": "f8805f58-a6d1-44bc-8f25-f31b01b471d2",
                 "detection_rule": "ml-anomaly",
-                "evidence_chain": "0c96a199e679... \u2192 Session [SMTP 10.0.2.30:56001 \u2192 45.33.32.156:25] \u2192 Pkt #15 (Offset 0) \u2192 Observed: anomaly-score \u2192 Finding #e3687286 \u2192 Rule: ml-anomaly"
+                "evidence_chain": "0c96a199e679... \u2192 Session [SMTP 10.0.2.30:56001 \u2192 45.33.32.156:25] \u2192 Pkt #15 (Offset 0) \u2192 Observed: anomaly-score \u2192 Finding #f8805f58 \u2192 Rule: ml-anomaly"
               }
             }
           ],
@@ -381,7 +660,7 @@
               {
                 "feature": "STARTTLS Negotiation",
                 "rule_id": "starttls-downgrade",
-                "finding_id": "1664a170-e86c-4330-b649-057160602fd1",
+                "finding_id": "624742be-5826-424f-b003-4543882bb9ef",
                 "observed_value": "TLS Version: unknown",
                 "score_contribution": 40,
                 "severity": "critical",
@@ -391,7 +670,7 @@
               {
                 "feature": "ml-anomaly",
                 "rule_id": "ml-anomaly",
-                "finding_id": "e3687286-d65b-4b3c-b46d-75b4877c8067",
+                "finding_id": "f8805f58-a6d1-44bc-8f25-f31b01b471d2",
                 "observed_value": "anomaly-score",
                 "score_contribution": 10,
                 "severity": "medium",
@@ -430,18 +709,21 @@
               "Cipher PFS Flag: False",
               "STARTTLS Status: True"
             ]
-          }
+          },
+          "host_posture_grade": "D",
+          "host_posture_label": "Weak"
         }
       ],
       "why_this_score": {
         "posture_score": 50,
         "posture_grade": "D",
+        "posture_label": "Weak",
         "factor_count": 2,
         "contributing_factors": [
           {
             "feature": "STARTTLS Negotiation",
             "rule_id": "starttls-downgrade",
-            "finding_id": "1664a170-e86c-4330-b649-057160602fd1",
+            "finding_id": "624742be-5826-424f-b003-4543882bb9ef",
             "observed_value": "TLS Version: unknown",
             "score_contribution": 40,
             "severity": "critical",
@@ -451,7 +733,7 @@
           {
             "feature": "ml-anomaly",
             "rule_id": "ml-anomaly",
-            "finding_id": "e3687286-d65b-4b3c-b46d-75b4877c8067",
+            "finding_id": "f8805f58-a6d1-44bc-8f25-f31b01b471d2",
             "observed_value": "anomaly-score",
             "score_contribution": 10,
             "severity": "medium",
@@ -459,12 +741,95 @@
             "short_explanation": "Session flagged as anomalous by IsolationForest (score=-0.027)"
           }
         ],
-        "ascii_tree": "Host Posture Score (45.33.32.156:25 - Grade D): 50 / 100\nSeverity: GRADE D\n\nWHY?\n\u251c\u2500\u2500 STARTTLS Negotiation (TLS Version...   +40\n\u2514\u2500\u2500 ml-anomaly (anomaly-score)             +10\n\u2514\u2500\u2500 Total                                  50"
+        "ascii_tree": "Host Posture Score (45.33.32.156:25 - Grade D [Weak]): 50 / 100\nSeverity: GRADE D (WEAK)\n\nWHY?\n\u251c\u2500\u2500 STARTTLS Negotiation (TLS Version...   +40\n\u2514\u2500\u2500 ml-anomaly (anomaly-score)             +10\n\u2514\u2500\u2500 Total                                  50",
+        "why_this_grade": {
+          "grade": "D",
+          "label": "Weak",
+          "score": 50,
+          "threshold_bracket": "31-50",
+          "headline": "Security Posture: D \u2014 Weak",
+          "summary": "Host '45.33.32.156:25' received Posture Grade D (Weak) with a cumulative risk score of 50/100 (Bracket: 31-50). This grade was determined by 2 adverse findings (1 Critical, 1 Medium).",
+          "determining_factors": [
+            {
+              "finding_id": "624742be-5826-424f-b003-4543882bb9ef",
+              "rule_id": "starttls-downgrade",
+              "feature": "Starttls Downgrade",
+              "severity": "critical",
+              "description": "STARTTLS downgrade attack suspected \u00e2\u20ac\u201d plaintext continued after STARTTLS command",
+              "score_contribution": 40,
+              "observed_value": "STARTTLS downgrade attack suspected \u00e2\u20ac\u201d plaintext continued after STARTTLS command",
+              "evidence_ref": "Packet #17 (Offset 0)",
+              "impact_on_grade": "+40 points penalty towards Grade D"
+            },
+            {
+              "finding_id": "f8805f58-a6d1-44bc-8f25-f31b01b471d2",
+              "rule_id": "ml-anomaly",
+              "feature": "Ml Anomaly",
+              "severity": "medium",
+              "description": "Session flagged as anomalous by IsolationForest (score=-0.027)",
+              "score_contribution": 10,
+              "observed_value": "Session flagged as anomalous by IsolationForest (score=-0.027)",
+              "evidence_ref": "Packet #15 (Offset 0)",
+              "impact_on_grade": "+10 points penalty towards Grade D"
+            }
+          ],
+          "grade_ladder": [
+            {
+              "grade": "A+",
+              "label": "Excellent",
+              "range": "0",
+              "active": false
+            },
+            {
+              "grade": "A",
+              "label": "Strong",
+              "range": "1-5",
+              "active": false
+            },
+            {
+              "grade": "B",
+              "label": "Good",
+              "range": "6-15",
+              "active": false
+            },
+            {
+              "grade": "C",
+              "label": "Moderate",
+              "range": "16-30",
+              "active": false
+            },
+            {
+              "grade": "D",
+              "label": "Weak",
+              "range": "31-50",
+              "active": true
+            },
+            {
+              "grade": "E",
+              "label": "Poor",
+              "range": "51-75",
+              "active": false
+            },
+            {
+              "grade": "F",
+              "label": "Critical",
+              "range": "76+",
+              "active": false
+            }
+          ],
+          "next_grade_target": {
+            "target_grade": "C",
+            "target_label": "Moderate",
+            "points_to_reduce": 20,
+            "top_remediation_action": "Remediate highest penalty finding 'starttls-downgrade' (-40 pts) to advance towards Grade C."
+          }
+        }
       }
     },
     {
       "host": "203.0.113.50:25",
       "posture_grade": "D",
+      "posture_label": "Weak",
       "posture_score": 35,
       "grade_delta": "No change from D (last scan 2026-09-29)",
       "finding_summary": {
@@ -474,10 +839,92 @@
         "low": 0,
         "informational": 0
       },
+      "why_this_grade": {
+        "grade": "D",
+        "label": "Weak",
+        "score": 35,
+        "threshold_bracket": "31-50",
+        "headline": "Security Posture: D \u2014 Weak",
+        "summary": "Host '203.0.113.50:25' received Posture Grade D (Weak) with a cumulative risk score of 35/100 (Bracket: 31-50). This grade was determined by 2 adverse findings (1 High, 1 Medium).",
+        "determining_factors": [
+          {
+            "finding_id": "0ad571db-c0e9-491a-949e-a845bfcebb54",
+            "rule_id": "weak-cipher",
+            "feature": "Weak Cipher",
+            "severity": "high",
+            "description": "A weak cipher suite is negotiated (no PFS or weak key exchange)",
+            "score_contribution": 25,
+            "observed_value": "A weak cipher suite is negotiated (no PFS or weak key exchange)",
+            "evidence_ref": "Packet #21 (Offset 0)",
+            "impact_on_grade": "+25 points penalty towards Grade D"
+          },
+          {
+            "finding_id": "768d2044-bc88-4a86-b4e0-da4bb37f1a4f",
+            "rule_id": "no-pfs",
+            "feature": "No Forward Secrecy",
+            "severity": "medium",
+            "description": "Cipher suite does not provide Perfect Forward Secrecy (PFS)",
+            "score_contribution": 10,
+            "observed_value": "Cipher suite does not provide Perfect Forward Secrecy (PFS)",
+            "evidence_ref": "Packet #21 (Offset 0)",
+            "impact_on_grade": "+10 points penalty towards Grade D"
+          }
+        ],
+        "grade_ladder": [
+          {
+            "grade": "A+",
+            "label": "Excellent",
+            "range": "0",
+            "active": false
+          },
+          {
+            "grade": "A",
+            "label": "Strong",
+            "range": "1-5",
+            "active": false
+          },
+          {
+            "grade": "B",
+            "label": "Good",
+            "range": "6-15",
+            "active": false
+          },
+          {
+            "grade": "C",
+            "label": "Moderate",
+            "range": "16-30",
+            "active": false
+          },
+          {
+            "grade": "D",
+            "label": "Weak",
+            "range": "31-50",
+            "active": true
+          },
+          {
+            "grade": "E",
+            "label": "Poor",
+            "range": "51-75",
+            "active": false
+          },
+          {
+            "grade": "F",
+            "label": "Critical",
+            "range": "76+",
+            "active": false
+          }
+        ],
+        "next_grade_target": {
+          "target_grade": "C",
+          "target_label": "Moderate",
+          "points_to_reduce": 5,
+          "top_remediation_action": "Remediate highest penalty finding 'weak-cipher' (-25 pts) to advance towards Grade C."
+        }
+      },
       "sessions": [
         {
-          "session_id": "38a92a49-d450-4627-bd2c-cdcc75c42a99",
-          "protocol": "SMTP",
+          "session_id": "800631d1-5284-4146-bb53-0920398eeb9b",
+          "protocol": "SMTP STARTTLS",
           "src_ip": "10.0.3.40",
           "dst_ip": "203.0.113.50",
           "src_port": 57001,
@@ -495,6 +942,7 @@
           "alpn": [],
           "tls_anomalies": [],
           "tls13_visibility_limited": false,
+          "not_observable": [],
           "certificate": null,
           "ml_risk_label": "medium",
           "ml_confidence": 0.3533,
@@ -512,7 +960,7 @@
           "findings": [
             {
               "id": "weak-cipher",
-              "finding_id": "765b7a29-4f5a-429e-baed-2fc8116c2a15",
+              "finding_id": "0ad571db-c0e9-491a-949e-a845bfcebb54",
               "category": "weak-cipher",
               "severity": "high",
               "description": "A weak cipher suite is negotiated (no PFS or weak key exchange)",
@@ -528,19 +976,19 @@
               "anomaly_score": null,
               "evidence_reference": {
                 "pcap_sha256": "0c96a199e6790537cec5f73b0d9b9730e0852bb8e22eadc8bd0320f8605e7ddc",
-                "session_id": "38a92a49-d450-4627-bd2c-cdcc75c42a99",
-                "session_flow": "SMTP 10.0.3.40:57001 \u2192 203.0.113.50:25",
+                "session_id": "800631d1-5284-4146-bb53-0920398eeb9b",
+                "session_flow": "SMTP STARTTLS 10.0.3.40:57001 \u2192 203.0.113.50:25",
                 "packet_number": 21,
                 "byte_offset": 0,
                 "observed_value": "Cipher Suite: TLS_RSA_WITH_AES_128_CBC_SHA",
-                "finding_id": "765b7a29-4f5a-429e-baed-2fc8116c2a15",
+                "finding_id": "0ad571db-c0e9-491a-949e-a845bfcebb54",
                 "detection_rule": "weak-cipher",
-                "evidence_chain": "0c96a199e679... \u2192 Session [SMTP 10.0.3.40:57001 \u2192 203.0.113.50:25] \u2192 Pkt #21 (Offset 0) \u2192 Observed: Cipher Suite: TLS_RSA_WITH_AES_128_CBC_SHA \u2192 Finding #765b7a29 \u2192 Rule: weak-cipher"
+                "evidence_chain": "0c96a199e679... \u2192 Session [SMTP STARTTLS 10.0.3.40:57001 \u2192 203.0.113.50:25] \u2192 Pkt #21 (Offset 0) \u2192 Observed: Cipher Suite: TLS_RSA_WITH_AES_128_CBC_SHA \u2192 Finding #0ad571db \u2192 Rule: weak-cipher"
               }
             },
             {
               "id": "no-pfs",
-              "finding_id": "125f2424-84b4-4505-9aa3-a3df42cb9a21",
+              "finding_id": "768d2044-bc88-4a86-b4e0-da4bb37f1a4f",
               "category": "no-forward-secrecy",
               "severity": "medium",
               "description": "Cipher suite does not provide Perfect Forward Secrecy (PFS)",
@@ -556,14 +1004,14 @@
               "anomaly_score": null,
               "evidence_reference": {
                 "pcap_sha256": "0c96a199e6790537cec5f73b0d9b9730e0852bb8e22eadc8bd0320f8605e7ddc",
-                "session_id": "38a92a49-d450-4627-bd2c-cdcc75c42a99",
-                "session_flow": "SMTP 10.0.3.40:57001 \u2192 203.0.113.50:25",
+                "session_id": "800631d1-5284-4146-bb53-0920398eeb9b",
+                "session_flow": "SMTP STARTTLS 10.0.3.40:57001 \u2192 203.0.113.50:25",
                 "packet_number": 21,
                 "byte_offset": 0,
                 "observed_value": "Key Exchange: RSA, PFS: False",
-                "finding_id": "125f2424-84b4-4505-9aa3-a3df42cb9a21",
+                "finding_id": "768d2044-bc88-4a86-b4e0-da4bb37f1a4f",
                 "detection_rule": "no-pfs",
-                "evidence_chain": "0c96a199e679... \u2192 Session [SMTP 10.0.3.40:57001 \u2192 203.0.113.50:25] \u2192 Pkt #21 (Offset 0) \u2192 Observed: Key Exchange: RSA, PFS: False \u2192 Finding #125f2424 \u2192 Rule: no-pfs"
+                "evidence_chain": "0c96a199e679... \u2192 Session [SMTP STARTTLS 10.0.3.40:57001 \u2192 203.0.113.50:25] \u2192 Pkt #21 (Offset 0) \u2192 Observed: Key Exchange: RSA, PFS: False \u2192 Finding #768d2044 \u2192 Rule: no-pfs"
               }
             }
           ],
@@ -576,7 +1024,7 @@
               {
                 "feature": "Cipher Suite Security",
                 "rule_id": "weak-cipher",
-                "finding_id": "765b7a29-4f5a-429e-baed-2fc8116c2a15",
+                "finding_id": "0ad571db-c0e9-491a-949e-a845bfcebb54",
                 "observed_value": "Cipher Suite: TLS_RSA_WITH_AES_128_CBC_SHA",
                 "score_contribution": 25,
                 "severity": "high",
@@ -586,7 +1034,7 @@
               {
                 "feature": "Forward Secrecy (PFS)",
                 "rule_id": "no-pfs",
-                "finding_id": "125f2424-84b4-4505-9aa3-a3df42cb9a21",
+                "finding_id": "768d2044-bc88-4a86-b4e0-da4bb37f1a4f",
                 "observed_value": "Key Exchange: RSA, PFS: False",
                 "score_contribution": 10,
                 "severity": "medium",
@@ -604,7 +1052,7 @@
               "model_architecture": "RandomForest Classifier + IsolationForest Baseline",
               "score_isolation_note": "ML assessment runs in parallel as a secondary heuristic and does not inflate deterministic rule scores.",
               "model_features": [
-                "Handshake Protocol: SMTP",
+                "Handshake Protocol: SMTP STARTTLS",
                 "TLS Version Feature: TLS1.2",
                 "Cipher PFS Flag: False",
                 "STARTTLS Status: True"
@@ -620,23 +1068,26 @@
             "model_architecture": "RandomForest Classifier + IsolationForest Baseline",
             "score_isolation_note": "ML assessment runs in parallel as a secondary heuristic and does not inflate deterministic rule scores.",
             "model_features": [
-              "Handshake Protocol: SMTP",
+              "Handshake Protocol: SMTP STARTTLS",
               "TLS Version Feature: TLS1.2",
               "Cipher PFS Flag: False",
               "STARTTLS Status: True"
             ]
-          }
+          },
+          "host_posture_grade": "D",
+          "host_posture_label": "Weak"
         }
       ],
       "why_this_score": {
         "posture_score": 35,
         "posture_grade": "D",
+        "posture_label": "Weak",
         "factor_count": 2,
         "contributing_factors": [
           {
             "feature": "Cipher Suite Security",
             "rule_id": "weak-cipher",
-            "finding_id": "765b7a29-4f5a-429e-baed-2fc8116c2a15",
+            "finding_id": "0ad571db-c0e9-491a-949e-a845bfcebb54",
             "observed_value": "Cipher Suite: TLS_RSA_WITH_AES_128_CBC_SHA",
             "score_contribution": 25,
             "severity": "high",
@@ -646,7 +1097,7 @@
           {
             "feature": "Forward Secrecy (PFS)",
             "rule_id": "no-pfs",
-            "finding_id": "125f2424-84b4-4505-9aa3-a3df42cb9a21",
+            "finding_id": "768d2044-bc88-4a86-b4e0-da4bb37f1a4f",
             "observed_value": "Key Exchange: RSA, PFS: False",
             "score_contribution": 10,
             "severity": "medium",
@@ -654,12 +1105,95 @@
             "short_explanation": "No Perfect Forward Secrecy (PFS); static RSA key exchange enables retrospective traffic decryption"
           }
         ],
-        "ascii_tree": "Host Posture Score (203.0.113.50:25 - Grade D): 35 / 100\nSeverity: GRADE D\n\nWHY?\n\u251c\u2500\u2500 Cipher Suite Security (Cipher Sui...   +25\n\u2514\u2500\u2500 Forward Secrecy (PFS) (Key Exchan...   +10\n\u2514\u2500\u2500 Total                                  35"
+        "ascii_tree": "Host Posture Score (203.0.113.50:25 - Grade D [Weak]): 35 / 100\nSeverity: GRADE D (WEAK)\n\nWHY?\n\u251c\u2500\u2500 Cipher Suite Security (Cipher Sui...   +25\n\u2514\u2500\u2500 Forward Secrecy (PFS) (Key Exchan...   +10\n\u2514\u2500\u2500 Total                                  35",
+        "why_this_grade": {
+          "grade": "D",
+          "label": "Weak",
+          "score": 35,
+          "threshold_bracket": "31-50",
+          "headline": "Security Posture: D \u2014 Weak",
+          "summary": "Host '203.0.113.50:25' received Posture Grade D (Weak) with a cumulative risk score of 35/100 (Bracket: 31-50). This grade was determined by 2 adverse findings (1 High, 1 Medium).",
+          "determining_factors": [
+            {
+              "finding_id": "0ad571db-c0e9-491a-949e-a845bfcebb54",
+              "rule_id": "weak-cipher",
+              "feature": "Weak Cipher",
+              "severity": "high",
+              "description": "A weak cipher suite is negotiated (no PFS or weak key exchange)",
+              "score_contribution": 25,
+              "observed_value": "A weak cipher suite is negotiated (no PFS or weak key exchange)",
+              "evidence_ref": "Packet #21 (Offset 0)",
+              "impact_on_grade": "+25 points penalty towards Grade D"
+            },
+            {
+              "finding_id": "768d2044-bc88-4a86-b4e0-da4bb37f1a4f",
+              "rule_id": "no-pfs",
+              "feature": "No Forward Secrecy",
+              "severity": "medium",
+              "description": "Cipher suite does not provide Perfect Forward Secrecy (PFS)",
+              "score_contribution": 10,
+              "observed_value": "Cipher suite does not provide Perfect Forward Secrecy (PFS)",
+              "evidence_ref": "Packet #21 (Offset 0)",
+              "impact_on_grade": "+10 points penalty towards Grade D"
+            }
+          ],
+          "grade_ladder": [
+            {
+              "grade": "A+",
+              "label": "Excellent",
+              "range": "0",
+              "active": false
+            },
+            {
+              "grade": "A",
+              "label": "Strong",
+              "range": "1-5",
+              "active": false
+            },
+            {
+              "grade": "B",
+              "label": "Good",
+              "range": "6-15",
+              "active": false
+            },
+            {
+              "grade": "C",
+              "label": "Moderate",
+              "range": "16-30",
+              "active": false
+            },
+            {
+              "grade": "D",
+              "label": "Weak",
+              "range": "31-50",
+              "active": true
+            },
+            {
+              "grade": "E",
+              "label": "Poor",
+              "range": "51-75",
+              "active": false
+            },
+            {
+              "grade": "F",
+              "label": "Critical",
+              "range": "76+",
+              "active": false
+            }
+          ],
+          "next_grade_target": {
+            "target_grade": "C",
+            "target_label": "Moderate",
+            "points_to_reduce": 5,
+            "top_remediation_action": "Remediate highest penalty finding 'weak-cipher' (-25 pts) to advance towards Grade C."
+          }
+        }
       }
     },
     {
       "host": "203.0.113.10:25",
-      "posture_grade": "A",
+      "posture_grade": "A+",
+      "posture_label": "Excellent",
       "posture_score": 0,
       "grade_delta": null,
       "finding_summary": {
@@ -669,10 +1203,64 @@
         "low": 0,
         "informational": 0
       },
+      "why_this_grade": {
+        "grade": "A+",
+        "label": "Excellent",
+        "score": 0,
+        "threshold_bracket": "0",
+        "headline": "Security Posture: A+ \u2014 Excellent",
+        "summary": "Host '203.0.113.10:25' achieved Posture Grade A+ (Excellent) with a perfect score of 0/100. Zero security findings or cryptographic policy violations were detected across all analyzed sessions.",
+        "determining_factors": [],
+        "grade_ladder": [
+          {
+            "grade": "A+",
+            "label": "Excellent",
+            "range": "0",
+            "active": true
+          },
+          {
+            "grade": "A",
+            "label": "Strong",
+            "range": "1-5",
+            "active": false
+          },
+          {
+            "grade": "B",
+            "label": "Good",
+            "range": "6-15",
+            "active": false
+          },
+          {
+            "grade": "C",
+            "label": "Moderate",
+            "range": "16-30",
+            "active": false
+          },
+          {
+            "grade": "D",
+            "label": "Weak",
+            "range": "31-50",
+            "active": false
+          },
+          {
+            "grade": "E",
+            "label": "Poor",
+            "range": "51-75",
+            "active": false
+          },
+          {
+            "grade": "F",
+            "label": "Critical",
+            "range": "76+",
+            "active": false
+          }
+        ],
+        "next_grade_target": null
+      },
       "sessions": [
         {
-          "session_id": "cfe0d6b7-6c5f-4e9e-b520-9001465a8c87",
-          "protocol": "SMTP",
+          "session_id": "6781cb7c-69f0-47a2-bfd5-eec539c6bf78",
+          "protocol": "SMTP STARTTLS",
           "src_ip": "10.0.0.5",
           "dst_ip": "203.0.113.10",
           "src_port": 54321,
@@ -690,6 +1278,9 @@
           "alpn": [],
           "tls_anomalies": [],
           "tls13_visibility_limited": false,
+          "not_observable": [
+            "key_exchange (not observable: handshake incomplete)"
+          ],
           "certificate": null,
           "ml_risk_label": "medium",
           "ml_confidence": 0.3533,
@@ -721,7 +1312,7 @@
               "model_architecture": "RandomForest Classifier + IsolationForest Baseline",
               "score_isolation_note": "ML assessment runs in parallel as a secondary heuristic and does not inflate deterministic rule scores.",
               "model_features": [
-                "Handshake Protocol: SMTP",
+                "Handshake Protocol: SMTP STARTTLS",
                 "TLS Version Feature: TLS1.2",
                 "Cipher PFS Flag: True",
                 "STARTTLS Status: True"
@@ -737,117 +1328,175 @@
             "model_architecture": "RandomForest Classifier + IsolationForest Baseline",
             "score_isolation_note": "ML assessment runs in parallel as a secondary heuristic and does not inflate deterministic rule scores.",
             "model_features": [
-              "Handshake Protocol: SMTP",
+              "Handshake Protocol: SMTP STARTTLS",
               "TLS Version Feature: TLS1.2",
               "Cipher PFS Flag: True",
               "STARTTLS Status: True"
             ]
-          }
+          },
+          "host_posture_grade": "A+",
+          "host_posture_label": "Excellent"
         }
       ],
       "why_this_score": {
         "posture_score": 0,
-        "posture_grade": "A",
+        "posture_grade": "A+",
+        "posture_label": "Excellent",
         "factor_count": 0,
         "contributing_factors": [],
-        "ascii_tree": "Host Posture Score (203.0.113.10:25 - Grade A): 0 / 100\nSeverity: GRADE A\n\nWHY?\n\u2514\u2500\u2500 No security findings detected          +0\n\u2514\u2500\u2500 Total                                 0"
+        "ascii_tree": "Host Posture Score (203.0.113.10:25 - Grade A+ [Excellent]): 0 / 100\nSeverity: GRADE A+ (EXCELLENT)\n\nWHY?\n\u2514\u2500\u2500 No security findings detected          +0\n\u2514\u2500\u2500 Total                                 0",
+        "why_this_grade": {
+          "grade": "A+",
+          "label": "Excellent",
+          "score": 0,
+          "threshold_bracket": "0",
+          "headline": "Security Posture: A+ \u2014 Excellent",
+          "summary": "Host '203.0.113.10:25' achieved Posture Grade A+ (Excellent) with a perfect score of 0/100. Zero security findings or cryptographic policy violations were detected across all analyzed sessions.",
+          "determining_factors": [],
+          "grade_ladder": [
+            {
+              "grade": "A+",
+              "label": "Excellent",
+              "range": "0",
+              "active": true
+            },
+            {
+              "grade": "A",
+              "label": "Strong",
+              "range": "1-5",
+              "active": false
+            },
+            {
+              "grade": "B",
+              "label": "Good",
+              "range": "6-15",
+              "active": false
+            },
+            {
+              "grade": "C",
+              "label": "Moderate",
+              "range": "16-30",
+              "active": false
+            },
+            {
+              "grade": "D",
+              "label": "Weak",
+              "range": "31-50",
+              "active": false
+            },
+            {
+              "grade": "E",
+              "label": "Poor",
+              "range": "51-75",
+              "active": false
+            },
+            {
+              "grade": "F",
+              "label": "Critical",
+              "range": "76+",
+              "active": false
+            }
+          ],
+          "next_grade_target": null
+        }
       }
     }
   ],
-  "analysis_id": "08a4053c-4e01-4ac3-b6a3-e88e42987fa3",
+  "analysis_id": "75e24868-1749-4764-9da0-9a1b7562978b",
   "source_filename": "capture.pcap",
   "forensic_evidence_and_chain_of_custody": {
     "source_pcap": "capture.pcap",
     "source_filename": "capture.pcap",
     "pcap_sha256": "0c96a199e6790537cec5f73b0d9b9730e0852bb8e22eadc8bd0320f8605e7ddc",
-    "analysis_id": "08a4053c-4e01-4ac3-b6a3-e88e42987fa3",
-    "report_id": "c397a0d2-94a4-40e0-b15f-00ffd1225fa0",
-    "timestamp": "2026-09-29T18:13:43.152336+00:00",
+    "analysis_id": "75e24868-1749-4764-9da0-9a1b7562978b",
+    "report_id": "c4ba2085-7b6e-46e7-93d8-fb7e8866f4be",
+    "timestamp": "2026-09-29T19:33:47.173634+00:00",
     "analyzer_version": "1.0.0",
     "passive_offline_status": "PASSIVE_OFFLINE (Air-Gapped / Strictly Read-Only)",
     "integrity_statement": "No active network connections were made during analysis.",
     "packet_level_evidence_mapping": [
       {
         "pcap_sha256": "0c96a199e6790537cec5f73b0d9b9730e0852bb8e22eadc8bd0320f8605e7ddc",
-        "session_id": "5382607b-2f11-4d1b-86d1-5e3862372dc9",
-        "session_flow": "SMTP 10.0.1.20:55001 \u2192 198.51.100.5:25",
+        "session_id": "1fce351e-49b9-4596-98b4-e70fed56b041",
+        "session_flow": "SMTP STARTTLS 10.0.1.20:55001 \u2192 198.51.100.5:25",
         "packet_number": 8,
         "byte_offset": 0,
         "observed_value": "TLS Version: TLS1.0",
-        "finding_id": "7b714013-2053-49fd-b9cd-d0e32527c658",
+        "finding_id": "f883e1e3-52e8-48ac-a27c-4abfc2f32da9",
         "detection_rule": "deprecated-tls-10",
-        "evidence_chain": "0c96a199e679... \u2192 Session [SMTP 10.0.1.20:55001 \u2192 198.51.100.5:25] \u2192 Pkt #8 (Offset 0) \u2192 Observed: TLS Version: TLS1.0 \u2192 Finding #7b714013 \u2192 Rule: deprecated-tls-10"
+        "evidence_chain": "0c96a199e679... \u2192 Session [SMTP STARTTLS 10.0.1.20:55001 \u2192 198.51.100.5:25] \u2192 Pkt #8 (Offset 0) \u2192 Observed: TLS Version: TLS1.0 \u2192 Finding #f883e1e3 \u2192 Rule: deprecated-tls-10"
       },
       {
         "pcap_sha256": "0c96a199e6790537cec5f73b0d9b9730e0852bb8e22eadc8bd0320f8605e7ddc",
-        "session_id": "5382607b-2f11-4d1b-86d1-5e3862372dc9",
-        "session_flow": "SMTP 10.0.1.20:55001 \u2192 198.51.100.5:25",
+        "session_id": "1fce351e-49b9-4596-98b4-e70fed56b041",
+        "session_flow": "SMTP STARTTLS 10.0.1.20:55001 \u2192 198.51.100.5:25",
         "packet_number": 8,
         "byte_offset": 0,
         "observed_value": "Cipher Suite: TLS_RSA_WITH_AES_128_CBC_SHA",
-        "finding_id": "48552d3d-d35a-4bbb-a605-eefa8790ef5c",
+        "finding_id": "141dac3b-fdb0-4ed3-b4e2-c56b2e241558",
         "detection_rule": "weak-cipher",
-        "evidence_chain": "0c96a199e679... \u2192 Session [SMTP 10.0.1.20:55001 \u2192 198.51.100.5:25] \u2192 Pkt #8 (Offset 0) \u2192 Observed: Cipher Suite: TLS_RSA_WITH_AES_128_CBC_SHA \u2192 Finding #48552d3d \u2192 Rule: weak-cipher"
+        "evidence_chain": "0c96a199e679... \u2192 Session [SMTP STARTTLS 10.0.1.20:55001 \u2192 198.51.100.5:25] \u2192 Pkt #8 (Offset 0) \u2192 Observed: Cipher Suite: TLS_RSA_WITH_AES_128_CBC_SHA \u2192 Finding #141dac3b \u2192 Rule: weak-cipher"
       },
       {
         "pcap_sha256": "0c96a199e6790537cec5f73b0d9b9730e0852bb8e22eadc8bd0320f8605e7ddc",
-        "session_id": "5382607b-2f11-4d1b-86d1-5e3862372dc9",
-        "session_flow": "SMTP 10.0.1.20:55001 \u2192 198.51.100.5:25",
+        "session_id": "1fce351e-49b9-4596-98b4-e70fed56b041",
+        "session_flow": "SMTP STARTTLS 10.0.1.20:55001 \u2192 198.51.100.5:25",
         "packet_number": 8,
         "byte_offset": 0,
         "observed_value": "Key Exchange: RSA, PFS: False",
-        "finding_id": "2b031574-aacc-4514-8490-9a24c4c74e54",
+        "finding_id": "3d9bc180-d524-4ddc-9084-4e0ff019e176",
         "detection_rule": "no-pfs",
-        "evidence_chain": "0c96a199e679... \u2192 Session [SMTP 10.0.1.20:55001 \u2192 198.51.100.5:25] \u2192 Pkt #8 (Offset 0) \u2192 Observed: Key Exchange: RSA, PFS: False \u2192 Finding #2b031574 \u2192 Rule: no-pfs"
+        "evidence_chain": "0c96a199e679... \u2192 Session [SMTP STARTTLS 10.0.1.20:55001 \u2192 198.51.100.5:25] \u2192 Pkt #8 (Offset 0) \u2192 Observed: Key Exchange: RSA, PFS: False \u2192 Finding #3d9bc180 \u2192 Rule: no-pfs"
       },
       {
         "pcap_sha256": "0c96a199e6790537cec5f73b0d9b9730e0852bb8e22eadc8bd0320f8605e7ddc",
-        "session_id": "63ade425-4f3e-4c99-a66d-3d5c46d319fd",
+        "session_id": "80fd83e7-d9b5-493c-99af-ad61545b8e36",
         "session_flow": "SMTP 10.0.2.30:56001 \u2192 45.33.32.156:25",
         "packet_number": 17,
         "byte_offset": 0,
         "observed_value": "TLS Version: unknown",
-        "finding_id": "1664a170-e86c-4330-b649-057160602fd1",
+        "finding_id": "624742be-5826-424f-b003-4543882bb9ef",
         "detection_rule": "starttls-downgrade",
-        "evidence_chain": "0c96a199e679... \u2192 Session [SMTP 10.0.2.30:56001 \u2192 45.33.32.156:25] \u2192 Pkt #17 (Offset 0) \u2192 Observed: TLS Version: unknown \u2192 Finding #1664a170 \u2192 Rule: starttls-downgrade"
+        "evidence_chain": "0c96a199e679... \u2192 Session [SMTP 10.0.2.30:56001 \u2192 45.33.32.156:25] \u2192 Pkt #17 (Offset 0) \u2192 Observed: TLS Version: unknown \u2192 Finding #624742be \u2192 Rule: starttls-downgrade"
       },
       {
         "pcap_sha256": "0c96a199e6790537cec5f73b0d9b9730e0852bb8e22eadc8bd0320f8605e7ddc",
-        "session_id": "63ade425-4f3e-4c99-a66d-3d5c46d319fd",
+        "session_id": "80fd83e7-d9b5-493c-99af-ad61545b8e36",
         "session_flow": "SMTP 10.0.2.30:56001 \u2192 45.33.32.156:25",
         "packet_number": 15,
         "byte_offset": 0,
         "observed_value": "anomaly-score",
-        "finding_id": "e3687286-d65b-4b3c-b46d-75b4877c8067",
+        "finding_id": "f8805f58-a6d1-44bc-8f25-f31b01b471d2",
         "detection_rule": "ml-anomaly",
-        "evidence_chain": "0c96a199e679... \u2192 Session [SMTP 10.0.2.30:56001 \u2192 45.33.32.156:25] \u2192 Pkt #15 (Offset 0) \u2192 Observed: anomaly-score \u2192 Finding #e3687286 \u2192 Rule: ml-anomaly"
+        "evidence_chain": "0c96a199e679... \u2192 Session [SMTP 10.0.2.30:56001 \u2192 45.33.32.156:25] \u2192 Pkt #15 (Offset 0) \u2192 Observed: anomaly-score \u2192 Finding #f8805f58 \u2192 Rule: ml-anomaly"
       },
       {
         "pcap_sha256": "0c96a199e6790537cec5f73b0d9b9730e0852bb8e22eadc8bd0320f8605e7ddc",
-        "session_id": "38a92a49-d450-4627-bd2c-cdcc75c42a99",
-        "session_flow": "SMTP 10.0.3.40:57001 \u2192 203.0.113.50:25",
+        "session_id": "800631d1-5284-4146-bb53-0920398eeb9b",
+        "session_flow": "SMTP STARTTLS 10.0.3.40:57001 \u2192 203.0.113.50:25",
         "packet_number": 21,
         "byte_offset": 0,
         "observed_value": "Cipher Suite: TLS_RSA_WITH_AES_128_CBC_SHA",
-        "finding_id": "765b7a29-4f5a-429e-baed-2fc8116c2a15",
+        "finding_id": "0ad571db-c0e9-491a-949e-a845bfcebb54",
         "detection_rule": "weak-cipher",
-        "evidence_chain": "0c96a199e679... \u2192 Session [SMTP 10.0.3.40:57001 \u2192 203.0.113.50:25] \u2192 Pkt #21 (Offset 0) \u2192 Observed: Cipher Suite: TLS_RSA_WITH_AES_128_CBC_SHA \u2192 Finding #765b7a29 \u2192 Rule: weak-cipher"
+        "evidence_chain": "0c96a199e679... \u2192 Session [SMTP STARTTLS 10.0.3.40:57001 \u2192 203.0.113.50:25] \u2192 Pkt #21 (Offset 0) \u2192 Observed: Cipher Suite: TLS_RSA_WITH_AES_128_CBC_SHA \u2192 Finding #0ad571db \u2192 Rule: weak-cipher"
       },
       {
         "pcap_sha256": "0c96a199e6790537cec5f73b0d9b9730e0852bb8e22eadc8bd0320f8605e7ddc",
-        "session_id": "38a92a49-d450-4627-bd2c-cdcc75c42a99",
-        "session_flow": "SMTP 10.0.3.40:57001 \u2192 203.0.113.50:25",
+        "session_id": "800631d1-5284-4146-bb53-0920398eeb9b",
+        "session_flow": "SMTP STARTTLS 10.0.3.40:57001 \u2192 203.0.113.50:25",
         "packet_number": 21,
         "byte_offset": 0,
         "observed_value": "Key Exchange: RSA, PFS: False",
-        "finding_id": "125f2424-84b4-4505-9aa3-a3df42cb9a21",
+        "finding_id": "768d2044-bc88-4a86-b4e0-da4bb37f1a4f",
         "detection_rule": "no-pfs",
-        "evidence_chain": "0c96a199e679... \u2192 Session [SMTP 10.0.3.40:57001 \u2192 203.0.113.50:25] \u2192 Pkt #21 (Offset 0) \u2192 Observed: Key Exchange: RSA, PFS: False \u2192 Finding #125f2424 \u2192 Rule: no-pfs"
+        "evidence_chain": "0c96a199e679... \u2192 Session [SMTP STARTTLS 10.0.3.40:57001 \u2192 203.0.113.50:25] \u2192 Pkt #21 (Offset 0) \u2192 Observed: Key Exchange: RSA, PFS: False \u2192 Finding #768d2044 \u2192 Rule: no-pfs"
       }
     ]
   },
   "explainability": {
     "status": "EXPLAINABLE_AI_RISK_ASSESSMENT_ACTIVE",
+    "posture_grading_framework": "Intuitive A+\u2013F Posture Tier (SSL Labs Compatible)",
     "total_factors_evaluated": 7,
     "configured_weights": {
       "severity_weights": {

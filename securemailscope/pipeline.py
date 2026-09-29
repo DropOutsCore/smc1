@@ -203,7 +203,11 @@ def run(pcap_path: str, config: PipelineConfig) -> PipelineResult:
                     session.packet_refs[0] if session.packet_refs else 0
                 )
                 sr.tls = parse_handshake(
-                    stream_data, start_offset, handshake_pkt
+                    stream_data,
+                    start_offset=start_offset,
+                    handshake_start_packet=handshake_pkt,
+                    client_data=session.stream.client_data,
+                    server_data=session.stream.server_data,
                 )
 
                 # Certificate extraction

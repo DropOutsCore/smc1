@@ -277,8 +277,8 @@ export default function SessionsPage() {
                       <div className="flex items-center gap-2">
                         <span className={cn(
                           'text-[10px] font-mono font-bold px-1.5 py-0.5 rounded border',
-                          session.protocol === 'SMTP' ? 'text-[#8BFF7A] border-[rgba(139,255,122,0.3)] bg-[rgba(139,255,122,0.08)]' :
-                          session.protocol === 'IMAP' ? 'text-[#3DDC97] border-[rgba(61,220,151,0.3)] bg-[rgba(61,220,151,0.08)]' :
+                          session.protocol.includes('SMTP') ? 'text-[#8BFF7A] border-[rgba(139,255,122,0.3)] bg-[rgba(139,255,122,0.08)]' :
+                          session.protocol.includes('IMAP') ? 'text-[#3DDC97] border-[rgba(61,220,151,0.3)] bg-[rgba(61,220,151,0.08)]' :
                           'text-[#5DA9FF] border-[rgba(93,169,255,0.3)] bg-[rgba(93,169,255,0.08)]'
                         )}>
                           {session.protocol}

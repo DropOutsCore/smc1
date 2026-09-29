@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SecureMailScope Forensic Report — c397a0d2</title>
+<title>SecureMailScope Forensic Report — c4ba2085</title>
 <style>
   :root {
     --bg: #0d1117; --surface: #161b22; --surface2: #21262d;
@@ -39,10 +39,12 @@
     display: flex; align-items: center; justify-content: center;
     font-size: 24px; font-weight: 800;
   }
+  .grade-A-plus, .grade-A\+ { background: rgba(63,185,80,0.22); color: #3fb950; border: 2px solid #3fb950; box-shadow: 0 0 10px rgba(63,185,80,0.3); }
   .grade-A { background: rgba(63,185,80,0.15); color: var(--grade-a); border: 2px solid var(--grade-a); }
   .grade-B { background: rgba(88,166,255,0.15); color: var(--grade-b); border: 2px solid var(--grade-b); }
   .grade-C { background: rgba(210,153,34,0.15); color: var(--grade-c); border: 2px solid var(--grade-c); }
   .grade-D { background: rgba(240,136,62,0.15); color: var(--grade-d); border: 2px solid var(--grade-d); }
+  .grade-E { background: rgba(248,113,113,0.15); color: #f87171; border: 2px solid #f87171; }
   .grade-F { background: rgba(248,81,73,0.15); color: var(--grade-f); border: 2px solid var(--grade-f); }
   .host-card h3 { font-size: 15px; font-weight: 600; padding-right: 70px; word-break: break-all; }
   .host-card .delta { font-size: 12px; color: var(--muted); margin-top: 4px; }
@@ -102,11 +104,11 @@
     <div class="meta-grid">
       <div class="meta-card">
         <div class="label">Report ID</div>
-        <div class="value">c397a0d2-94a4-40e0-b15f-00ffd1225fa0</div>
+        <div class="value">c4ba2085-7b6e-46e7-93d8-fb7e8866f4be</div>
       </div>
       <div class="meta-card">
         <div class="label">Generated At</div>
-        <div class="value">2026-09-29T18:13:43.152336+00:00</div>
+        <div class="value">2026-09-29T19:33:47.173634+00:00</div>
       </div>
       <div class="meta-card">
         <div class="label">Source PCAP SHA-256</div>
@@ -138,12 +140,17 @@
     <div class="host-grid">
       
       <div class="host-card">
-        <div class="grade-badge grade-F">F</div>
+        <div class="grade-badge grade-E">E</div>
         <h3>198.51.100.5:25</h3>
+        <div style="margin-top:4px;">
+          <span style="font-size:12px;font-weight:700;color:#f85149;">
+            Security Posture: E (Poor)
+          </span>
+        </div>
         
-        <div class="delta">📈 No change from F (last scan 2026-09-29)</div>
+        <div class="delta">📈 No change from E (last scan 2026-09-29)</div>
         
-        <div class="delta">Score: 60 | Sessions: 1</div>
+        <div class="delta">Risk Score: 60 / 100 | Sessions: 1</div>
         <div class="severity-pills" style="margin-top:10px;">
           
           
@@ -159,10 +166,15 @@
       <div class="host-card">
         <div class="grade-badge grade-D">D</div>
         <h3>45.33.32.156:25</h3>
+        <div style="margin-top:4px;">
+          <span style="font-size:12px;font-weight:700;color:#f85149;">
+            Security Posture: D (Weak)
+          </span>
+        </div>
         
         <div class="delta">📈 No change from D (last scan 2026-09-29)</div>
         
-        <div class="delta">Score: 50 | Sessions: 1</div>
+        <div class="delta">Risk Score: 50 / 100 | Sessions: 1</div>
         <div class="severity-pills" style="margin-top:10px;">
           
           <span class="pill pill-critical">1 Critical</span>
@@ -178,10 +190,15 @@
       <div class="host-card">
         <div class="grade-badge grade-D">D</div>
         <h3>203.0.113.50:25</h3>
+        <div style="margin-top:4px;">
+          <span style="font-size:12px;font-weight:700;color:#f85149;">
+            Security Posture: D (Weak)
+          </span>
+        </div>
         
         <div class="delta">📈 No change from D (last scan 2026-09-29)</div>
         
-        <div class="delta">Score: 35 | Sessions: 1</div>
+        <div class="delta">Risk Score: 35 / 100 | Sessions: 1</div>
         <div class="severity-pills" style="margin-top:10px;">
           
           
@@ -195,10 +212,15 @@
       </div>
       
       <div class="host-card">
-        <div class="grade-badge grade-A">A</div>
+        <div class="grade-badge grade-A-plus">A+</div>
         <h3>203.0.113.10:25</h3>
+        <div style="margin-top:4px;">
+          <span style="font-size:12px;font-weight:700;color:#3fb950;">
+            Security Posture: A+ (Excellent)
+          </span>
+        </div>
         
-        <div class="delta">Score: 0 | Sessions: 1</div>
+        <div class="delta">Risk Score: 0 / 100 | Sessions: 1</div>
         <div class="severity-pills" style="margin-top:10px;">
           
           
@@ -215,8 +237,136 @@
   <div class="section">
     <div class="section-title">
       Host: 198.51.100.5:25
-      <span class="grade-badge grade-F" style="display:inline-flex;width:36px;height:36px;font-size:16px;vertical-align:middle;margin-left:12px;">F</span>
+      <span class="grade-badge grade-E" style="display:inline-flex;width:36px;height:36px;font-size:16px;vertical-align:middle;margin-left:12px;">E</span>
+      <span style="font-size:13px;font-weight:600;margin-left:8px;color:var(--muted);">Security Posture: <strong>E (Poor)</strong> — Risk Score: 60/100</span>
     </div>
+
+    <!-- Why This Grade? — Single Intuitive Posture Grade Breakdown -->
+    
+    
+    <div style="margin-bottom:18px;background:rgba(88,166,255,0.04);border:1px solid rgba(88,166,255,0.25);border-radius:8px;padding:16px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+        <div>
+          <span style="font-size:11px;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:0.05em;">🛡️ Why This Grade? — Single Intuitive Security Posture</span>
+          <h3 style="margin:2px 0 0 0;font-size:15px;color:#f0f6fc;">
+            Security Posture: <strong style="color:#f85149;">E</strong> (Poor)
+            <span style="font-size:12px;color:var(--muted);font-weight:400;margin-left:8px;">Risk Score: 60/100 (Bracket: 51-75)</span>
+          </h3>
+        </div>
+        <span class="tag" style="background:#0d1117;color:var(--accent);border-color:var(--accent);font-weight:700;">
+          POOR
+        </span>
+      </div>
+
+      <p style="font-size:12px;color:#c9d1d9;margin:6px 0 12px 0;line-height:1.5;">Host &#39;198.51.100.5:25&#39; received Posture Grade E (Poor) with a cumulative risk score of 60/100 (Bracket: 51-75). This grade was determined by 3 adverse findings (2 High, 1 Medium).</p>
+
+      <!-- Grade Ladder Bar -->
+      
+      <div style="display:flex;gap:6px;margin-bottom:12px;overflow-x:auto;">
+        
+        <div style="flex:1;min-width:65px;padding:6px 4px;text-align:center;border-radius:6px;border:1px solid rgba(255,255,255,0.08);background:rgba(0,0,0,0.2);">
+          <div style="font-size:13px;font-weight:700;color:#8b949e;">A+</div>
+          <div style="font-size:9px;color:#6e7681;">Excellent</div>
+          <div style="font-size:8px;font-family:monospace;color:#6e7681;">0</div>
+        </div>
+        
+        <div style="flex:1;min-width:65px;padding:6px 4px;text-align:center;border-radius:6px;border:1px solid rgba(255,255,255,0.08);background:rgba(0,0,0,0.2);">
+          <div style="font-size:13px;font-weight:700;color:#8b949e;">A</div>
+          <div style="font-size:9px;color:#6e7681;">Strong</div>
+          <div style="font-size:8px;font-family:monospace;color:#6e7681;">1-5</div>
+        </div>
+        
+        <div style="flex:1;min-width:65px;padding:6px 4px;text-align:center;border-radius:6px;border:1px solid rgba(255,255,255,0.08);background:rgba(0,0,0,0.2);">
+          <div style="font-size:13px;font-weight:700;color:#8b949e;">B</div>
+          <div style="font-size:9px;color:#6e7681;">Good</div>
+          <div style="font-size:8px;font-family:monospace;color:#6e7681;">6-15</div>
+        </div>
+        
+        <div style="flex:1;min-width:65px;padding:6px 4px;text-align:center;border-radius:6px;border:1px solid rgba(255,255,255,0.08);background:rgba(0,0,0,0.2);">
+          <div style="font-size:13px;font-weight:700;color:#8b949e;">C</div>
+          <div style="font-size:9px;color:#6e7681;">Moderate</div>
+          <div style="font-size:8px;font-family:monospace;color:#6e7681;">16-30</div>
+        </div>
+        
+        <div style="flex:1;min-width:65px;padding:6px 4px;text-align:center;border-radius:6px;border:1px solid rgba(255,255,255,0.08);background:rgba(0,0,0,0.2);">
+          <div style="font-size:13px;font-weight:700;color:#8b949e;">D</div>
+          <div style="font-size:9px;color:#6e7681;">Weak</div>
+          <div style="font-size:8px;font-family:monospace;color:#6e7681;">31-50</div>
+        </div>
+        
+        <div style="flex:1;min-width:65px;padding:6px 4px;text-align:center;border-radius:6px;border:1px solid #3fb950;background:rgba(63,185,80,0.15);">
+          <div style="font-size:13px;font-weight:700;color:#3fb950;">E</div>
+          <div style="font-size:9px;color:#e6edf3;">Poor</div>
+          <div style="font-size:8px;font-family:monospace;color:#6e7681;">51-75</div>
+        </div>
+        
+        <div style="flex:1;min-width:65px;padding:6px 4px;text-align:center;border-radius:6px;border:1px solid rgba(255,255,255,0.08);background:rgba(0,0,0,0.2);">
+          <div style="font-size:13px;font-weight:700;color:#8b949e;">F</div>
+          <div style="font-size:9px;color:#6e7681;">Critical</div>
+          <div style="font-size:8px;font-family:monospace;color:#6e7681;">76+</div>
+        </div>
+        
+      </div>
+      
+
+      <!-- Determining Factors Table -->
+      
+      <div style="margin-top:10px;">
+        <span style="font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;">Findings Causing This Grade (Deterministic Impact):</span>
+        <table style="margin-top:6px;">
+          <thead>
+            <tr>
+              <th>Finding / Rule</th>
+              <th>Observed on Wire</th>
+              <th>Score Impact</th>
+              <th>Severity</th>
+              <th>Packet Evidence</th>
+              <th>Impact on Posture Grade</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+            <tr>
+              <td><strong>Deprecated Protocol</strong><br/><span style="font-size:10px;color:var(--muted)">deprecated-tls-10</span></td>
+              <td><code>TLS 1.0 is negotiated â€” deprecated by NIST and IETF (RFC 8996)</code></td>
+              <td style="color:var(--critical);font-weight:700;">+25</td>
+              <td class="sev-high">HIGH</td>
+              <td><span class="evidence-ref">Packet #8 (Offset 0)</span></td>
+              <td style="font-size:11px;color:var(--muted)">+25 points penalty towards Grade E</td>
+            </tr>
+            
+            <tr>
+              <td><strong>Weak Cipher</strong><br/><span style="font-size:10px;color:var(--muted)">weak-cipher</span></td>
+              <td><code>A weak cipher suite is negotiated (no PFS or weak key exchange)</code></td>
+              <td style="color:var(--critical);font-weight:700;">+25</td>
+              <td class="sev-high">HIGH</td>
+              <td><span class="evidence-ref">Packet #8 (Offset 0)</span></td>
+              <td style="font-size:11px;color:var(--muted)">+25 points penalty towards Grade E</td>
+            </tr>
+            
+            <tr>
+              <td><strong>No Forward Secrecy</strong><br/><span style="font-size:10px;color:var(--muted)">no-pfs</span></td>
+              <td><code>Cipher suite does not provide Perfect Forward Secrecy (PFS)</code></td>
+              <td style="color:var(--critical);font-weight:700;">+10</td>
+              <td class="sev-medium">MEDIUM</td>
+              <td><span class="evidence-ref">Packet #8 (Offset 0)</span></td>
+              <td style="font-size:11px;color:var(--muted)">+10 points penalty towards Grade E</td>
+            </tr>
+            
+          </tbody>
+        </table>
+      </div>
+      
+
+      <!-- Actionable Target -->
+      
+      <div style="margin-top:10px;padding:8px 12px;background:rgba(210,153,34,0.08);border:1px solid rgba(210,153,34,0.3);border-radius:6px;display:flex;justify-content:space-between;align-items:center;">
+        <span style="font-size:11px;color:#d29922;font-weight:600;">🎯 Path to Grade D (Weak):</span>
+        <span style="font-size:11px;color:#e6edf3;">Remediate highest penalty finding &#39;deprecated-tls-10&#39; (-25 pts) to advance towards Grade D.</span>
+      </div>
+      
+    </div>
+    
 
     <!-- Host Posture Score Breakdown -->
     
@@ -224,12 +374,12 @@
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
         <strong style="color:var(--accent);font-size:13px;">🔍 Host Posture Score Breakdown — 198.51.100.5:25</strong>
         <span class="tag" style="background:#0d1117;color:#3fb950;border-color:#3fb950;font-weight:700;">
-          Posture Score: 60 / 100 (Grade F)
+          Posture Score: 60 / 100 (Grade E)
         </span>
       </div>
       
-      <pre class="code-block" style="background:#0d1117;color:#3fb950;font-size:11px;line-height:1.45;margin:6px 0 0 0;">Host Posture Score (198.51.100.5:25 - Grade F): 60 / 100
-Severity: GRADE F
+      <pre class="code-block" style="background:#0d1117;color:#3fb950;font-size:11px;line-height:1.45;margin:6px 0 0 0;">Host Posture Score (198.51.100.5:25 - Grade E [Poor]): 60 / 100
+Severity: GRADE E (POOR)
 
 WHY?
 ├── TLS Protocol Version (TLS Version...   +40
@@ -244,13 +394,13 @@ WHY?
     <div class="session-detail">
       <div class="session-header">
         <h4>
-          SMTP Session —
+          SMTP STARTTLS Session —
           10.0.1.20:55001 → 198.51.100.5:25
           <span class="tag">STARTTLS</span>
           
           
         </h4>
-        <span style="color:var(--muted);font-size:12px;">5382607b…</span>
+        <span style="color:var(--muted);font-size:12px;">1fce351e…</span>
       </div>
       <div class="session-body">
 
@@ -439,7 +589,126 @@ WHY?
     <div class="section-title">
       Host: 45.33.32.156:25
       <span class="grade-badge grade-D" style="display:inline-flex;width:36px;height:36px;font-size:16px;vertical-align:middle;margin-left:12px;">D</span>
+      <span style="font-size:13px;font-weight:600;margin-left:8px;color:var(--muted);">Security Posture: <strong>D (Weak)</strong> — Risk Score: 50/100</span>
     </div>
+
+    <!-- Why This Grade? — Single Intuitive Posture Grade Breakdown -->
+    
+    
+    <div style="margin-bottom:18px;background:rgba(88,166,255,0.04);border:1px solid rgba(88,166,255,0.25);border-radius:8px;padding:16px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+        <div>
+          <span style="font-size:11px;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:0.05em;">🛡️ Why This Grade? — Single Intuitive Security Posture</span>
+          <h3 style="margin:2px 0 0 0;font-size:15px;color:#f0f6fc;">
+            Security Posture: <strong style="color:#f85149;">D</strong> (Weak)
+            <span style="font-size:12px;color:var(--muted);font-weight:400;margin-left:8px;">Risk Score: 50/100 (Bracket: 31-50)</span>
+          </h3>
+        </div>
+        <span class="tag" style="background:#0d1117;color:var(--accent);border-color:var(--accent);font-weight:700;">
+          WEAK
+        </span>
+      </div>
+
+      <p style="font-size:12px;color:#c9d1d9;margin:6px 0 12px 0;line-height:1.5;">Host &#39;45.33.32.156:25&#39; received Posture Grade D (Weak) with a cumulative risk score of 50/100 (Bracket: 31-50). This grade was determined by 2 adverse findings (1 Critical, 1 Medium).</p>
+
+      <!-- Grade Ladder Bar -->
+      
+      <div style="display:flex;gap:6px;margin-bottom:12px;overflow-x:auto;">
+        
+        <div style="flex:1;min-width:65px;padding:6px 4px;text-align:center;border-radius:6px;border:1px solid rgba(255,255,255,0.08);background:rgba(0,0,0,0.2);">
+          <div style="font-size:13px;font-weight:700;color:#8b949e;">A+</div>
+          <div style="font-size:9px;color:#6e7681;">Excellent</div>
+          <div style="font-size:8px;font-family:monospace;color:#6e7681;">0</div>
+        </div>
+        
+        <div style="flex:1;min-width:65px;padding:6px 4px;text-align:center;border-radius:6px;border:1px solid rgba(255,255,255,0.08);background:rgba(0,0,0,0.2);">
+          <div style="font-size:13px;font-weight:700;color:#8b949e;">A</div>
+          <div style="font-size:9px;color:#6e7681;">Strong</div>
+          <div style="font-size:8px;font-family:monospace;color:#6e7681;">1-5</div>
+        </div>
+        
+        <div style="flex:1;min-width:65px;padding:6px 4px;text-align:center;border-radius:6px;border:1px solid rgba(255,255,255,0.08);background:rgba(0,0,0,0.2);">
+          <div style="font-size:13px;font-weight:700;color:#8b949e;">B</div>
+          <div style="font-size:9px;color:#6e7681;">Good</div>
+          <div style="font-size:8px;font-family:monospace;color:#6e7681;">6-15</div>
+        </div>
+        
+        <div style="flex:1;min-width:65px;padding:6px 4px;text-align:center;border-radius:6px;border:1px solid rgba(255,255,255,0.08);background:rgba(0,0,0,0.2);">
+          <div style="font-size:13px;font-weight:700;color:#8b949e;">C</div>
+          <div style="font-size:9px;color:#6e7681;">Moderate</div>
+          <div style="font-size:8px;font-family:monospace;color:#6e7681;">16-30</div>
+        </div>
+        
+        <div style="flex:1;min-width:65px;padding:6px 4px;text-align:center;border-radius:6px;border:1px solid #3fb950;background:rgba(63,185,80,0.15);">
+          <div style="font-size:13px;font-weight:700;color:#3fb950;">D</div>
+          <div style="font-size:9px;color:#e6edf3;">Weak</div>
+          <div style="font-size:8px;font-family:monospace;color:#6e7681;">31-50</div>
+        </div>
+        
+        <div style="flex:1;min-width:65px;padding:6px 4px;text-align:center;border-radius:6px;border:1px solid rgba(255,255,255,0.08);background:rgba(0,0,0,0.2);">
+          <div style="font-size:13px;font-weight:700;color:#8b949e;">E</div>
+          <div style="font-size:9px;color:#6e7681;">Poor</div>
+          <div style="font-size:8px;font-family:monospace;color:#6e7681;">51-75</div>
+        </div>
+        
+        <div style="flex:1;min-width:65px;padding:6px 4px;text-align:center;border-radius:6px;border:1px solid rgba(255,255,255,0.08);background:rgba(0,0,0,0.2);">
+          <div style="font-size:13px;font-weight:700;color:#8b949e;">F</div>
+          <div style="font-size:9px;color:#6e7681;">Critical</div>
+          <div style="font-size:8px;font-family:monospace;color:#6e7681;">76+</div>
+        </div>
+        
+      </div>
+      
+
+      <!-- Determining Factors Table -->
+      
+      <div style="margin-top:10px;">
+        <span style="font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;">Findings Causing This Grade (Deterministic Impact):</span>
+        <table style="margin-top:6px;">
+          <thead>
+            <tr>
+              <th>Finding / Rule</th>
+              <th>Observed on Wire</th>
+              <th>Score Impact</th>
+              <th>Severity</th>
+              <th>Packet Evidence</th>
+              <th>Impact on Posture Grade</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+            <tr>
+              <td><strong>Starttls Downgrade</strong><br/><span style="font-size:10px;color:var(--muted)">starttls-downgrade</span></td>
+              <td><code>STARTTLS downgrade attack suspected â€” plaintext continued after STARTTLS command</code></td>
+              <td style="color:var(--critical);font-weight:700;">+40</td>
+              <td class="sev-critical">CRITICAL</td>
+              <td><span class="evidence-ref">Packet #17 (Offset 0)</span></td>
+              <td style="font-size:11px;color:var(--muted)">+40 points penalty towards Grade D</td>
+            </tr>
+            
+            <tr>
+              <td><strong>Ml Anomaly</strong><br/><span style="font-size:10px;color:var(--muted)">ml-anomaly</span></td>
+              <td><code>Session flagged as anomalous by IsolationForest (score=-0.027)</code></td>
+              <td style="color:var(--critical);font-weight:700;">+10</td>
+              <td class="sev-medium">MEDIUM</td>
+              <td><span class="evidence-ref">Packet #15 (Offset 0)</span></td>
+              <td style="font-size:11px;color:var(--muted)">+10 points penalty towards Grade D</td>
+            </tr>
+            
+          </tbody>
+        </table>
+      </div>
+      
+
+      <!-- Actionable Target -->
+      
+      <div style="margin-top:10px;padding:8px 12px;background:rgba(210,153,34,0.08);border:1px solid rgba(210,153,34,0.3);border-radius:6px;display:flex;justify-content:space-between;align-items:center;">
+        <span style="font-size:11px;color:#d29922;font-weight:600;">🎯 Path to Grade C (Moderate):</span>
+        <span style="font-size:11px;color:#e6edf3;">Remediate highest penalty finding &#39;starttls-downgrade&#39; (-40 pts) to advance towards Grade C.</span>
+      </div>
+      
+    </div>
+    
 
     <!-- Host Posture Score Breakdown -->
     
@@ -451,8 +720,8 @@ WHY?
         </span>
       </div>
       
-      <pre class="code-block" style="background:#0d1117;color:#3fb950;font-size:11px;line-height:1.45;margin:6px 0 0 0;">Host Posture Score (45.33.32.156:25 - Grade D): 50 / 100
-Severity: GRADE D
+      <pre class="code-block" style="background:#0d1117;color:#3fb950;font-size:11px;line-height:1.45;margin:6px 0 0 0;">Host Posture Score (45.33.32.156:25 - Grade D [Weak]): 50 / 100
+Severity: GRADE D (WEAK)
 
 WHY?
 ├── STARTTLS Negotiation (TLS Version...   +40
@@ -472,7 +741,7 @@ WHY?
           
           <span class="tag" style="color:var(--critical)">⚠ DOWNGRADE</span>
         </h4>
-        <span style="color:var(--muted);font-size:12px;">63ade425…</span>
+        <span style="color:var(--muted);font-size:12px;">80fd83e7…</span>
       </div>
       <div class="session-body">
 
@@ -644,7 +913,126 @@ WHY?
     <div class="section-title">
       Host: 203.0.113.50:25
       <span class="grade-badge grade-D" style="display:inline-flex;width:36px;height:36px;font-size:16px;vertical-align:middle;margin-left:12px;">D</span>
+      <span style="font-size:13px;font-weight:600;margin-left:8px;color:var(--muted);">Security Posture: <strong>D (Weak)</strong> — Risk Score: 35/100</span>
     </div>
+
+    <!-- Why This Grade? — Single Intuitive Posture Grade Breakdown -->
+    
+    
+    <div style="margin-bottom:18px;background:rgba(88,166,255,0.04);border:1px solid rgba(88,166,255,0.25);border-radius:8px;padding:16px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+        <div>
+          <span style="font-size:11px;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:0.05em;">🛡️ Why This Grade? — Single Intuitive Security Posture</span>
+          <h3 style="margin:2px 0 0 0;font-size:15px;color:#f0f6fc;">
+            Security Posture: <strong style="color:#f85149;">D</strong> (Weak)
+            <span style="font-size:12px;color:var(--muted);font-weight:400;margin-left:8px;">Risk Score: 35/100 (Bracket: 31-50)</span>
+          </h3>
+        </div>
+        <span class="tag" style="background:#0d1117;color:var(--accent);border-color:var(--accent);font-weight:700;">
+          WEAK
+        </span>
+      </div>
+
+      <p style="font-size:12px;color:#c9d1d9;margin:6px 0 12px 0;line-height:1.5;">Host &#39;203.0.113.50:25&#39; received Posture Grade D (Weak) with a cumulative risk score of 35/100 (Bracket: 31-50). This grade was determined by 2 adverse findings (1 High, 1 Medium).</p>
+
+      <!-- Grade Ladder Bar -->
+      
+      <div style="display:flex;gap:6px;margin-bottom:12px;overflow-x:auto;">
+        
+        <div style="flex:1;min-width:65px;padding:6px 4px;text-align:center;border-radius:6px;border:1px solid rgba(255,255,255,0.08);background:rgba(0,0,0,0.2);">
+          <div style="font-size:13px;font-weight:700;color:#8b949e;">A+</div>
+          <div style="font-size:9px;color:#6e7681;">Excellent</div>
+          <div style="font-size:8px;font-family:monospace;color:#6e7681;">0</div>
+        </div>
+        
+        <div style="flex:1;min-width:65px;padding:6px 4px;text-align:center;border-radius:6px;border:1px solid rgba(255,255,255,0.08);background:rgba(0,0,0,0.2);">
+          <div style="font-size:13px;font-weight:700;color:#8b949e;">A</div>
+          <div style="font-size:9px;color:#6e7681;">Strong</div>
+          <div style="font-size:8px;font-family:monospace;color:#6e7681;">1-5</div>
+        </div>
+        
+        <div style="flex:1;min-width:65px;padding:6px 4px;text-align:center;border-radius:6px;border:1px solid rgba(255,255,255,0.08);background:rgba(0,0,0,0.2);">
+          <div style="font-size:13px;font-weight:700;color:#8b949e;">B</div>
+          <div style="font-size:9px;color:#6e7681;">Good</div>
+          <div style="font-size:8px;font-family:monospace;color:#6e7681;">6-15</div>
+        </div>
+        
+        <div style="flex:1;min-width:65px;padding:6px 4px;text-align:center;border-radius:6px;border:1px solid rgba(255,255,255,0.08);background:rgba(0,0,0,0.2);">
+          <div style="font-size:13px;font-weight:700;color:#8b949e;">C</div>
+          <div style="font-size:9px;color:#6e7681;">Moderate</div>
+          <div style="font-size:8px;font-family:monospace;color:#6e7681;">16-30</div>
+        </div>
+        
+        <div style="flex:1;min-width:65px;padding:6px 4px;text-align:center;border-radius:6px;border:1px solid #3fb950;background:rgba(63,185,80,0.15);">
+          <div style="font-size:13px;font-weight:700;color:#3fb950;">D</div>
+          <div style="font-size:9px;color:#e6edf3;">Weak</div>
+          <div style="font-size:8px;font-family:monospace;color:#6e7681;">31-50</div>
+        </div>
+        
+        <div style="flex:1;min-width:65px;padding:6px 4px;text-align:center;border-radius:6px;border:1px solid rgba(255,255,255,0.08);background:rgba(0,0,0,0.2);">
+          <div style="font-size:13px;font-weight:700;color:#8b949e;">E</div>
+          <div style="font-size:9px;color:#6e7681;">Poor</div>
+          <div style="font-size:8px;font-family:monospace;color:#6e7681;">51-75</div>
+        </div>
+        
+        <div style="flex:1;min-width:65px;padding:6px 4px;text-align:center;border-radius:6px;border:1px solid rgba(255,255,255,0.08);background:rgba(0,0,0,0.2);">
+          <div style="font-size:13px;font-weight:700;color:#8b949e;">F</div>
+          <div style="font-size:9px;color:#6e7681;">Critical</div>
+          <div style="font-size:8px;font-family:monospace;color:#6e7681;">76+</div>
+        </div>
+        
+      </div>
+      
+
+      <!-- Determining Factors Table -->
+      
+      <div style="margin-top:10px;">
+        <span style="font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;">Findings Causing This Grade (Deterministic Impact):</span>
+        <table style="margin-top:6px;">
+          <thead>
+            <tr>
+              <th>Finding / Rule</th>
+              <th>Observed on Wire</th>
+              <th>Score Impact</th>
+              <th>Severity</th>
+              <th>Packet Evidence</th>
+              <th>Impact on Posture Grade</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+            <tr>
+              <td><strong>Weak Cipher</strong><br/><span style="font-size:10px;color:var(--muted)">weak-cipher</span></td>
+              <td><code>A weak cipher suite is negotiated (no PFS or weak key exchange)</code></td>
+              <td style="color:var(--critical);font-weight:700;">+25</td>
+              <td class="sev-high">HIGH</td>
+              <td><span class="evidence-ref">Packet #21 (Offset 0)</span></td>
+              <td style="font-size:11px;color:var(--muted)">+25 points penalty towards Grade D</td>
+            </tr>
+            
+            <tr>
+              <td><strong>No Forward Secrecy</strong><br/><span style="font-size:10px;color:var(--muted)">no-pfs</span></td>
+              <td><code>Cipher suite does not provide Perfect Forward Secrecy (PFS)</code></td>
+              <td style="color:var(--critical);font-weight:700;">+10</td>
+              <td class="sev-medium">MEDIUM</td>
+              <td><span class="evidence-ref">Packet #21 (Offset 0)</span></td>
+              <td style="font-size:11px;color:var(--muted)">+10 points penalty towards Grade D</td>
+            </tr>
+            
+          </tbody>
+        </table>
+      </div>
+      
+
+      <!-- Actionable Target -->
+      
+      <div style="margin-top:10px;padding:8px 12px;background:rgba(210,153,34,0.08);border:1px solid rgba(210,153,34,0.3);border-radius:6px;display:flex;justify-content:space-between;align-items:center;">
+        <span style="font-size:11px;color:#d29922;font-weight:600;">🎯 Path to Grade C (Moderate):</span>
+        <span style="font-size:11px;color:#e6edf3;">Remediate highest penalty finding &#39;weak-cipher&#39; (-25 pts) to advance towards Grade C.</span>
+      </div>
+      
+    </div>
+    
 
     <!-- Host Posture Score Breakdown -->
     
@@ -656,8 +1044,8 @@ WHY?
         </span>
       </div>
       
-      <pre class="code-block" style="background:#0d1117;color:#3fb950;font-size:11px;line-height:1.45;margin:6px 0 0 0;">Host Posture Score (203.0.113.50:25 - Grade D): 35 / 100
-Severity: GRADE D
+      <pre class="code-block" style="background:#0d1117;color:#3fb950;font-size:11px;line-height:1.45;margin:6px 0 0 0;">Host Posture Score (203.0.113.50:25 - Grade D [Weak]): 35 / 100
+Severity: GRADE D (WEAK)
 
 WHY?
 ├── Cipher Suite Security (Cipher Sui...   +25
@@ -671,13 +1059,13 @@ WHY?
     <div class="session-detail">
       <div class="session-header">
         <h4>
-          SMTP Session —
+          SMTP STARTTLS Session —
           10.0.3.40:57001 → 203.0.113.50:25
           <span class="tag">STARTTLS</span>
           
           
         </h4>
-        <span style="color:var(--muted);font-size:12px;">38a92a49…</span>
+        <span style="color:var(--muted);font-size:12px;">800631d1…</span>
       </div>
       <div class="session-body">
 
@@ -838,8 +1226,85 @@ WHY?
   <div class="section">
     <div class="section-title">
       Host: 203.0.113.10:25
-      <span class="grade-badge grade-A" style="display:inline-flex;width:36px;height:36px;font-size:16px;vertical-align:middle;margin-left:12px;">A</span>
+      <span class="grade-badge grade-A-plus" style="display:inline-flex;width:36px;height:36px;font-size:16px;vertical-align:middle;margin-left:12px;">A+</span>
+      <span style="font-size:13px;font-weight:600;margin-left:8px;color:var(--muted);">Security Posture: <strong>A+ (Excellent)</strong> — Risk Score: 0/100</span>
     </div>
+
+    <!-- Why This Grade? — Single Intuitive Posture Grade Breakdown -->
+    
+    
+    <div style="margin-bottom:18px;background:rgba(88,166,255,0.04);border:1px solid rgba(88,166,255,0.25);border-radius:8px;padding:16px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+        <div>
+          <span style="font-size:11px;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:0.05em;">🛡️ Why This Grade? — Single Intuitive Security Posture</span>
+          <h3 style="margin:2px 0 0 0;font-size:15px;color:#f0f6fc;">
+            Security Posture: <strong style="color:#3fb950;">A+</strong> (Excellent)
+            <span style="font-size:12px;color:var(--muted);font-weight:400;margin-left:8px;">Risk Score: 0/100 (Bracket: 0)</span>
+          </h3>
+        </div>
+        <span class="tag" style="background:#0d1117;color:var(--accent);border-color:var(--accent);font-weight:700;">
+          EXCELLENT
+        </span>
+      </div>
+
+      <p style="font-size:12px;color:#c9d1d9;margin:6px 0 12px 0;line-height:1.5;">Host &#39;203.0.113.10:25&#39; achieved Posture Grade A+ (Excellent) with a perfect score of 0/100. Zero security findings or cryptographic policy violations were detected across all analyzed sessions.</p>
+
+      <!-- Grade Ladder Bar -->
+      
+      <div style="display:flex;gap:6px;margin-bottom:12px;overflow-x:auto;">
+        
+        <div style="flex:1;min-width:65px;padding:6px 4px;text-align:center;border-radius:6px;border:1px solid #3fb950;background:rgba(63,185,80,0.15);">
+          <div style="font-size:13px;font-weight:700;color:#3fb950;">A+</div>
+          <div style="font-size:9px;color:#e6edf3;">Excellent</div>
+          <div style="font-size:8px;font-family:monospace;color:#6e7681;">0</div>
+        </div>
+        
+        <div style="flex:1;min-width:65px;padding:6px 4px;text-align:center;border-radius:6px;border:1px solid rgba(255,255,255,0.08);background:rgba(0,0,0,0.2);">
+          <div style="font-size:13px;font-weight:700;color:#8b949e;">A</div>
+          <div style="font-size:9px;color:#6e7681;">Strong</div>
+          <div style="font-size:8px;font-family:monospace;color:#6e7681;">1-5</div>
+        </div>
+        
+        <div style="flex:1;min-width:65px;padding:6px 4px;text-align:center;border-radius:6px;border:1px solid rgba(255,255,255,0.08);background:rgba(0,0,0,0.2);">
+          <div style="font-size:13px;font-weight:700;color:#8b949e;">B</div>
+          <div style="font-size:9px;color:#6e7681;">Good</div>
+          <div style="font-size:8px;font-family:monospace;color:#6e7681;">6-15</div>
+        </div>
+        
+        <div style="flex:1;min-width:65px;padding:6px 4px;text-align:center;border-radius:6px;border:1px solid rgba(255,255,255,0.08);background:rgba(0,0,0,0.2);">
+          <div style="font-size:13px;font-weight:700;color:#8b949e;">C</div>
+          <div style="font-size:9px;color:#6e7681;">Moderate</div>
+          <div style="font-size:8px;font-family:monospace;color:#6e7681;">16-30</div>
+        </div>
+        
+        <div style="flex:1;min-width:65px;padding:6px 4px;text-align:center;border-radius:6px;border:1px solid rgba(255,255,255,0.08);background:rgba(0,0,0,0.2);">
+          <div style="font-size:13px;font-weight:700;color:#8b949e;">D</div>
+          <div style="font-size:9px;color:#6e7681;">Weak</div>
+          <div style="font-size:8px;font-family:monospace;color:#6e7681;">31-50</div>
+        </div>
+        
+        <div style="flex:1;min-width:65px;padding:6px 4px;text-align:center;border-radius:6px;border:1px solid rgba(255,255,255,0.08);background:rgba(0,0,0,0.2);">
+          <div style="font-size:13px;font-weight:700;color:#8b949e;">E</div>
+          <div style="font-size:9px;color:#6e7681;">Poor</div>
+          <div style="font-size:8px;font-family:monospace;color:#6e7681;">51-75</div>
+        </div>
+        
+        <div style="flex:1;min-width:65px;padding:6px 4px;text-align:center;border-radius:6px;border:1px solid rgba(255,255,255,0.08);background:rgba(0,0,0,0.2);">
+          <div style="font-size:13px;font-weight:700;color:#8b949e;">F</div>
+          <div style="font-size:9px;color:#6e7681;">Critical</div>
+          <div style="font-size:8px;font-family:monospace;color:#6e7681;">76+</div>
+        </div>
+        
+      </div>
+      
+
+      <!-- Determining Factors Table -->
+      
+
+      <!-- Actionable Target -->
+      
+    </div>
+    
 
     <!-- Host Posture Score Breakdown -->
     
@@ -847,12 +1312,12 @@ WHY?
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
         <strong style="color:var(--accent);font-size:13px;">🔍 Host Posture Score Breakdown — 203.0.113.10:25</strong>
         <span class="tag" style="background:#0d1117;color:#3fb950;border-color:#3fb950;font-weight:700;">
-          Posture Score: 0 / 100 (Grade A)
+          Posture Score: 0 / 100 (Grade A+)
         </span>
       </div>
       
-      <pre class="code-block" style="background:#0d1117;color:#3fb950;font-size:11px;line-height:1.45;margin:6px 0 0 0;">Host Posture Score (203.0.113.10:25 - Grade A): 0 / 100
-Severity: GRADE A
+      <pre class="code-block" style="background:#0d1117;color:#3fb950;font-size:11px;line-height:1.45;margin:6px 0 0 0;">Host Posture Score (203.0.113.10:25 - Grade A+ [Excellent]): 0 / 100
+Severity: GRADE A+ (EXCELLENT)
 
 WHY?
 └── No security findings detected          +0
@@ -865,13 +1330,13 @@ WHY?
     <div class="session-detail">
       <div class="session-header">
         <h4>
-          SMTP Session —
+          SMTP STARTTLS Session —
           10.0.0.5:54321 → 203.0.113.10:25
           <span class="tag">STARTTLS</span>
           
           
         </h4>
-        <span style="color:var(--muted);font-size:12px;">cfe0d6b7…</span>
+        <span style="color:var(--muted);font-size:12px;">6781cb7c…</span>
       </div>
       <div class="session-body">
 
@@ -980,15 +1445,15 @@ WHY?
       </div>
       <div class="meta-card">
         <div class="label">Analysis ID</div>
-        <div class="value">08a4053c-4e01-4ac3-b6a3-e88e42987fa3</div>
+        <div class="value">75e24868-1749-4764-9da0-9a1b7562978b</div>
       </div>
       <div class="meta-card">
         <div class="label">Report ID</div>
-        <div class="value">c397a0d2-94a4-40e0-b15f-00ffd1225fa0</div>
+        <div class="value">c4ba2085-7b6e-46e7-93d8-fb7e8866f4be</div>
       </div>
       <div class="meta-card">
         <div class="label">Timestamp</div>
-        <div class="value">2026-09-29T18:13:43.152336+00:00</div>
+        <div class="value">2026-09-29T19:33:47.173634+00:00</div>
       </div>
       <div class="meta-card">
         <div class="label">Analyzer Version</div>
@@ -1018,66 +1483,66 @@ WHY?
         
           
           <tr>
-            <td><code>7b714013</code></td>
+            <td><code>f883e1e3</code></td>
             <td><strong>deprecated-tls-10</strong></td>
-            <td><code>SMTP 10.0.1.20:55001 → 198.51.100.5:25</code></td>
+            <td><code>SMTP STARTTLS 10.0.1.20:55001 → 198.51.100.5:25</code></td>
             <td><span class="evidence-ref">Pkt #8 (Offset 0)</span></td>
             <td><code>TLS Version: TLS1.0</code></td>
-            <td style="font-size: 11px; font-family: monospace; color: var(--muted); word-break: break-all;">0c96a199e679... → Session [SMTP 10.0.1.20:55001 → 198.51.100.5:25] → Pkt #8 (Offset 0) → Observed: TLS Version: TLS1.0 → Finding #7b714013 → Rule: deprecated-tls-10</td>
+            <td style="font-size: 11px; font-family: monospace; color: var(--muted); word-break: break-all;">0c96a199e679... → Session [SMTP STARTTLS 10.0.1.20:55001 → 198.51.100.5:25] → Pkt #8 (Offset 0) → Observed: TLS Version: TLS1.0 → Finding #f883e1e3 → Rule: deprecated-tls-10</td>
           </tr>
           
           <tr>
-            <td><code>48552d3d</code></td>
+            <td><code>141dac3b</code></td>
             <td><strong>weak-cipher</strong></td>
-            <td><code>SMTP 10.0.1.20:55001 → 198.51.100.5:25</code></td>
+            <td><code>SMTP STARTTLS 10.0.1.20:55001 → 198.51.100.5:25</code></td>
             <td><span class="evidence-ref">Pkt #8 (Offset 0)</span></td>
             <td><code>Cipher Suite: TLS_RSA_WITH_AES_128_CBC_SHA</code></td>
-            <td style="font-size: 11px; font-family: monospace; color: var(--muted); word-break: break-all;">0c96a199e679... → Session [SMTP 10.0.1.20:55001 → 198.51.100.5:25] → Pkt #8 (Offset 0) → Observed: Cipher Suite: TLS_RSA_WITH_AES_128_CBC_SHA → Finding #48552d3d → Rule: weak-cipher</td>
+            <td style="font-size: 11px; font-family: monospace; color: var(--muted); word-break: break-all;">0c96a199e679... → Session [SMTP STARTTLS 10.0.1.20:55001 → 198.51.100.5:25] → Pkt #8 (Offset 0) → Observed: Cipher Suite: TLS_RSA_WITH_AES_128_CBC_SHA → Finding #141dac3b → Rule: weak-cipher</td>
           </tr>
           
           <tr>
-            <td><code>2b031574</code></td>
+            <td><code>3d9bc180</code></td>
             <td><strong>no-pfs</strong></td>
-            <td><code>SMTP 10.0.1.20:55001 → 198.51.100.5:25</code></td>
+            <td><code>SMTP STARTTLS 10.0.1.20:55001 → 198.51.100.5:25</code></td>
             <td><span class="evidence-ref">Pkt #8 (Offset 0)</span></td>
             <td><code>Key Exchange: RSA, PFS: False</code></td>
-            <td style="font-size: 11px; font-family: monospace; color: var(--muted); word-break: break-all;">0c96a199e679... → Session [SMTP 10.0.1.20:55001 → 198.51.100.5:25] → Pkt #8 (Offset 0) → Observed: Key Exchange: RSA, PFS: False → Finding #2b031574 → Rule: no-pfs</td>
+            <td style="font-size: 11px; font-family: monospace; color: var(--muted); word-break: break-all;">0c96a199e679... → Session [SMTP STARTTLS 10.0.1.20:55001 → 198.51.100.5:25] → Pkt #8 (Offset 0) → Observed: Key Exchange: RSA, PFS: False → Finding #3d9bc180 → Rule: no-pfs</td>
           </tr>
           
           <tr>
-            <td><code>1664a170</code></td>
+            <td><code>624742be</code></td>
             <td><strong>starttls-downgrade</strong></td>
             <td><code>SMTP 10.0.2.30:56001 → 45.33.32.156:25</code></td>
             <td><span class="evidence-ref">Pkt #17 (Offset 0)</span></td>
             <td><code>TLS Version: unknown</code></td>
-            <td style="font-size: 11px; font-family: monospace; color: var(--muted); word-break: break-all;">0c96a199e679... → Session [SMTP 10.0.2.30:56001 → 45.33.32.156:25] → Pkt #17 (Offset 0) → Observed: TLS Version: unknown → Finding #1664a170 → Rule: starttls-downgrade</td>
+            <td style="font-size: 11px; font-family: monospace; color: var(--muted); word-break: break-all;">0c96a199e679... → Session [SMTP 10.0.2.30:56001 → 45.33.32.156:25] → Pkt #17 (Offset 0) → Observed: TLS Version: unknown → Finding #624742be → Rule: starttls-downgrade</td>
           </tr>
           
           <tr>
-            <td><code>e3687286</code></td>
+            <td><code>f8805f58</code></td>
             <td><strong>ml-anomaly</strong></td>
             <td><code>SMTP 10.0.2.30:56001 → 45.33.32.156:25</code></td>
             <td><span class="evidence-ref">Pkt #15 (Offset 0)</span></td>
             <td><code>anomaly-score</code></td>
-            <td style="font-size: 11px; font-family: monospace; color: var(--muted); word-break: break-all;">0c96a199e679... → Session [SMTP 10.0.2.30:56001 → 45.33.32.156:25] → Pkt #15 (Offset 0) → Observed: anomaly-score → Finding #e3687286 → Rule: ml-anomaly</td>
+            <td style="font-size: 11px; font-family: monospace; color: var(--muted); word-break: break-all;">0c96a199e679... → Session [SMTP 10.0.2.30:56001 → 45.33.32.156:25] → Pkt #15 (Offset 0) → Observed: anomaly-score → Finding #f8805f58 → Rule: ml-anomaly</td>
           </tr>
           
           <tr>
-            <td><code>765b7a29</code></td>
+            <td><code>0ad571db</code></td>
             <td><strong>weak-cipher</strong></td>
-            <td><code>SMTP 10.0.3.40:57001 → 203.0.113.50:25</code></td>
+            <td><code>SMTP STARTTLS 10.0.3.40:57001 → 203.0.113.50:25</code></td>
             <td><span class="evidence-ref">Pkt #21 (Offset 0)</span></td>
             <td><code>Cipher Suite: TLS_RSA_WITH_AES_128_CBC_SHA</code></td>
-            <td style="font-size: 11px; font-family: monospace; color: var(--muted); word-break: break-all;">0c96a199e679... → Session [SMTP 10.0.3.40:57001 → 203.0.113.50:25] → Pkt #21 (Offset 0) → Observed: Cipher Suite: TLS_RSA_WITH_AES_128_CBC_SHA → Finding #765b7a29 → Rule: weak-cipher</td>
+            <td style="font-size: 11px; font-family: monospace; color: var(--muted); word-break: break-all;">0c96a199e679... → Session [SMTP STARTTLS 10.0.3.40:57001 → 203.0.113.50:25] → Pkt #21 (Offset 0) → Observed: Cipher Suite: TLS_RSA_WITH_AES_128_CBC_SHA → Finding #0ad571db → Rule: weak-cipher</td>
           </tr>
           
           <tr>
-            <td><code>125f2424</code></td>
+            <td><code>768d2044</code></td>
             <td><strong>no-pfs</strong></td>
-            <td><code>SMTP 10.0.3.40:57001 → 203.0.113.50:25</code></td>
+            <td><code>SMTP STARTTLS 10.0.3.40:57001 → 203.0.113.50:25</code></td>
             <td><span class="evidence-ref">Pkt #21 (Offset 0)</span></td>
             <td><code>Key Exchange: RSA, PFS: False</code></td>
-            <td style="font-size: 11px; font-family: monospace; color: var(--muted); word-break: break-all;">0c96a199e679... → Session [SMTP 10.0.3.40:57001 → 203.0.113.50:25] → Pkt #21 (Offset 0) → Observed: Key Exchange: RSA, PFS: False → Finding #125f2424 → Rule: no-pfs</td>
+            <td style="font-size: 11px; font-family: monospace; color: var(--muted); word-break: break-all;">0c96a199e679... → Session [SMTP STARTTLS 10.0.3.40:57001 → 203.0.113.50:25] → Pkt #21 (Offset 0) → Observed: Key Exchange: RSA, PFS: False → Finding #768d2044 → Rule: no-pfs</td>
           </tr>
           
         
@@ -1088,7 +1553,7 @@ WHY?
   <!-- FOOTER -->
   <div class="report-footer">
     <p>SecureMailScope v1.0.0 — Passive Forensic Analysis — No active network connections were made.</p>
-    <p class="sha256">Source PCAP: 0c96a199e6790537cec5f73b0d9b9730e0852bb8e22eadc8bd0320f8605e7ddc | Report ID: c397a0d2-94a4-40e0-b15f-00ffd1225fa0</p>
+    <p class="sha256">Source PCAP: 0c96a199e6790537cec5f73b0d9b9730e0852bb8e22eadc8bd0320f8605e7ddc | Report ID: c4ba2085-7b6e-46e7-93d8-fb7e8866f4be</p>
   </div>
 
 </div>

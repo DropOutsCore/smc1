@@ -67,17 +67,80 @@ def _canonical_key(src_ip: str, src_port: int, dst_ip: str, dst_port: int) -> tu
     return (min(a, b), max(a, b))
 
 
+import re
+
+_MAIL_SERVER_PORTS = {25, 465, 587, 143, 993, 110, 995, 2525}
+
+_SERVER_BANNERS = (
+    re.compile(rb"^220[ -]", re.MULTILINE),
+    re.compile(rb"^\* OK\b", re.MULTILINE | re.IGNORECASE),
+    re.compile(rb"^\+OK\b", re.MULTILINE),
+)
+
+_CLIENT_COMMANDS = (
+    re.compile(rb"^(?:EHLO|HELO)\b", re.MULTILINE | re.IGNORECASE),
+    re.compile(rb"^\*?\s*(?:CAPABILITY|STARTTLS|STLS)\b", re.MULTILINE | re.IGNORECASE),
+    re.compile(rb"^[a-zA-Z0-9]+\s+(?:CAPABILITY|STARTTLS|LOGIN|AUTHENTICATE|SELECT)\b", re.MULTILINE | re.IGNORECASE),
+    re.compile(rb"^(?:USER|PASS|QUIT|STAT|LIST|RETR)\b", re.MULTILINE | re.IGNORECASE),
+)
+
+
+def _identify_client_server_endpoints(
+    segs: list[RawSegment]
+) -> tuple[tuple[str, int], tuple[str, int]]:
+    """
+    Determine (client_endpoint, server_endpoint) consistently as:
+    Client IP:Port -> Mail Server IP:Port.
+
+    Preserves original packet directions within the segments list.
+    """
+    first = min(segs, key=lambda s: (s.timestamp, s.packet_number))
+    ep1 = (first.src_ip, first.src_port)
+    ep2 = (first.dst_ip, first.dst_port)
+
+    # 1. Check well-known mail server ports
+    ep1_is_server_port = ep1[1] in _MAIL_SERVER_PORTS
+    ep2_is_server_port = ep2[1] in _MAIL_SERVER_PORTS
+
+    if ep2_is_server_port and not ep1_is_server_port:
+        return ep1, ep2
+    if ep1_is_server_port and not ep2_is_server_port:
+        return ep2, ep1
+
+    # 2. Check server greeting banners vs client commands across segments
+    ep1_payload = b"".join(s.data for s in segs if (s.src_ip, s.src_port) == ep1)[:2048]
+    ep2_payload = b"".join(s.data for s in segs if (s.src_ip, s.src_port) == ep2)[:2048]
+
+    ep1_has_banner = any(p.search(ep1_payload) for p in _SERVER_BANNERS)
+    ep2_has_banner = any(p.search(ep2_payload) for p in _SERVER_BANNERS)
+
+    if ep1_has_banner and not ep2_has_banner:
+        return ep2, ep1  # ep1 is server, ep2 is client
+    if ep2_has_banner and not ep1_has_banner:
+        return ep1, ep2  # ep2 is server, ep1 is client
+
+    ep1_has_client_cmd = any(p.search(ep1_payload) for p in _CLIENT_COMMANDS)
+    ep2_has_client_cmd = any(p.search(ep2_payload) for p in _CLIENT_COMMANDS)
+
+    if ep1_has_client_cmd and not ep2_has_client_cmd:
+        return ep1, ep2
+    if ep2_has_client_cmd and not ep1_has_client_cmd:
+        return ep2, ep1
+
+    # 3. Fallback: initiator of first segment is treated as client
+    return ep1, ep2
+
+
 def _reassemble_flow(
     canonical_key: tuple, segs: list[RawSegment]
 ) -> TCPStream:
-    """Reassemble one bidirectional flow."""
-    # Determine the "client" side as the initiator (first segment's source)
-    first = min(segs, key=lambda s: (s.timestamp, s.packet_number))
-    client_ip, client_port = first.src_ip, first.src_port
-    server_ip, server_port = first.dst_ip, first.dst_port
+    """Reassemble one bidirectional flow normalized as Client -> Server."""
+    client_ep, server_ep = _identify_client_server_endpoints(segs)
+    client_ip, client_port = client_ep
+    server_ip, server_port = server_ep
 
     client_segs = [s for s in segs if s.src_ip == client_ip and s.src_port == client_port]
-    server_segs = [s for s in segs if not (s.src_ip == client_ip and s.src_port == client_port)]
+    server_segs = [s for s in segs if s.src_ip == server_ip and s.src_port == server_port]
 
     client_data = _assemble_direction(client_segs)
     server_data = _assemble_direction(server_segs)

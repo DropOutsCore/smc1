@@ -18,8 +18,15 @@ from typing import Optional
 
 class ProtocolType(str, Enum):
     SMTP = "SMTP"
+    SMTP_STARTTLS = "SMTP STARTTLS"
+    SMTPS = "SMTPS / implicit TLS"
     IMAP = "IMAP"
+    IMAP_STARTTLS = "IMAP STARTTLS"
+    IMAPS = "IMAPS / implicit TLS"
     POP3 = "POP3"
+    POP3_PLAINTEXT = "POP3 / plaintext"
+    POP3_STARTTLS = "POP3 STARTTLS"
+    POP3S = "POP3S / implicit TLS"
     UNKNOWN = "UNKNOWN"
 
 

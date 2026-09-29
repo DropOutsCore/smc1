@@ -88,7 +88,7 @@ def test_implicit_tls_ports():
     sessions = build_email_sessions([stream])
     assert len(sessions) == 1
     assert sessions[0].is_implicit_tls is True
-    assert sessions[0].protocol == "IMAP"
+    assert sessions[0].protocol == "IMAPS / implicit TLS"
 
 
 def test_tcp_reassembly_deduplicates_retransmits():

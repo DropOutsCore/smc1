@@ -23,6 +23,7 @@ References: RFC 8446 (TLS 1.3), RFC 5246 (TLS 1.2), RFC 6066 (SNI/ALPN)
 from __future__ import annotations
 
 import logging
+import re
 import struct
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -90,7 +91,18 @@ _EXT_SESSION_TICKET = 0x0023
 _EXT_RENEGOTIATION = 0xFF01
 
 # Cipher suites that imply PFS
-_PFS_KEY_EXCHANGES = {"ECDHE", "DHE"}
+_NAMED_CURVES = {
+    0x0017: "secp256r1",
+    0x0018: "secp384r1",
+    0x0019: "secp521r1",
+    0x001D: "x25519",
+    0x001E: "x448",
+}
+
+# Regex to scan for TLS record starts (0x16 Handshake)
+_TLS_RECORD_SCAN = re.compile(rb"\x16\x03[\x00-\x04]", re.DOTALL)
+_TLS_CLIENT_HELLO_SCAN = re.compile(rb"\x16\x03[\x00-\x04].{2}\x01", re.DOTALL)
+_TLS_SERVER_HELLO_SCAN = re.compile(rb"\x16\x03[\x00-\x04].{2}\x02", re.DOTALL)
 
 
 @dataclass
@@ -111,6 +123,8 @@ class TLSHandshakeInfo:
     handshake_start_packet: int = 0
     # TLS 1.3 visibility note
     tls13_visibility_limited: bool = False
+    # Explicit tracking for unobserved passive telemetry
+    not_observable: list[str] = field(default_factory=list)
 
     TLS13_VISIBILITY_NOTE = (
         "TLS 1.3 encrypts most handshake fields after ServerHello. "
@@ -118,73 +132,136 @@ class TLSHandshakeInfo:
     )
 
 
-def parse_handshake(
-    stream_data: bytes,
+def _parse_records_from_stream(
+    data: bytes,
+    messages: list,
+    info: TLSHandshakeInfo,
     start_offset: int = 0,
-    handshake_start_packet: int = 0,
-) -> TLSHandshakeInfo:
-    """
-    Parse a TLS handshake from raw bytes beginning at start_offset.
+) -> None:
+    """Scan and parse consecutive TLS records from a byte buffer."""
+    if not data or len(data) < 5:
+        return
 
-    Parameters
-    ----------
-    stream_data : bytes
-        The combined TCP stream payload (or the TLS portion thereof).
-    start_offset : int
-        Byte offset where the TLS record layer begins.
-    handshake_start_packet : int
-        Packet number for forensic reference.
+    pos = max(0, start_offset)
+    if pos >= len(data):
+        return
 
-    Returns
-    -------
-    TLSHandshakeInfo
-    """
-    info = TLSHandshakeInfo(handshake_start_packet=handshake_start_packet)
-    data = stream_data[start_offset:]
+    # If pos does not point to a TLS record, scan forward for one
+    if data[pos] not in (_TLS_RECORD_TYPE_HANDSHAKE,
+                         _TLS_RECORD_TYPE_CHANGE_CIPHER,
+                         _TLS_RECORD_TYPE_APP_DATA,
+                         _TLS_RECORD_TYPE_ALERT):
+        m = _TLS_RECORD_SCAN.search(data, pos)
+        if m:
+            pos = m.start()
+        else:
+            return
 
-    if len(data) < 5:
-        info.anomalies.append("insufficient-data: TLS record too short")
-        return info
-
-    pos = 0
-    messages: list[tuple[str, bytes]] = []  # (msg_type_name, payload)
-
-    # ── Parse TLS records ────────────────────────────────────────────────
     while pos + 5 <= len(data):
         rec_type = data[pos]
         if rec_type not in (_TLS_RECORD_TYPE_HANDSHAKE,
                              _TLS_RECORD_TYPE_CHANGE_CIPHER,
                              _TLS_RECORD_TYPE_APP_DATA,
                              _TLS_RECORD_TYPE_ALERT):
-            break  # Not a valid TLS record — stop parsing
+            # Attempt to resync to the next record
+            m = _TLS_RECORD_SCAN.search(data, pos + 1)
+            if m:
+                pos = m.start()
+                continue
+            break
 
-        version_bytes = data[pos + 1: pos + 3]
         rec_len = struct.unpack("!H", data[pos + 3: pos + 5])[0]
         payload = data[pos + 5: pos + 5 + rec_len]
 
         if len(payload) < rec_len:
+            if rec_type == _TLS_RECORD_TYPE_HANDSHAKE and len(payload) >= 4:
+                _parse_handshake_record(payload, messages, info)
             info.anomalies.append(f"truncated-record: expected {rec_len} got {len(payload)}")
             break
 
         if rec_type == _TLS_RECORD_TYPE_HANDSHAKE:
             _parse_handshake_record(payload, messages, info)
         elif rec_type == _TLS_RECORD_TYPE_CHANGE_CIPHER:
-            pass  # ChangeCipherSpec — expected
+            pass
         elif rec_type == _TLS_RECORD_TYPE_APP_DATA:
-            break  # Application data means handshake is done
+            pass
 
         pos += 5 + rec_len
 
-    # ── Derive key exchange and PFS from cipher suite ─────────────────────
+
+def parse_handshake(
+    stream_data: bytes,
+    start_offset: int = 0,
+    handshake_start_packet: int = 0,
+    client_data: Optional[bytes] = None,
+    server_data: Optional[bytes] = None,
+) -> TLSHandshakeInfo:
+    """
+    Parse a TLS handshake from raw bytes beginning at start_offset, or from
+    reassembled unidirectional client_data and server_data streams.
+
+    Parameters
+    ----------
+    stream_data : bytes
+        The combined TCP stream payload.
+    start_offset : int
+        Byte offset where the TLS record layer begins in stream_data.
+    handshake_start_packet : int
+        Packet number for forensic reference.
+    client_data : bytes, optional
+        Reassembled client-to-server payload (contains ClientHello, SNI, ALPN).
+    server_data : bytes, optional
+        Reassembled server-to-client payload (contains ServerHello, Certs, KEX).
+
+    Returns
+    -------
+    TLSHandshakeInfo
+    """
+    info = TLSHandshakeInfo(handshake_start_packet=handshake_start_packet)
+    messages: list[tuple[str, bytes]] = []
+
+    # 1. Parse client records (ClientHello -> SNI, offered versions, ALPN)
+    if client_data:
+        c_offset = 0
+        cm = _TLS_CLIENT_HELLO_SCAN.search(client_data)
+        if cm:
+            c_offset = cm.start()
+        _parse_records_from_stream(client_data, messages, info, start_offset=c_offset)
+
+    # 2. Parse server records (ServerHello -> Version, Cipher; Certificate; ServerKeyExchange)
+    if server_data:
+        s_offset = 0
+        sm = _TLS_SERVER_HELLO_SCAN.search(server_data)
+        if sm:
+            s_offset = sm.start()
+        elif _TLS_RECORD_SCAN.search(server_data):
+            s_offset = _TLS_RECORD_SCAN.search(server_data).start()
+        _parse_records_from_stream(server_data, messages, info, start_offset=s_offset)
+
+    # 3. If stream_data provided and (version/cipher still unknown or unidirectional data not provided),
+    # parse combined stream_data as fallback:
+    if stream_data and (info.tls_version == "unknown" or info.cipher_suite == "unknown" or not client_data):
+        _parse_records_from_stream(stream_data, messages, info, start_offset=start_offset)
+
+    # ── Derive key exchange and PFS from cipher suite & handshake ───────────
     _derive_kex_and_pfs(info)
 
     # ── TLS 1.3 visibility note ───────────────────────────────────────────
     if info.tls_version == "TLS1.3":
         info.tls13_visibility_limited = True
         if not info.certificate_chain_der:
+            info.not_observable.append("certificate_chain (encrypted in TLS 1.3)")
             info.anomalies.append(
                 "tls13-encrypted-handshake: " + TLSHandshakeInfo.TLS13_VISIBILITY_NOTE
             )
+
+    # Mark unobserved telemetry explicitly
+    if info.tls_version == "unknown":
+        info.not_observable.append("tls_version (not observable: handshake incomplete)")
+    if info.cipher_suite == "unknown":
+        info.not_observable.append("cipher_suite (not observable: handshake incomplete)")
+    if info.key_exchange == "unknown":
+        info.not_observable.append("key_exchange (not observable: handshake incomplete)")
 
     return info
 
@@ -211,11 +288,16 @@ def _parse_handshake_record(payload: bytes, messages: list, info: TLSHandshakeIn
                 _parse_server_hello(msg_body, info)
             elif msg_type == 0x0B:
                 _parse_certificate(msg_body, info)
+            elif msg_type == 0x0C:
+                _parse_server_key_exchange(msg_body, info)
         except Exception as exc:
             info.anomalies.append(f"parse-error-{name}: {exc}")
             logger.debug("Error parsing %s: %s", name, exc)
 
         pos += 4 + msg_len
+
+
+_EXT_KEY_SHARE = 0x0033
 
 
 def _parse_client_hello(body: bytes, info: TLSHandshakeInfo) -> None:
@@ -226,6 +308,9 @@ def _parse_client_hello(body: bytes, info: TLSHandshakeInfo) -> None:
 
     # Legacy version (2 bytes)
     legacy_ver = struct.unpack("!H", body[0:2])[0]
+    legacy_str = _TLS_VERSION_MAP.get(legacy_ver, f"0x{legacy_ver:04x}")
+    if legacy_str not in info.offered_versions and legacy_ver in _TLS_VERSION_MAP:
+        info.offered_versions.append(legacy_str)
     pos = 2
 
     # Random (32 bytes)
@@ -276,7 +361,7 @@ def _parse_client_hello(body: bytes, info: TLSHandshakeInfo) -> None:
 
 
 def _parse_server_hello(body: bytes, info: TLSHandshakeInfo) -> None:
-    """Parse ServerHello — extract negotiated version and cipher suite."""
+    """Parse ServerHello — extract negotiated version, cipher suite, and key share."""
     if len(body) < 35:
         return
     pos = 0
@@ -304,7 +389,7 @@ def _parse_server_hello(body: bytes, info: TLSHandshakeInfo) -> None:
     # Initial version from legacy field
     negotiated_ver = _TLS_VERSION_MAP.get(legacy_ver, f"0x{legacy_ver:04x}")
 
-    # Check extensions for supported_versions (TLS 1.3 sends actual version here)
+    # Check extensions
     if pos + 2 <= len(body):
         ext_total = struct.unpack("!H", body[pos: pos + 2])[0]
         pos += 2
@@ -317,6 +402,11 @@ def _parse_server_hello(body: bytes, info: TLSHandshakeInfo) -> None:
             if ext_type == _EXT_SUPPORTED_VERSIONS and len(ext_data) >= 2:
                 ver_code = struct.unpack("!H", ext_data[0:2])[0]
                 negotiated_ver = _TLS_VERSION_MAP.get(ver_code, f"0x{ver_code:04x}")
+            elif ext_type == _EXT_KEY_SHARE and len(ext_data) >= 2:
+                group_code = struct.unpack("!H", ext_data[0:2])[0]
+                curve_name = _NAMED_CURVES.get(group_code, f"0x{group_code:04X}")
+                info.key_exchange = f"ECDHE ({curve_name})"
+                info.pfs = True
 
     info.tls_version = negotiated_ver
 
@@ -326,34 +416,51 @@ def _parse_server_hello(body: bytes, info: TLSHandshakeInfo) -> None:
     info.cipher_strength = suite_info.get("strength", "unknown")
 
 
+def _parse_server_key_exchange(body: bytes, info: TLSHandshakeInfo) -> None:
+    """Parse ServerKeyExchange (type 0x0C) to observe ECDHE curve or DHE parameters."""
+    if len(body) < 3:
+        return
+    curve_type = body[0]
+    if curve_type == 3 and len(body) >= 3:  # named_curve
+        named_curve = struct.unpack("!H", body[1:3])[0]
+        curve_name = _NAMED_CURVES.get(named_curve, f"0x{named_curve:04X}")
+        info.key_exchange = f"ECDHE ({curve_name})"
+        info.pfs = True
+    elif len(body) >= 2:
+        p_len = struct.unpack("!H", body[0:2])[0]
+        if 64 <= p_len <= 1024 and 2 + p_len <= len(body):
+            info.key_exchange = f"DHE ({p_len * 8}-bit)"
+            info.pfs = True
+
+
 def _parse_certificate(body: bytes, info: TLSHandshakeInfo) -> None:
     """Parse Certificate message — extract raw DER-encoded certificates."""
     if len(body) < 3:
         return
     pos = 0
+    is_tls13 = (info.tls_version == "TLS1.3")
 
-    # TLS 1.3 has a context field before the list
-    # Heuristic: if first byte is 0x00 and next 3 encode a reasonable list length, skip it
+    if is_tls13:
+        # TLS 1.3: skip 1-byte request context length + context bytes
+        context_len = body[pos]
+        pos += 1 + context_len
+
+    if pos + 3 > len(body):
+        return
+
     total_certs_len = struct.unpack("!I", b"\x00" + body[pos: pos + 3])[0]
     pos += 3
 
-    if total_certs_len > len(body) - 3:
-        # Try TLS 1.3 context byte
-        pos = 1
-        total_certs_len = struct.unpack("!I", b"\x00" + body[pos: pos + 3])[0]
-        pos += 3
-
-    end = pos + total_certs_len
-    while pos + 3 <= end and pos + 3 <= len(body):
+    end = min(pos + total_certs_len, len(body))
+    while pos + 3 <= end:
         cert_len = struct.unpack("!I", b"\x00" + body[pos: pos + 3])[0]
         pos += 3
-        # TLS 1.3 may have per-cert extensions after the cert
         if cert_len > 0 and pos + cert_len <= len(body):
             cert_der = body[pos: pos + cert_len]
             info.certificate_chain_der.append(cert_der)
         pos += cert_len
-        # TLS 1.3: skip per-cert extension data (2-byte length)
-        if pos + 2 <= len(body):
+        # TLS 1.3 only: each cert has 2-byte extension data length
+        if is_tls13 and pos + 2 <= len(body):
             ext_skip = struct.unpack("!H", body[pos: pos + 2])[0]
             pos += 2 + ext_skip
 
@@ -445,7 +552,10 @@ def _cipher_code_to_name(code: int) -> str:
 
 
 def _derive_kex_and_pfs(info: TLSHandshakeInfo) -> None:
-    """Derive key exchange mechanism and PFS from cipher suite name."""
+    """Derive key exchange mechanism and PFS from cipher suite name or wire params."""
+    if info.key_exchange != "unknown":
+        return
+
     suite = info.cipher_suite.upper()
     db = _load_cipher_db()
     db_entry = db.get(info.cipher_suite, {})

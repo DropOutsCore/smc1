@@ -109,38 +109,120 @@ def _write_pcap(filename: str, packets: list[tuple[float, bytes]]) -> None:
 # ---------------------------------------------------------------------------
 # TLS record helpers
 # ---------------------------------------------------------------------------
-def _tls_client_hello(tls_version_code: bytes = b"\x03\x03") -> bytes:
-    """Minimal TLS ClientHello for the given version (0x0301=TLS1.0, 0x0303=TLS1.2/1.3)."""
-    # TLS record: type=22 (handshake), version, length
-    # Handshake: type=1 (ClientHello), length, body
-    random_bytes = b"\x00" * 32
-    session_id = b"\x00"  # empty
-    cipher_suites = b"\x00\x02\x13\x01"  # TLS_AES_128_GCM_SHA256
+def _generate_test_cert_der(cn: str = "mail.example.com") -> bytes:
+    """Generate a valid self-signed DER certificate using cryptography."""
+    try:
+        from cryptography import x509
+        from cryptography.hazmat.primitives import hashes, serialization
+        from cryptography.hazmat.primitives.asymmetric import rsa
+        import datetime
+
+        key = rsa.generate_private_key(public_exponent=65537, key_size=2048)
+        subject = issuer = x509.Name([
+            x509.NameAttribute(x509.NameOID.COMMON_NAME, cn),
+            x509.NameAttribute(x509.NameOID.ORGANIZATION_NAME, "AVALOK Test Lab"),
+        ])
+        now = datetime.datetime.now(datetime.timezone.utc)
+        cert = (
+            x509.CertificateBuilder()
+            .subject_name(subject)
+            .issuer_name(issuer)
+            .public_key(key.public_key())
+            .serial_number(x509.random_serial_number())
+            .not_valid_before(now - datetime.timedelta(days=1))
+            .not_valid_after(now + datetime.timedelta(days=365))
+            .add_extension(
+                x509.SubjectAlternativeName([x509.DNSName(cn)]),
+                critical=False,
+            )
+            .sign(key, hashes.SHA256())
+        )
+        return cert.public_bytes(serialization.Encoding.DER)
+    except Exception:
+        # Fallback dummy DER bytes
+        return b"\x30\x82\x01\x00" + b"\x00" * 256
+
+
+def _tls_client_hello(
+    tls_version_code: bytes = b"\x03\x03",
+    sni: str = "",
+    cipher_suites: list[bytes] = None,
+) -> bytes:
+    """Construct a realistic TLS ClientHello."""
+    random_bytes = b"\x12" * 32
+    session_id = b"\x00"
+    if not cipher_suites:
+        cipher_suites = [b"\x13\x01", b"\xC0\x2F", b"\xC0\x30"]  # TLS_AES_128_GCM, ECDHE_RSA_AES128_GCM, ECDHE_RSA_AES256_GCM
+    cs_bytes = struct.pack("!H", len(cipher_suites) * 2) + b"".join(cipher_suites)
     compression = b"\x01\x00"
-    extensions = b"\x00\x00"
 
-    body = (
-        tls_version_code +  # legacy version
-        random_bytes +
-        session_id +
-        cipher_suites +
-        compression +
-        extensions
-    )
+    ext_buf = bytearray()
+    if sni:
+        hn = sni.encode("ascii")
+        sni_entry = b"\x00" + struct.pack("!H", len(hn)) + hn
+        sni_list = struct.pack("!H", len(sni_entry)) + sni_entry
+        ext_buf += struct.pack("!HH", 0x0000, len(sni_list)) + sni_list
+
+    # supported_versions (0x002B)
+    supp_vers = b"\x04\x03\x04\x03\x03"  # length 4: TLS 1.3, TLS 1.2
+    ext_buf += struct.pack("!HH", 0x002B, len(supp_vers)) + supp_vers
+
+    exts_packed = struct.pack("!H", len(ext_buf)) + bytes(ext_buf) if ext_buf else b"\x00\x00"
+
+    body = tls_version_code + random_bytes + session_id + cs_bytes + compression + exts_packed
     hs_msg = b"\x01" + struct.pack("!I", len(body))[1:] + body
-    rec = b"\x16" + tls_version_code + struct.pack("!H", len(hs_msg)) + hs_msg
-    return rec
+    return b"\x16" + tls_version_code + struct.pack("!H", len(hs_msg)) + hs_msg
 
 
-def _tls_server_hello(version_code: bytes = b"\x03\x03", cipher: bytes = b"\x13\x01") -> bytes:
-    """Minimal TLS ServerHello."""
-    random_bytes = b"\x11" * 32
+def _tls_server_hello(
+    version_code: bytes = b"\x03\x03",
+    cipher: bytes = b"\x13\x01",
+    is_tls13: bool = False,
+    key_share_group: int = 0x001D,
+) -> bytes:
+    """Construct a TLS ServerHello."""
+    random_bytes = b"\x23" * 32
     session_id = b"\x00"
     compression = b"\x00"
-    extensions = b"\x00\x00"
-    body = version_code + random_bytes + session_id + cipher + compression + extensions
+
+    ext_buf = bytearray()
+    if is_tls13:
+        # supported_versions (0x002B) -> TLS 1.3 (0x0304)
+        ext_buf += struct.pack("!HHH", 0x002B, 2, 0x0304)
+        # key_share (0x0033)
+        key_share_bytes = b"\x44" * 32
+        ks_body = struct.pack("!HH", key_share_group, len(key_share_bytes)) + key_share_bytes
+        ext_buf += struct.pack("!HH", 0x0033, len(ks_body)) + ks_body
+
+    exts_packed = struct.pack("!H", len(ext_buf)) + bytes(ext_buf) if ext_buf else b"\x00\x00"
+    body = version_code + random_bytes + session_id + cipher + compression + exts_packed
     hs = b"\x02" + struct.pack("!I", len(body))[1:] + body
     return b"\x16" + version_code + struct.pack("!H", len(hs)) + hs
+
+
+def _tls_certificate_record(cert_der: bytes, version_code: bytes = b"\x03\x03") -> bytes:
+    """Build a Certificate message (type 0x0B)."""
+    cert_entry = struct.pack("!I", len(cert_der))[1:] + cert_der
+    body = struct.pack("!I", len(cert_entry))[1:] + cert_entry
+    hs_msg = b"\x0B" + struct.pack("!I", len(body))[1:] + body
+    return b"\x16" + version_code + struct.pack("!H", len(hs_msg)) + hs_msg
+
+
+def _tls_server_key_exchange(curve_id: int = 0x0017, version_code: bytes = b"\x03\x03") -> bytes:
+    """Build a ServerKeyExchange message (type 0x0C) for ECDHE."""
+    dummy_point = b"\x04" + (b"\x12" * 64)
+    ec_params = struct.pack("!BH", 3, curve_id) + bytes([len(dummy_point)]) + dummy_point
+    sig = b"\x99" * 256
+    sig_field = b"\x04\x01" + struct.pack("!H", len(sig)) + sig
+    body = ec_params + sig_field
+    hs_msg = b"\x0C" + struct.pack("!I", len(body))[1:] + body
+    return b"\x16" + version_code + struct.pack("!H", len(hs_msg)) + hs_msg
+
+
+def _tls_server_hello_done(version_code: bytes = b"\x03\x03") -> bytes:
+    """Build a ServerHelloDone message (type 0x0E)."""
+    hs_msg = b"\x0E\x00\x00\x00"
+    return b"\x16" + version_code + struct.pack("!H", len(hs_msg)) + hs_msg
 
 
 # ---------------------------------------------------------------------------
@@ -258,6 +340,104 @@ def gen_no_pfs() -> None:
     _write_pcap("smtp_no_pfs_rsa.pcap", packets)
 
 
+def gen_multi_protocol_sample() -> str:
+    """
+    Generate the reference multi-protocol sample PCAP containing:
+      1. SMTP STARTTLS (192.168.1.50:45120 -> 10.0.0.25:587)
+      2. IMAP STARTTLS (192.168.1.51:45122 -> 10.0.0.14:143)
+      3. SMTPS / implicit TLS (192.168.1.52:45124 -> 10.0.0.46:465)
+      4. POP3 / plaintext (192.168.1.53:45126 -> 10.0.0.13:110)
+      5. SMTP STARTTLS (192.168.1.54:45128 -> 10.0.0.25:587)
+    """
+    ts = time.time()
+    packets = []
+
+    # Certs for realistic telemetry
+    cert_mail25 = _generate_test_cert_der("mail.corp25.com")
+    cert_imap14 = _generate_test_cert_der("imap.corp14.com")
+
+    # ── Session 1: SMTP STARTTLS on 587 (TLS 1.2 + ECDHE P-256 + AES256) ───
+    c1, s1 = ("192.168.1.50", 45120), ("10.0.0.25", 587)
+    s1_flow = [
+        (s1, c1, b"220 mail.corp25.com ESMTP Postfix\r\n"),
+        (c1, s1, b"EHLO client50.corp.internal\r\n"),
+        (s1, c1, b"250-mail.corp25.com\r\n250 STARTTLS\r\n"),
+        (c1, s1, b"STARTTLS\r\n"),
+        (s1, c1, b"220 2.0.0 Ready to start TLS\r\n"),
+        (c1, s1, _tls_client_hello(b"\x03\x03", sni="mail.corp25.com")),
+        (s1, c1, _tls_server_hello(b"\x03\x03", cipher=b"\xC0\x30") +
+                 _tls_certificate_record(cert_mail25) +
+                 _tls_server_key_exchange(curve_id=0x0017) +
+                 _tls_server_hello_done()),
+    ]
+    for i, (src, dst, data) in enumerate(s1_flow):
+        f = _eth_ip_tcp(src[0], dst[0], src[1], dst[1], data, seq=10000 + i * 500)
+        packets.append((ts + 0.01 * i, f))
+
+    # ── Session 2: IMAP STARTTLS on 143 (TLS 1.2 + ECDHE P-256 + AES128) ───
+    c2, s2 = ("192.168.1.51", 45122), ("10.0.0.14", 143)
+    s2_flow = [
+        (s2, c2, b"* OK [CAPABILITY IMAP4rev1 STARTTLS] Dovecot ready.\r\n"),
+        (c2, s2, b"a001 STARTTLS\r\n"),
+        (s2, c2, b"a001 OK Begin TLS negotiation now.\r\n"),
+        (c2, s2, _tls_client_hello(b"\x03\x03", sni="imap.corp14.com")),
+        (s2, c2, _tls_server_hello(b"\x03\x03", cipher=b"\xC0\x2F") +
+                 _tls_certificate_record(cert_imap14) +
+                 _tls_server_key_exchange(curve_id=0x0017) +
+                 _tls_server_hello_done()),
+    ]
+    for i, (src, dst, data) in enumerate(s2_flow):
+        f = _eth_ip_tcp(src[0], dst[0], src[1], dst[1], data, seq=20000 + i * 500)
+        packets.append((ts + 0.5 + 0.01 * i, f))
+
+    # ── Session 3: SMTPS / implicit TLS on 465 (TLS 1.3 + X25519 + AES256) ──
+    c3, s3 = ("192.168.1.52", 45124), ("10.0.0.46", 465)
+    s3_flow = [
+        (c3, s3, _tls_client_hello(b"\x03\x03", sni="smtps.corp46.com")),
+        (s3, c3, _tls_server_hello(b"\x03\x03", cipher=b"\x13\x02", is_tls13=True, key_share_group=0x001D)),
+    ]
+    for i, (src, dst, data) in enumerate(s3_flow):
+        f = _eth_ip_tcp(src[0], dst[0], src[1], dst[1], data, seq=30000 + i * 500)
+        packets.append((ts + 1.0 + 0.01 * i, f))
+
+    # ── Session 4: POP3 / plaintext on 110 (No TLS) ─────────────────────────
+    c4, s4 = ("192.168.1.53", 45126), ("10.0.0.13", 110)
+    s4_flow = [
+        (s4, c4, b"+OK POP3 server ready <1234.5678@corp13.com>\r\n"),
+        (c4, s4, b"USER alice\r\n"),
+        (s4, c4, b"+OK send password\r\n"),
+        (c4, s4, b"PASS secret123\r\n"),
+        (s4, c4, b"+OK Mailbox open, 2 messages\r\n"),
+        (c4, s4, b"QUIT\r\n"),
+        (s4, c4, b"+OK Bye\r\n"),
+    ]
+    for i, (src, dst, data) in enumerate(s4_flow):
+        f = _eth_ip_tcp(src[0], dst[0], src[1], dst[1], data, seq=40000 + i * 500)
+        packets.append((ts + 1.5 + 0.01 * i, f))
+
+    # ── Session 5: SMTP STARTTLS on 587 (TLS 1.2 + ECDHE P-256 + AES128) ───
+    c5, s5 = ("192.168.1.54", 45128), ("10.0.0.25", 587)
+    s5_flow = [
+        (s5, c5, b"220 mail.corp25.com ESMTP\r\n"),
+        (c5, s5, b"EHLO client54.corp.internal\r\n"),
+        (s5, c5, b"250-mail.corp25.com\r\n250 STARTTLS\r\n"),
+        (c5, s5, b"STARTTLS\r\n"),
+        (s5, c5, b"220 Go ahead\r\n"),
+        (c5, s5, _tls_client_hello(b"\x03\x03", sni="mail.corp25.com")),
+        (s5, c5, _tls_server_hello(b"\x03\x03", cipher=b"\xC0\x2F") +
+                 _tls_certificate_record(cert_mail25) +
+                 _tls_server_key_exchange(curve_id=0x0017) +
+                 _tls_server_hello_done()),
+    ]
+    for i, (src, dst, data) in enumerate(s5_flow):
+        f = _eth_ip_tcp(src[0], dst[0], src[1], dst[1], data, seq=50000 + i * 500)
+        packets.append((ts + 2.0 + 0.01 * i, f))
+
+    filename = "email_tls_sample.pcap"
+    _write_pcap(filename, packets)
+    return str(OUTPUT_DIR / filename)
+
+
 def main() -> None:
     print("Generating synthetic test PCAPs...")
     print(f"Output directory: {OUTPUT_DIR}")
@@ -268,6 +448,8 @@ def main() -> None:
     gen_self_signed()
     gen_starttls_downgrade()
     gen_no_pfs()
+    sample_path = gen_multi_protocol_sample()
+    print(f"  Generated multi-protocol sample: {sample_path}")
     print()
     print("Done! Use these PCAPs as rule-engine test fixtures and demo material.")
     print("Run analysis: python -m securemailscope.main analyze <pcap_file>")

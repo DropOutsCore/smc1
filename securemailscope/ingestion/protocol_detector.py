@@ -45,28 +45,39 @@ _PORT_PROTOCOL: dict[int, ProtocolType] = {
 _IMPLICIT_TLS_PORTS: set[int] = {465, 993, 995}
 
 # Banner patterns (bytes, case-insensitive)
-_SMTP_BANNER = re.compile(rb"^220\s", re.MULTILINE)
+_SMTP_BANNER = re.compile(rb"^220[ -]", re.MULTILINE)
 _IMAP_BANNER = re.compile(rb"\*\s+OK\b", re.MULTILINE | re.IGNORECASE)
 _POP3_BANNER = re.compile(rb"^\+OK\b", re.MULTILINE)
 
-# STARTTLS command and success response patterns
-_STARTTLS_CMD = re.compile(rb"STARTTLS\r?\n", re.IGNORECASE)
-_SMTP_STARTTLS_OK = re.compile(rb"^220\s+.*ready\b", re.MULTILINE | re.IGNORECASE)
-_IMAP_STARTTLS_OK = re.compile(rb"\bOK\b.*begin\b.*tls\b", re.MULTILINE | re.IGNORECASE)
+# Additional payload command patterns for non-standard ports or missing banners
+_SMTP_CMDS = re.compile(rb"^(?:EHLO|HELO|MAIL FROM:|RCPT TO:)\b", re.MULTILINE | re.IGNORECASE)
+_IMAP_CMDS = re.compile(rb"(?:CAPABILITY|LOGIN|AUTHENTICATE|SELECT|EXAMINE)\b", re.IGNORECASE)
+_POP3_CMDS = re.compile(rb"^(?:USER|PASS|STAT|LIST|RETR|DELE|STLS)\b", re.MULTILINE | re.IGNORECASE)
+
+# STARTTLS / STLS command patterns:
+# Matches SMTP "STARTTLS\r\n", IMAP "tag STARTTLS\r\n", and POP3 "STLS\r\n"
+_STARTTLS_CMD = re.compile(rb"(?:STARTTLS|STLS)\r?\n", re.IGNORECASE)
+_SMTP_STARTTLS_OK = re.compile(rb"^220[ -].*ready\b", re.MULTILINE | re.IGNORECASE)
+_IMAP_STARTTLS_OK = re.compile(rb"\bOK\b.*(?:begin|start).*tls\b", re.MULTILINE | re.IGNORECASE)
 _POP3_STARTTLS_OK = re.compile(rb"^\+OK", re.MULTILINE)
 
-# TLS ClientHello magic: record type 0x16, version 0x03xx, handshake type 0x01
-_TLS_CLIENT_HELLO = re.compile(rb"\x16\x03[\x00-\x04]\x00.", re.DOTALL)
+# TLS Handshake / ClientHello magic: record type 0x16 (22), version 0x03xx, 2-byte length
+_TLS_CLIENT_HELLO = re.compile(rb"\x16\x03[\x00-\x04].{2}", re.DOTALL)
+# TLS ServerHello magic: record type 0x16 (22), version 0x03xx, 2-byte length, handshake type 0x02
+_TLS_SERVER_RECORD = re.compile(rb"\x16\x03[\x00-\x04].{2}\x02", re.DOTALL)
+# Any TLS record start
+_TLS_RECORD_ANY = re.compile(rb"[\x14-\x17]\x03[\x00-\x04]", re.DOTALL)
 
 
 def identify_protocol(stream: TCPStream) -> ProtocolType:
     """
-    Determine the email protocol carried by a TCP stream.
+    Determine the base email protocol (SMTP, IMAP, POP3) carried by a TCP stream.
 
     Checks (in priority order):
     1. Destination port (well-known)
     2. Source port (server may be on standard port, client on ephemeral)
     3. Payload banner bytes
+    4. Client / server command patterns
     """
     # Port-based detection (most reliable)
     for port in (stream.dst_port, stream.src_port):
@@ -91,17 +102,90 @@ def identify_protocol(stream: TCPStream) -> ProtocolType:
     if _POP3_BANNER.search(combined_sample):
         return ProtocolType.POP3
 
+    # Command sniffing across payloads
+    payload_sample = (stream.client_data or b"")[:4096] + combined_sample[:4096]
+    if _SMTP_CMDS.search(payload_sample):
+        return ProtocolType.SMTP
+    if _IMAP_CMDS.search(payload_sample):
+        return ProtocolType.IMAP
+    if _POP3_CMDS.search(payload_sample):
+        return ProtocolType.POP3
+
     return ProtocolType.UNKNOWN
+
+
+def is_stream_implicit_tls(stream: TCPStream) -> bool:
+    """
+    Determine if the stream runs implicit TLS (e.g. SMTPS/465, IMAPS/993, POP3S/995).
+
+    Prefers observed network traffic over port assumptions when PCAP evidence is available:
+    if client sends TLS ClientHello immediately without prior plaintext application banners,
+    it is treated as implicit TLS.
+    """
+    if stream.dst_port in _IMPLICIT_TLS_PORTS or stream.src_port in _IMPLICIT_TLS_PORTS:
+        return True
+
+    # Check if stream client traffic starts directly with a TLS ClientHello
+    cdata = stream.client_data.lstrip(b"\r\n\x00") if stream.client_data else b""
+    if cdata.startswith(b"\x16\x03") and _TLS_CLIENT_HELLO.match(cdata):
+        sdata = stream.server_data[:128] if stream.server_data else b""
+        if not any(pat.search(sdata) for pat in (_SMTP_BANNER, _IMAP_BANNER, _POP3_BANNER)):
+            return True
+
+    return False
+
+
+def classify_protocol_label(
+    base_proto: ProtocolType,
+    dst_port: int,
+    is_implicit: bool,
+    starttls_detected: bool,
+    downgrade_suspected: bool = False,
+) -> str:
+    """
+    Map observed protocol, port, and security negotiation to precise standardized labels:
+    - Port 465 / implicit SMTP -> 'SMTPS / implicit TLS'
+    - Port 587 / SMTP with STARTTLS -> 'SMTP STARTTLS'
+    - Plaintext SMTP -> 'SMTP'
+    - Port 143 / IMAP with STARTTLS -> 'IMAP STARTTLS'
+    - Plaintext IMAP -> 'IMAP'
+    - Port 993 / implicit IMAP -> 'IMAPS / implicit TLS'
+    - Port 110 with STLS -> 'POP3 STARTTLS'
+    - Plaintext POP3 -> 'POP3 / plaintext'
+    - Port 995 / implicit POP3 -> 'POP3S / implicit TLS'
+    """
+    if base_proto == ProtocolType.SMTP:
+        if is_implicit or dst_port == 465:
+            return ProtocolType.SMTPS.value
+        if starttls_detected and not downgrade_suspected:
+            return ProtocolType.SMTP_STARTTLS.value
+        return ProtocolType.SMTP.value
+
+    if base_proto == ProtocolType.IMAP:
+        if is_implicit or dst_port == 993:
+            return ProtocolType.IMAPS.value
+        if starttls_detected and not downgrade_suspected:
+            return ProtocolType.IMAP_STARTTLS.value
+        return ProtocolType.IMAP.value
+
+    if base_proto == ProtocolType.POP3:
+        if is_implicit or dst_port == 995:
+            return ProtocolType.POP3S.value
+        if starttls_detected and not downgrade_suspected:
+            return ProtocolType.POP3_STARTTLS.value
+        return ProtocolType.POP3_PLAINTEXT.value
+
+    return base_proto.value
 
 
 def detect_starttls(stream: TCPStream) -> StarttlsResult:
     """
-    Locate the STARTTLS command and the resulting TLS ClientHello.
+    Locate the STARTTLS / STLS command and the resulting TLS ClientHello.
 
     Returns
     -------
     StarttlsResult
-        detected=True if a STARTTLS command was found.
+        detected=True if a STARTTLS or STLS command was found.
         starttls_offset is the byte offset in combined_data where the
         TLS record layer begins (i.e., where encryption starts).
         downgrade_suspected=True if plaintext continued after the command.
@@ -116,29 +200,50 @@ def detect_starttls(stream: TCPStream) -> StarttlsResult:
     result.detected = True
     cmd_end = cmd_match.end()
 
-    # Find the packet containing the STARTTLS command
+    # Find the packet containing the STARTTLS / STLS command
     result.command_packet = _byte_offset_to_packet(stream, cmd_match.start())
 
-    # Look for TLS ClientHello after the STARTTLS command
+    # Look for TLS ClientHello after the STARTTLS command in combined_data
     tls_match = _TLS_CLIENT_HELLO.search(data, cmd_end)
+    if not tls_match and stream.client_data:
+        # Check in reassembled client_data
+        client_cmd = _STARTTLS_CMD.search(stream.client_data)
+        client_cmd_end = client_cmd.end() if client_cmd else 0
+        c_match = _TLS_CLIENT_HELLO.search(stream.client_data, client_cmd_end)
+        if c_match:
+            hello_bytes = stream.client_data[c_match.start():c_match.start() + 16]
+            c_offset = data.find(hello_bytes, cmd_end)
+            if c_offset != -1:
+                tls_match = type("Match", (), {"start": lambda: c_offset})()
+
     if tls_match:
         result.starttls_offset = tls_match.start()
         result.response_packet = _byte_offset_to_packet(stream, tls_match.start())
     else:
-        # STARTTLS command seen but no ClientHello followed — downgrade!
-        result.downgrade_suspected = True
-        result.downgrade_evidence_packet = result.command_packet
-        logger.warning(
-            "STARTTLS downgrade suspected on stream %s: command found at byte %d "
-            "but no ClientHello followed.",
-            stream.stream_key,
-            cmd_match.start(),
+        # STARTTLS / STLS seen, check if plaintext followed (downgrade!)
+        trailing = data[cmd_end:]
+        # If client sends further plaintext commands (AUTH, USER, PASS, MAIL FROM)
+        has_subsequent_plaintext = (
+            b"AUTH " in trailing or
+            b"USER " in trailing or
+            b"PASS " in trailing or
+            b"MAIL FROM" in trailing or
+            b"a00" in trailing
         )
+        if has_subsequent_plaintext or len(trailing.strip()) > 30:
+            result.downgrade_suspected = True
+            result.downgrade_evidence_packet = result.command_packet
+            logger.warning(
+                "STARTTLS downgrade suspected on stream %s: command found at byte %d "
+                "but no ClientHello followed.",
+                stream.stream_key,
+                cmd_match.start(),
+            )
         return result
 
-    # Additional downgrade check: plaintext after STARTTLS offset
+    # Additional downgrade check: unencrypted authentication sent after TLS offset
     post_tls = data[result.starttls_offset:]
-    if _STARTTLS_CMD.search(post_tls) or b"AUTH " in post_tls[:256]:
+    if b"AUTH PLAIN" in post_tls[:256] or b"AUTH LOGIN" in post_tls[:256]:
         result.downgrade_suspected = True
         result.downgrade_evidence_packet = _byte_offset_to_packet(
             stream, result.starttls_offset
@@ -179,7 +284,8 @@ def _extract_banner(stream: TCPStream) -> str:
 
 def build_email_sessions(streams: list[TCPStream]) -> list[EmailSession]:
     """
-    Convert reassembled TCP streams into EmailSession objects.
+    Convert reassembled TCP streams into EmailSession objects with accurate
+    protocol classification and normalized session direction.
 
     Filters out streams that cannot be identified as email protocols.
     """
@@ -189,19 +295,26 @@ def build_email_sessions(streams: list[TCPStream]) -> list[EmailSession]:
         if proto == ProtocolType.UNKNOWN:
             continue
 
-        is_implicit = (stream.dst_port in _IMPLICIT_TLS_PORTS or
-                       stream.src_port in _IMPLICIT_TLS_PORTS)
+        is_implicit = is_stream_implicit_tls(stream)
 
         starttls = StarttlsResult()
         if not is_implicit:
             starttls = detect_starttls(stream)
+
+        proto_label = classify_protocol_label(
+            base_proto=proto,
+            dst_port=stream.dst_port,
+            is_implicit=is_implicit,
+            starttls_detected=starttls.detected,
+            downgrade_suspected=starttls.downgrade_suspected,
+        )
 
         banner = _extract_banner(stream)
         packet_refs = sorted({s.packet_number for s in stream.segments})
 
         session = EmailSession(
             session_id=str(uuid.uuid4()),
-            protocol=proto.value,
+            protocol=proto_label,
             src_ip=stream.src_ip,
             dst_ip=stream.dst_ip,
             src_port=stream.src_port,
@@ -219,7 +332,7 @@ def build_email_sessions(streams: list[TCPStream]) -> list[EmailSession]:
         logger.debug(
             "Session %s: %s %s:%d -> %s:%d  STARTTLS=%s  implicit_TLS=%s",
             session.session_id[:8],
-            proto.value,
+            proto_label,
             stream.src_ip, stream.src_port,
             stream.dst_ip, stream.dst_port,
             starttls.detected,
