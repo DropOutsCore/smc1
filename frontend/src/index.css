@@ -2,33 +2,35 @@
 @import "tailwindcss";
 
 @theme {
-  --color-brand: #3D81E3;
-  --font-sans: 'Inter', system-ui, sans-serif;
+  --color-brand: #48BB36;
+  --color-brand-hover: #3ca32c;
+  --color-brand-light: #5fcf4c;
+  --font-sans: 'Geist', 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
 
-  --color-bg-base: #0c0c0c;
-  --color-bg-deep: #060606;
-  --color-bg-surface: #111215;
-  --color-bg-elevated: #16181d;
-  --color-bg-card: #1b1d24;
+  --color-bg-base: #111418;
+  --color-bg-deep: #0a0d11;
+  --color-bg-surface: #171b22;
+  --color-bg-elevated: #1e242d;
+  --color-bg-card: #232a35;
 
-  --color-primary: #3D81E3;
-  --color-primary-dim: #2767c2;
-  --color-secondary: #00d2ff;
+  --color-primary: #48BB36;
+  --color-primary-dim: #389c29;
+  --color-secondary: #22c55e;
 
   --color-text-primary: #ffffff;
-  --color-text-muted: #B8C8C0;
-  --color-text-dim: #88929b;
+  --color-text-muted: #94a3b8;
+  --color-text-dim: #64748b;
 
-  --color-border: rgba(255, 255, 255, 0.1);
-  --color-border-strong: rgba(255, 255, 255, 0.2);
+  --color-border: rgba(255, 255, 255, 0.08);
+  --color-border-strong: rgba(255, 255, 255, 0.16);
 
-  --color-critical: #FF5C5C;
-  --color-high: #F5B942;
-  --color-medium: #5DA9FF;
-  --color-low: #3DDC97;
-  --color-info: #B8C8C0;
+  --color-critical: #ef4444;
+  --color-high: #f59e0b;
+  --color-medium: #3b82f6;
+  --color-low: #48BB36;
+  --color-info: #94a3b8;
 
-  --font-mono: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', ui-monospace, monospace;
+  --font-mono: 'Geist Mono', 'JetBrains Mono', 'Fira Code', ui-monospace, monospace;
 }
 
 :root {
@@ -44,16 +46,17 @@ html {
 }
 
 html, body {
-  font-family: 'Inter', system-ui, sans-serif;
+  font-family: 'Geist', 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  letter-spacing: -0.011em;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #0c0c0c;
+  background-color: #111418;
   color: #ffffff;
   min-height: 100vh;
 }
 
 ::selection {
-  background-color: rgba(61, 129, 227, 0.3);
+  background-color: rgba(72, 187, 54, 0.35);
   color: #ffffff;
 }
 
@@ -63,14 +66,14 @@ html, body {
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #0c0c0c;
+  background: #111418;
 }
 ::-webkit-scrollbar-thumb {
   background: rgba(255, 255, 255, 0.15);
   border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.3);
+  background: rgba(72, 187, 54, 0.4);
 }
 
 /* Liquid-glass utility */

@@ -70,16 +70,16 @@ export default function ReportsPage() {
       <div className="max-w-screen-xl mx-auto px-6 py-10 fade-in">
         <div className="flex items-end justify-between mb-8">
           <div>
-            <h1 className="text-[#F3F7F4] text-2xl font-bold">Forensic Reports</h1>
-            <p className="text-[#7F948B] text-sm mt-1 font-mono">
+            <h1 className="text-white text-3xl font-extrabold tracking-tight">Forensic Reports</h1>
+            <p className="text-white/60 text-sm mt-1 font-mono">
               {reports.length} stored analysis report{reports.length !== 1 ? 's' : ''}
             </p>
           </div>
           <button
             onClick={() => navigate('/analyze')}
-            className="flex items-center gap-2 px-5 py-2 bg-white text-black font-semibold text-xs rounded-full hover:bg-white/90 shadow-md transition-all cursor-pointer"
+            className="flex items-center gap-2 px-5 py-2.5 bg-[#48BB36] hover:bg-[#3ca32c] text-white font-bold text-xs uppercase tracking-wider rounded-md shadow-lg shadow-[#48bb36]/25 transition-all cursor-pointer"
           >
-            + New Analysis
+            + Ingest New PCAP
           </button>
         </div>
 
@@ -91,7 +91,10 @@ export default function ReportsPage() {
             title="No Reports"
             description="Analyze a PCAP file to generate your first forensic report."
             action={
-              <button onClick={() => navigate('/analyze')} className="px-6 py-2.5 bg-white text-black font-semibold text-sm rounded-full hover:bg-white/90 shadow-lg transition-all cursor-pointer">
+              <button
+                onClick={() => navigate('/analyze')}
+                className="px-6 py-3 bg-[#48BB36] hover:bg-[#3ca32c] text-white font-bold text-xs uppercase tracking-wider rounded-md shadow-lg shadow-[#48bb36]/25 transition-all cursor-pointer"
+              >
                 Analyze PCAP
               </button>
             }

@@ -24,19 +24,19 @@ function SessionWhyThisScore({ session }: { session: Session }) {
     <div className="border border-white/10 bg-[#111215]/90 rounded-xl p-3.5 space-y-3 mb-5">
       <div className="flex items-center justify-between border-b border-white/10 pb-2">
         <div className="flex items-center gap-1.5">
-          <HelpCircle size={14} className="text-cyan-400" />
-          <span className="text-cyan-300 font-mono text-xs font-bold uppercase tracking-wider">
+          <HelpCircle size={14} className="text-[#48BB36]" />
+          <span className="text-[#48BB36] font-mono text-xs font-bold uppercase tracking-wider">
             Why This Score? — Risk Reasoning
           </span>
         </div>
         <div className="flex items-center gap-2">
           <span className="text-[10px] font-mono text-white bg-white/10 px-2 py-0.5 rounded border border-white/10">
-            Score: <strong className="text-cyan-300">{scoreVal} / 100</strong> ({sevVal.toUpperCase()})
+            Score: <strong className="text-[#48BB36]">{scoreVal} / 100</strong> ({sevVal.toUpperCase()})
           </span>
           {why?.ascii_tree && (
             <button
               onClick={() => setShowTree(v => !v)}
-              className="text-[10px] font-mono text-[#8BFF7A] underline hover:text-[#65E86A] transition-colors"
+              className="text-[10px] font-mono text-[#48BB36] underline hover:text-[#5fcf4c] transition-colors cursor-pointer"
             >
               {showTree ? 'Hide Tree' : 'View Tree'}
             </button>
@@ -196,7 +196,10 @@ export default function SessionsPage() {
             title="No Sessions"
             description="Analyze a PCAP file to see reconstructed email sessions."
             action={
-              <button onClick={() => navigate('/analyze')} className="px-6 py-2.5 bg-white text-black font-semibold text-sm rounded-full hover:bg-white/90 transition-all shadow-lg cursor-pointer">
+              <button
+                onClick={() => navigate('/analyze')}
+                className="px-6 py-3 bg-[#48BB36] hover:bg-[#3ca32c] text-white font-bold text-xs uppercase tracking-wider rounded-md shadow-lg shadow-[#48bb36]/25 transition-all cursor-pointer"
+              >
                 Analyze PCAP
               </button>
             }
@@ -221,8 +224,8 @@ export default function SessionsPage() {
     <Layout>
       <div className="max-w-screen-xl mx-auto px-6 py-10 fade-in">
         <div className="mb-6">
-          <h1 className="text-[#F3F7F4] text-2xl font-bold">Session Explorer</h1>
-          <p className="text-[#7F948B] text-sm mt-1 font-mono">
+          <h1 className="text-white text-3xl font-extrabold tracking-tight">Session Explorer</h1>
+          <p className="text-white/60 text-sm mt-1 font-mono">
             {allSessions.length} reconstructed sessions across {report.hosts.length} hosts
           </p>
         </div>
@@ -232,7 +235,7 @@ export default function SessionsPage() {
           <select
             value={filterProtocol}
             onChange={e => setFilterProtocol(e.target.value)}
-            className="bg-[#0B2A20] border border-[rgba(139,255,122,0.15)] text-[#B8C8C0] text-xs font-mono rounded px-3 py-1.5 focus:outline-none focus:border-[rgba(139,255,122,0.4)]"
+            className="bg-[#171c23] border border-white/10 text-white text-xs font-mono rounded-lg px-3 py-2 focus:outline-none focus:border-[#48BB36]"
           >
             <option value="">All Protocols</option>
             {protocols.map(p => <option key={p} value={p}>{p}</option>)}
@@ -240,7 +243,7 @@ export default function SessionsPage() {
           <select
             value={filterSeverity}
             onChange={e => setFilterSeverity(e.target.value)}
-            className="bg-[#0B2A20] border border-[rgba(139,255,122,0.15)] text-[#B8C8C0] text-xs font-mono rounded px-3 py-1.5 focus:outline-none focus:border-[rgba(139,255,122,0.4)]"
+            className="bg-[#171c23] border border-white/10 text-white text-xs font-mono rounded-lg px-3 py-2 focus:outline-none focus:border-[#48BB36]"
           >
             <option value="">All Severity</option>
             {['critical', 'high', 'medium', 'low'].map(s => <option key={s} value={s}>{s}</option>)}

@@ -1,7 +1,13 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none">
-  <rect x="1" y="1" width="30" height="30" rx="6" stroke="rgba(139,255,122,0.4)" stroke-width="1.2"/>
-  <path d="M16 5 L29 26 L3 26 Z" stroke="#8BFF7A" stroke-width="1.5" fill="rgba(139,255,122,0.08)"/>
-  <circle cx="16" cy="20" r="4" stroke="#8BFF7A" stroke-width="1.5" fill="rgba(139,255,122,0.2)"/>
-  <circle cx="16" cy="20" r="1.5" fill="#8BFF7A"/>
-  <line x1="16" y1="5" x2="16" y2="13" stroke="rgba(139,255,122,0.5)" stroke-width="1.2"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <defs>
+    <linearGradient id="shieldGrad" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#55CC3E"/>
+      <stop offset="100%" stop-color="#3FA82F"/>
+    </linearGradient>
+  </defs>
+  <path d="M32 4 L56 12 V28 C56 42 45 54 32 60 C19 54 8 42 8 28 V12 L32 4 Z" fill="url(#shieldGrad)" />
+  <path d="M32 6 L53 13.5 V28 C53 40.5 43 51.5 32 57 C21 51.5 11 40.5 11 28 V13.5 L32 6 Z" stroke="#68E050" stroke-width="1.5" fill="none" opacity="0.4"/>
+  <!-- Keyhole in center -->
+  <circle cx="32" cy="27" r="6" fill="#11161B"/>
+  <polygon points="29,29 27,41 37,41 35,29" fill="#11161B"/>
 </svg>

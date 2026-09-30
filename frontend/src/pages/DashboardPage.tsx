@@ -89,14 +89,14 @@ function WhyThisScoreDashboard({ hosts, reportId }: { hosts: HostReport[]; repor
         <div className="flex items-center gap-2">
           <button
             onClick={() => setShowTree(v => !v)}
-            className="flex items-center gap-1.5 text-xs font-mono text-cyan-300 bg-white/10 px-3 py-1.5 rounded-lg border border-white/10 hover:bg-white/15 transition-colors cursor-pointer"
+            className="flex items-center gap-1.5 text-xs font-mono text-[#48BB36] bg-[#48BB36]/10 px-3 py-1.5 rounded-lg border border-[#48BB36]/30 hover:bg-[#48BB36]/20 transition-colors cursor-pointer"
           >
             <Terminal size={13} />
             <span>{showTree ? 'Hide Decision Tree' : 'View Decision Tree'}</span>
           </button>
           <button
             onClick={() => navigate(`/reports/${reportId}`)}
-            className="text-xs font-mono text-[#7F948B] hover:text-[#8BFF7A] px-2 py-1 transition-colors"
+            className="text-xs font-mono text-[#7F948B] hover:text-[#48BB36] px-2 py-1 transition-colors"
           >
             Forensic Report →
           </button>
@@ -262,7 +262,7 @@ export default function DashboardPage() {
             action={
               <button
                 onClick={() => navigate('/analyze')}
-                className="px-6 py-2.5 bg-white text-black font-semibold text-sm rounded-full hover:bg-white/90 transition-all cursor-pointer shadow-lg"
+                className="px-6 py-3 bg-[#48BB36] hover:bg-[#3ca32c] text-white font-bold text-xs uppercase tracking-wider rounded-md shadow-lg shadow-[#48bb36]/25 transition-all cursor-pointer"
               >
                 Analyze PCAP
               </button>

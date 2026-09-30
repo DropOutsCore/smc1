@@ -252,19 +252,19 @@ function WhyThisScoreSection({ why, ml, title = "Why This Score?" }: { why?: Why
     <div className="border border-white/10 bg-[#111215]/90 rounded-xl p-4 space-y-3 mb-4">
       <div className="flex items-center justify-between border-b border-white/10 pb-2.5">
         <div className="flex items-center gap-2">
-          <HelpCircle size={15} className="text-cyan-400" />
-          <h4 className="text-cyan-300 font-mono text-xs font-bold uppercase tracking-wider">
+          <HelpCircle size={15} className="text-[#48BB36]" />
+          <h4 className="text-[#48BB36] font-mono text-xs font-bold uppercase tracking-wider">
             {title} — Transparent Risk Breakdown
           </h4>
         </div>
         <div className="flex items-center gap-2">
           <span className="text-[10px] font-mono text-white bg-white/10 px-2.5 py-0.5 rounded border border-white/10">
-            Score: <strong className="text-cyan-300">{scoreVal} / 100</strong> ({sevVal.toUpperCase()})
+            Score: <strong className="text-[#48BB36]">{scoreVal} / 100</strong> ({sevVal.toUpperCase()})
           </span>
           {why?.ascii_tree && (
             <button
               onClick={() => setShowTree(v => !v)}
-              className="text-[10px] font-mono text-[#8BFF7A] underline hover:text-[#65E86A] transition-colors"
+              className="text-[10px] font-mono text-[#48BB36] underline hover:text-[#5fcf4c] transition-colors cursor-pointer"
             >
               {showTree ? 'Hide Tree' : 'View Tree'}
             </button>
@@ -526,21 +526,21 @@ export default function ReportDetailPage() {
     <Layout>
       <div className="max-w-screen-xl mx-auto px-6 py-10 fade-in">
         {/* Header */}
-        <div className="flex items-start justify-between mb-8">
+        <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 mb-8">
           <div>
-            <button onClick={() => navigate('/reports')} className="flex items-center gap-1.5 text-[#7F948B] text-xs font-mono hover:text-[#8BFF7A] transition-colors mb-3">
+            <button onClick={() => navigate('/reports')} className="flex items-center gap-1.5 text-white/50 text-xs font-mono hover:text-[#48BB36] transition-colors mb-3 cursor-pointer">
               <ArrowLeft size={12} /> Reports
             </button>
-            <h1 className="text-[#F3F7F4] text-2xl font-bold">Forensic Report</h1>
-            <p className="text-[#7F948B] text-sm font-mono mt-1">
+            <h1 className="text-white text-3xl font-extrabold tracking-tight">Forensic Report</h1>
+            <p className="text-white/60 text-sm font-mono mt-1">
               Report #{shortId(report.report_id)} — {formatDate(report.generated_at)}
             </p>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 flex-wrap">
             <button
               onClick={handleDownloadPdf}
               disabled={downloading !== null}
-              className="flex items-center gap-1.5 px-4 py-2 bg-white text-black font-semibold font-mono text-xs rounded-full hover:bg-white/90 transition-all disabled:opacity-40 shadow-md cursor-pointer"
+              className="flex items-center gap-1.5 px-5 py-2.5 bg-[#48BB36] hover:bg-[#3ca32c] text-white font-bold text-xs uppercase tracking-wider rounded-md shadow-lg shadow-[#48bb36]/25 transition-all disabled:opacity-40 cursor-pointer"
               title="Download Formal Forensic PDF Report"
             >
               <Download size={13} /> {downloading === 'pdf' ? 'Generating PDF…' : 'PDF Report'}
@@ -548,15 +548,15 @@ export default function ReportDetailPage() {
             <button
               onClick={handleDownloadHtml}
               disabled={downloading !== null}
-              className="flex items-center gap-1.5 px-4 py-2 border border-white/20 text-white/80 text-xs font-mono rounded-full hover:text-white hover:bg-white/10 transition-all disabled:opacity-40 cursor-pointer"
+              className="flex items-center gap-1.5 px-4 py-2.5 bg-white/10 hover:bg-white/15 text-white font-bold text-xs uppercase tracking-wider rounded-md transition-all disabled:opacity-40 border border-white/10 cursor-pointer"
               title="Download Interactive HTML Report"
             >
-              <Download size={13} /> {downloading === 'html' ? 'Downloading…' : 'HTML'}
+              <FileText size={13} /> {downloading === 'html' ? 'Downloading…' : 'HTML'}
             </button>
             <button
               onClick={handleDownloadJson}
               disabled={downloading !== null}
-              className="flex items-center gap-1.5 px-4 py-2 border border-[rgba(139,255,122,0.25)] text-[#B8C8C0] text-xs font-mono rounded hover:text-[#8BFF7A] hover:border-[rgba(139,255,122,0.5)] transition-all disabled:opacity-40"
+              className="flex items-center gap-1.5 px-4 py-2.5 bg-white/10 hover:bg-white/15 text-white font-bold text-xs uppercase tracking-wider rounded-md transition-all disabled:opacity-40 border border-white/10 cursor-pointer"
               title="Download Raw JSON Report"
             >
               <Download size={13} /> {downloading === 'json' ? 'Downloading…' : 'JSON'}
